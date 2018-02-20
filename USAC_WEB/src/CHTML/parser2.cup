@@ -56,13 +56,13 @@ action code
 /*----------------------------------------AREA DE DECLARACIONES-------------------------------------------------------------*/
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 terminal String opentag,closetag,igual,pcoma, coma, cadena, tTexto, chtml, finChtml, encabezado, finEncabezado, cuerpo, finCuerpo;
-terminal String cjs, finCjs, ccss, finCcss, titulo, finTitulo, panel, finPanel, imagen, finImagen, enlace, finEnlace;
-terminal String fondo, ruta, palabra, click, id, grupo, alto, ancho, alineado, path, boton, finBoton, tabla, finTabla;
+terminal String cjs, finCjs, ccss, finCcss, titulo, finTitulo, panel, finPanel, imagen, finImagen, enlace, finEnlace, saltoFin;
+terminal String fondo, ruta, palabra, click, id, grupo, alto, ancho, alineado, path, boton, finBoton, tabla, finTabla, spinner, finSpinner;
 terminal String fil_t, finFil_t, cb, finCb, ct, finCt, tTexA, caja_texto, finCaja_texto, caja, finCaja, opcion, finOpcion, valor;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 non terminal ASTNodo INICIO_CHTML, ENCABEZADO, CUERPO, FONDO, L_ENCABEZADO, CJS, RUTA, CCSS, TITULO, TXT, PANEL;
 non terminal ASTNodo ATRIBUTO, NOM_A, L_CUERPO, L_ATTS, IMAGEN, BOTON, ENLACE, TABLA, FILATABLA, C_ENCABEZADO, CELDA;
-non terminal ASTNodo L_CELDAS, L_FILAS, CAJA_TEXTO, CAJA, OPCION, L_OPCIONES;
+non terminal ASTNodo L_CELDAS, L_FILAS, CAJA_TEXTO, CAJA, OPCION, L_OPCIONES, SPINNER, SALTO;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //---------->PRECENDENCIAS DE MENOR A MAYOR
 precedence right opentag;
@@ -249,7 +249,13 @@ TITULO ::= opentag titulo closetag TXT:h1 opentag finTitulo closetag
         :}
         | opentag titulo L_ATTS:h1 closetag TXT:h2 opentag finTitulo closetag
         {:
-          
+          ASTNodo padre = new ASTNodo(parser.contador, "TITULO");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
         :}
         | error finTitulo closetag
         {:
@@ -364,6 +370,60 @@ L_CUERPO::= L_CUERPO:h1 PANEL:h2
             {padre.addHijo(h1);}
             if(h2!=null)
             {padre.addHijo(h2);}
+            RESULT = padre;
+          :}
+          | L_CUERPO:h1 CAJA:h2
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "L_CUERPO");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            if(h2!=null)
+            {padre.addHijo(h2);}
+            RESULT = padre;
+          :}
+          | L_CUERPO:h1 SPINNER:h2
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "L_CUERPO");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            if(h2!=null)
+            {padre.addHijo(h2);}
+            RESULT = padre;
+          :}
+          | L_CUERPO:h1 SALTO:h2
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "L_CUERPO");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            if(h2!=null)
+            {padre.addHijo(h2);}
+            RESULT = padre;
+          :}
+          | SALTO:h1
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "L_CUERPO");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            RESULT = padre;
+          :}
+          | CAJA:h1
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "L_CUERPO");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            RESULT = padre;
+          :}
+          | SPINNER:h1
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "L_CUERPO");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
             RESULT = padre;
           :}
           | CAJA_TEXTO:h1
@@ -870,7 +930,7 @@ CAJA ::= opentag caja closetag opentag finCaja closetag
           {padre.addHijo(h1);}
           RESULT = padre;
         :}
-        |opentag caja closetag TXT:h1 opentag finCaja closetag
+        |opentag caja closetag L_OPCIONES:h1 opentag finCaja closetag
         {:
           ASTNodo padre = new ASTNodo(parser.contador,"CAJA");
           parser.contador++;
@@ -878,7 +938,7 @@ CAJA ::= opentag caja closetag opentag finCaja closetag
           {padre.addHijo(h1);}
           RESULT = padre;
         :}
-        |opentag caja L_ATTS:h1 closetag TXT:h2 opentag finCaja closetag
+        |opentag caja L_ATTS:h1 closetag L_OPCIONES:h2 opentag finCaja closetag
         {:
           ASTNodo padre = new ASTNodo(parser.contador,"CAJA");
           parser.contador++;
@@ -963,6 +1023,67 @@ L_OPCIONES ::= L_OPCIONES:h1 OPCION:h2
           parser.contador++;
           if(h1!=null)
           {padre.addHijo(h1);}
+          RESULT = padre;
+        :}
+        ;
+//-------------------------------------------------------------------------------------
+SPINNER ::= opentag spinner closetag opentag finSpinner closetag
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "SPINNER");
+            parser.contador++;
+            RESULT = padre;
+          :}
+          | opentag spinner L_ATTS:h1 closetag opentag finSpinner closetag
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "SPINNER");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            RESULT = padre;
+          :}
+          |opentag spinner closetag entero:cont opentag finSpinner closetag
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "SPINNER");
+            parser.contador++;
+            ASTNodo hijo = new ASTNodo(parser.contador, "CONTADOR");
+            parser.contador++;
+            ASTNodo con = new ASTNodo(parser.contador, cont);
+            parser.contador++;
+            hijo.addHijo(con);
+            padre.addHijo(hijo);
+            RESULT = padre;
+          :}
+          |opentag spinner L_ATTS:h1 closetag entero:cont opentag finSpinner closetag
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "SPINNER");
+            parser.contador++;
+            ASTNodo hijo = new ASTNodo(parser.contador, "CONTADOR");
+            parser.contador++;
+            ASTNodo con = new ASTNodo(parser.contador, cont);
+            hijo.addHijo(con);
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            padre.addHijo(hijo);
+            RESULT = padre;
+          :}
+          | error finSpinner closetag
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "SPINNER");
+            parser.contador++;
+            RESULT = padre;
+          :}
+          ;
+//-------------------------------------------------------------------------------------
+SALTO ::= opentag saltoFin closetag
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "SALTO");
+          parser.contador++;
+          RESULT = padre;
+        :}
+        | error saltoFin closetag
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "SALTO");
+          parser.contador++;
           RESULT = padre;
         :}
         ;

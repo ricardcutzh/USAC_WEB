@@ -71,6 +71,9 @@ path = [a-zA-Z]:\/[\\\S|*\S]?.[^\s\<\>]*
 <YYINITIAL> "fin-caja"          {/*System.out.println("Encontre:  fin-caja");*/ return new Symbol(Simbolos.finCaja, yycolumn, yyline, yytext());}
 <YYINITIAL> "opcion"            {/*System.out.println("Encontre:  opcion"); */return new Symbol(Simbolos.opcion, yycolumn, yyline, yytext());}
 <YYINITIAL> "fin-opcion"        {/*System.out.println("Encontre:  fin-opcion"); */return new Symbol(Simbolos.finOpcion, yycolumn, yyline, yytext());}
+<YYINITIAL> "spinner"           {/*System.out.println("Encontre:  spinner");*/ return new Symbol(Simbolos.spinner, yycolumn, yyline, yytext());}
+<YYINITIAL> "fin-spinner"       {/*System.out.println("Encontre:  fin-spinner");*/ return new Symbol(Simbolos.finSpinner, yycolumn, yyline, yytext());}
+<YYINITIAL> "salto-fin"         {/*System.out.println("Encontre:  salto-fin");*/ return new Symbol(Simbolos.saltoFin, yycolumn, yyline, yytext());}
 //---------->SIMBOLOS
 <YYINITIAL> "<"                 {/*System.out.println("Encontre:  opentag");*/ return new Symbol(Simbolos.opentag, yycolumn, yyline, yytext());}
 <YYINITIAL> ">"                 {/*System.out.println("Encontre:  closetag");*/ return new Symbol(Simbolos.closetag, yycolumn, yyline, yytext());}
