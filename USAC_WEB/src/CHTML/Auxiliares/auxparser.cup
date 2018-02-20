@@ -34,7 +34,7 @@ parser code
       int fila = s.right;
       int columna = s.left;
 
-      System.out.println("--------------Error Sintactico Recuperado------------------------");
+      System.out.println("--------------Error Sintactico Recuperado AUXILIAR------------------------");
       System.out.println("Lexema: "+lexema);
       System.out.println("Fila: "+fila);
       System.out.println("Columna: "+columna);
@@ -71,6 +71,7 @@ action code
 /*----------------------------------------AREA DE DECLARACIONES-------------------------------------------------------------*/
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 terminal String  texto, finTexto, id, grupo, alto, ancho, alineado, opentag, closetag, igual, pcoma, coma, cadena, salida;
+terminal String  texto_a, finTexto_a, click;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 non terminal ASTNodo TEXTO, ATRIBUTO, NOM_A, L_ATTS;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,8 +84,10 @@ TEXTO ::= opentag texto L_ATTS:h1 salida:sal finTexto closetag
           {:
             ASTNodo padre = new ASTNodo(parser.contador,"TEXTO");
             parser.contador++;
-            ASTNodo conte = new ASTNodo(parser.contador,"SALIDA");
+            ASTNodo conte = new ASTNodo(parser.contador,"TXT");
             parser.contador++;
+            sal = sal.replace("<","");
+            sal = sal.replace(">","");
             ASTNodo nodo = new ASTNodo(parser.contador, sal);
             parser.contador++;
             padre.addHijo(h1);
@@ -96,12 +99,42 @@ TEXTO ::= opentag texto L_ATTS:h1 salida:sal finTexto closetag
           {:
             ASTNodo padre = new ASTNodo(parser.contador,"TEXTO");
             parser.contador++;
-            ASTNodo conte = new ASTNodo(parser.contador,"SALIDA");
+            ASTNodo conte = new ASTNodo(parser.contador,"TXT");
             parser.contador++;
             sal = sal.replace("<","");
             sal = sal.replace(">","");
             ASTNodo nodo = new ASTNodo(parser.contador, sal);
             parser.contador++;
+            conte.addHijo(nodo);
+            padre.addHijo(conte);
+            parser.raiz = padre;
+
+          :}
+          |opentag texto_a salida:sal finTexto_a closetag
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador,"TEXTO_A");
+            parser.contador++;
+            ASTNodo conte = new ASTNodo(parser.contador,"TXT");
+            parser.contador++;
+            sal = sal.replace("<","");
+            sal = sal.replace(">","");
+            ASTNodo nodo = new ASTNodo(parser.contador, sal);
+            parser.contador++;
+            conte.addHijo(nodo);
+            padre.addHijo(conte);
+            parser.raiz = padre;
+          :}
+          |opentag texto_a L_ATTS:h1 salida:sal finTexto_a closetag
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador,"TEXTO_A");
+            parser.contador++;
+            ASTNodo conte = new ASTNodo(parser.contador,"TXT");
+            parser.contador++;
+            sal = sal.replace("<","");
+            sal = sal.replace(">","");
+            ASTNodo nodo = new ASTNodo(parser.contador, sal);
+            parser.contador++;
+            padre.addHijo(h1);
             conte.addHijo(nodo);
             padre.addHijo(conte);
             parser.raiz = padre;
@@ -150,6 +183,12 @@ NOM_A ::=
             RESULT = r;
           :}
           |alineado:val
+          {:
+            ASTNodo r = new ASTNodo(parser.contador,val);
+            parser.contador++;
+            RESULT = r;
+          :}
+          |click:val
           {:
             ASTNodo r = new ASTNodo(parser.contador,val);
             parser.contador++;

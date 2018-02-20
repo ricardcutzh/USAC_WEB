@@ -2,19 +2,7 @@
   <ENCABEZADO>
   <FIN-ENCABEZADO>
   <CUERPO>
-    <TABLA click="has algo"; id = "mi table";>
-      <FIL_T>
-        <CB><FIN-CB>
-        <CB><FIN-CB>
-        <CB><FIN-CB>
-        <CB><FIN-CB>
-      <FIN-FIL_T>
-      <FIL_T>
-        <CT><FIN-CT>
-        <CT><FIN-CT>
-        <CT><FIN-CT>
-        <CT><FIN-CT>
-      <FIN-FIL_T>
-    <FIN-TABLA>
+    <TEXTO> hhghggj <FIN-TEXTO>
+    <Texto_A> PRUEBA DEFINITIVA <FIN-TEXTO_A>
   <FIN-CUERPO>
 <FIN-CHTML>

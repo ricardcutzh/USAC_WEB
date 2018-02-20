@@ -31,10 +31,12 @@ textoSalida = \>(\\.|[^\"\\])*\<
 
 %%
 /*----------AREA DE REGLAS LEXICAS-------------------------------------------------------------------*/
-<YYINITIAL> "texto"             {System.out.println("Encontre:  texto"); return new Symbol(Symb.texto, yycolumn, yyline, yytext());}
-<YYINITIAL> "fin-texto"         {System.out.println("Encontre:  fin-texto"); return new Symbol(Symb.finTexto, yycolumn, yyline, yytext());}
-
+<YYINITIAL> "texto"             {/*System.out.println("Encontre:  texto");*/ return new Symbol(Symb.texto, yycolumn, yyline, yytext());}
+<YYINITIAL> "fin-texto"         {/*System.out.println("Encontre:  fin-texto");*/ return new Symbol(Symb.finTexto, yycolumn, yyline, yytext());}
+<YYINITIAL> "texto_a"           {/*System.out.println("Encontre:  texto_a");*/ return new Symbol(Symb.texto_a, yycolumn, yyline, yytext());}
+<YYINITIAL> "fin-texto_a"       {/*System.out.println("Encontre:  fin-texto_a");*/ return new Symbol(Symb.finTexto_a, yycolumn, yyline, yytext());}
 //----------->OTROS
+<YYINITIAL> "click"             {/*System.out.println("Encontre:  click");*/ return new Symbol(Symb.click, yycolumn, yyline, yytext());}
 <YYINITIAL> "id"                {/*System.out.println("Encontre:  id");*/ return new Symbol(Symb.id, yycolumn, yyline, yytext());}
 <YYINITIAL> "grupo"             {/*System.out.println("Encontre:  grupo");*/ return new Symbol(Symb.grupo, yycolumn, yyline, yytext());}
 <YYINITIAL> "alto"              {/*System.out.println("Encontre:  alto");*/ return new Symbol(Symb.alto, yycolumn, yyline, yytext());}
