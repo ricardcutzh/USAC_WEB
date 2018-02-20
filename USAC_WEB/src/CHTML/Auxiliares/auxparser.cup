@@ -1,0 +1,169 @@
+/*----------------------------------------AREA DE CODIGO DE USUARIO---------------------------------------------------------*/
+//------->PAQUETES E IMPORTACIONES
+package CHTML.Auxiliares;
+import java_cup.runtime.*;
+import AST.*;
+import java.util.ArrayList;
+//--------------------->CODIGO DE PARSER, VARIABLES Y METODOS
+parser code
+{:
+    //METODO PARA ERROR RECUPERABLE
+    public static ASTNodo raiz;
+    int contador;
+    public static ArrayList<TError> errores;
+    //METODO PARA ERROR RECUPERABLE
+
+    public void setContador(int cont)
+    {
+      contador = cont;
+    }
+
+    public int getContador()
+    {
+      return contador;
+    }
+
+    public ASTNodo getRaiz()
+    {
+      return raiz;
+    }
+
+    public void syntax_error(Symbol s)
+    {
+      String lexema = s.value.toString();
+      int fila = s.right;
+      int columna = s.left;
+
+      System.out.println("--------------Error Sintactico Recuperado------------------------");
+      System.out.println("Lexema: "+lexema);
+      System.out.println("Fila: "+fila);
+      System.out.println("Columna: "+columna);
+
+    }
+
+    //METODO PARA ERRORES QUE NO SE RECUPERAN
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
+    {
+      try
+      {
+        String lexema = s.value.toString();
+        int fila = s.right;
+        int columna = s.left;
+
+        System.out.println("--------------Error Sintactico PANICO------------------------");
+        System.out.println("Lexema: "+lexema);
+        System.out.println("Fila: "+fila);
+        System.out.println("Columna: "+columna);
+      }
+      catch(Exception ex)
+      {
+        System.out.println("ERROR IRRECUPERABLE");
+      }
+    }
+
+:}
+
+//-------------->CODIGO PARA LAS ACCIONES GRAMATICALES
+action code
+{:
+
+:}
+/*----------------------------------------AREA DE DECLARACIONES-------------------------------------------------------------*/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+terminal String  texto, finTexto, id, grupo, alto, ancho, alineado, opentag, closetag, igual, pcoma, coma, cadena, salida;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+non terminal ASTNodo TEXTO, ATRIBUTO, NOM_A, L_ATTS;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//---------->PRECENDENCIAS DE MENOR A MAYOR
+
+//--------------> DONDE INICIA
+start with TEXTO;
+/*----------------------------------------AREA DE ACCIONES SEMANTICAS-------------------------------------------------------*/
+TEXTO ::= opentag texto L_ATTS:h1 salida:sal finTexto closetag
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador,"TEXTO");
+            parser.contador++;
+            ASTNodo conte = new ASTNodo(parser.contador,"SALIDA");
+            parser.contador++;
+            ASTNodo nodo = new ASTNodo(parser.contador, sal);
+            parser.contador++;
+            padre.addHijo(h1);
+            conte.addHijo(nodo);
+            padre.addHijo(conte);
+            parser.raiz = padre;
+          :}
+          |opentag texto salida:sal finTexto closetag
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador,"TEXTO");
+            parser.contador++;
+            ASTNodo conte = new ASTNodo(parser.contador,"SALIDA");
+            parser.contador++;
+            sal = sal.replace("<","");
+            sal = sal.replace(">","");
+            ASTNodo nodo = new ASTNodo(parser.contador, sal);
+            parser.contador++;
+            conte.addHijo(nodo);
+            padre.addHijo(conte);
+            parser.raiz = padre;
+          :}
+          ;
+L_ATTS::= L_ATTS:h1 ATRIBUTO:h2
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador,"L_ATTS");
+          parser.contador++;
+          padre.addHijo(h1);
+          padre.addHijo(h2);
+          RESULT = padre;
+        :}
+        |ATRIBUTO:h1
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador,"L_ATTS");
+          parser.contador++;
+          padre.addHijo(h1);
+          RESULT = padre;
+        :}
+        ;
+//--------------------------------------------------------------------
+NOM_A ::=
+          |id:val
+          {:
+            ASTNodo r = new ASTNodo(parser.contador,val);
+            parser.contador++;
+            RESULT = r;
+          :}
+          |grupo:val
+          {:
+            ASTNodo r = new ASTNodo(parser.contador,val);
+            parser.contador++;
+            RESULT = r;
+          :}
+          |alto:val
+          {:
+            ASTNodo r = new ASTNodo(parser.contador,val);
+            parser.contador++;
+            RESULT = r;
+          :}
+          |ancho:val
+          {:
+            ASTNodo r = new ASTNodo(parser.contador,val);
+            parser.contador++;
+            RESULT = r;
+          :}
+          |alineado:val
+          {:
+            ASTNodo r = new ASTNodo(parser.contador,val);
+            parser.contador++;
+            RESULT = r;
+          :}
+          ;
+//--------------------------------------------------------------------
+ATRIBUTO ::=NOM_A:h1  igual cadena:cad pcoma
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, h1.getEtiqueta().toUpperCase());
+            parser.contador++;
+            cad = cad.replace("\"","");
+            ASTNodo hijo = new ASTNodo(parser.contador,cad);
+            parser.contador++;
+            padre.addHijo(hijo);
+            RESULT = padre;
+          :};
