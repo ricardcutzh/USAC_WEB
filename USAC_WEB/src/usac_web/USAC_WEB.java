@@ -13,6 +13,7 @@ import CHTML.Auxiliares.*;
 import CHTML.LexCHTML;
 import CHTML.parser;
 import AST.ASTNodo;
+import CCSS.*;
 import static CHTML.parser.raiz;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -28,8 +29,12 @@ public class USAC_WEB {
     
     
     public static void main(String[] args) throws IOException {
-        String hola = "hola";
-        
+        //pruebaCCSS();
+        pruebaCHTML();
+    }
+    
+    public static void pruebaCHTML()
+    {
         try {
             // TODO code application logic here
             LexCHTML lex = new LexCHTML(new FileReader("entrada.txt"));
@@ -49,6 +54,33 @@ public class USAC_WEB {
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(USAC_WEB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public static void pruebaCCSS()
+    {
+        try
+        {
+            CCSS.LexCSS lexer = new CCSS.LexCSS(new FileReader("CSSP.txt"));
+            CCSS.parser p = new CCSS.parser(lexer);
+            p.parse();
+            if(CCSS.parser.raiz!=null)
+            {
+                System.out.println(CCSS.parser.raiz.graficaAST(CCSS.parser.raiz));
+            }
+            System.out.println("//----------------------------------------------------------------------------------------------");
+            System.out.println("//-----------------------------------ERRORES----------------------------------------------------");
+            int er =  CCSS.parser.errores.size();
+            for(int x = 0; x< er; x++)
+            {
+                System.out.println("Error: "+CCSS.parser.errores.get(x).getLexema()+" | LINEA: "+CCSS.parser.errores.get(x).getLine()+" | COLUMNA: "+CCSS.parser.errores.get(x).getColumn());
+            }
+            System.out.println("//----------------------------------------------------------------------------------------------");
+            System.out.println("//----------------------------------------------------------------------------------------------");
+        }
+        catch(Exception ex)
+        {
+            
         }
     }
     

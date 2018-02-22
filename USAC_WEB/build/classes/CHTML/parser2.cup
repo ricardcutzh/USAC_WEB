@@ -58,7 +58,7 @@ action code
 terminal String opentag,closetag,igual,pcoma, coma, cadena, tTexto, chtml, finChtml, encabezado, finEncabezado, cuerpo, finCuerpo;
 terminal String cjs, finCjs, ccss, finCcss, titulo, finTitulo, panel, finPanel, imagen, finImagen, enlace, finEnlace, saltoFin;
 terminal String fondo, ruta, palabra, click, id, grupo, alto, ancho, alineado, path, boton, finBoton, tabla, finTabla, spinner, finSpinner;
-terminal String fil_t, finFil_t, cb, finCb, ct, finCt, tTexA, caja_texto, finCaja_texto, caja, finCaja, opcion, finOpcion, valor;
+terminal String fil_t, finFil_t, cb, finCb, ct, finCt, tTexA, caja_texto, finCaja_texto, caja, finCaja, opcion, finOpcion, valor, entero;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 non terminal ASTNodo INICIO_CHTML, ENCABEZADO, CUERPO, FONDO, L_ENCABEZADO, CJS, RUTA, CCSS, TITULO, TXT, PANEL;
 non terminal ASTNodo ATRIBUTO, NOM_A, L_CUERPO, L_ATTS, IMAGEN, BOTON, ENLACE, TABLA, FILATABLA, C_ENCABEZADO, CELDA;
@@ -729,6 +729,24 @@ FILATABLA ::= opentag fil_t closetag opentag finFil_t closetag
               {padre.addHijo(h1);}
               RESULT = padre;
             :}
+            | opentag fil_t L_ATTS:h1 closetag opentag finFil_t closetag
+            {:
+              ASTNodo padre = new ASTNodo(parser.contador, "FILATABLA");
+              parser.contador++;
+              if(h1!=null)
+              {padre.addHijo(h1);}
+              RESULT = padre;
+            :}
+            | opentag fil_t L_ATTS:h1 closetag L_CELDAS:h2 opentag finFil_t closetag
+            {:
+              ASTNodo padre = new ASTNodo(parser.contador, "FILATABLA");
+              parser.contador++;
+              if(h1!=null)
+              {padre.addHijo(h1);}
+              if(h2!=null)
+              {padre.addHijo(h2);}
+              RESULT = padre;
+            :}
             | error finFil_t closetag
             {:
               ASTNodo padre = new ASTNodo(parser.contador, "FILATABLA");
@@ -743,6 +761,24 @@ C_ENCABEZADO ::= opentag cb closetag opentag finCb closetag
               parser.contador++;
               RESULT = padre;
             :}
+            | opentag cb L_ATTS:h1 closetag TXT:h2 opentag finCb closetag
+            {:
+              ASTNodo padre = new ASTNodo(parser.contador, "C_ENCABEZADO");
+              parser.contador++;
+              if(h1!=null)
+              {padre.addHijo(h1);}
+              if(h2!=null)
+              {padre.addHijo(h2);}
+              RESULT = padre;
+            :}
+            | opentag cb L_ATTS:h1 closetag opentag finCb closetag
+            {:
+              ASTNodo padre = new ASTNodo(parser.contador, "C_ENCABEZADO");
+              parser.contador++;
+              if(h1!=null)
+              {padre.addHijo(h1);}
+              RESULT = padre;
+            :}
             | opentag cb closetag TXT:h1 opentag finCb closetag
             {:
               ASTNodo padre = new ASTNodo(parser.contador, "C_ENCABEZADO");
@@ -751,12 +787,32 @@ C_ENCABEZADO ::= opentag cb closetag opentag finCb closetag
               {padre.addHijo(h1);}
               RESULT = padre;
             :}
+            | opentag cb L_ATTS:h1 closetag BOTON:h2 opentag finCb closetag
+            {:
+              ASTNodo padre = new ASTNodo(parser.contador, "C_ENCABEZADO");
+              parser.contador++;
+              if(h1!=null)
+              {padre.addHijo(h1);}
+              if(h2!=null)
+              {padre.addHijo(h2);}
+              RESULT = padre;
+            :}
             | opentag cb closetag BOTON:h1 opentag finCb closetag
             {:
               ASTNodo padre = new ASTNodo(parser.contador, "C_ENCABEZADO");
               parser.contador++;
               if(h1!=null)
               {padre.addHijo(h1);}
+              RESULT = padre;
+            :}
+            | opentag cb L_ATTS:h1 closetag IMAGEN:h2 opentag finCb closetag
+            {:
+              ASTNodo padre = new ASTNodo(parser.contador, "C_ENCABEZADO");
+              parser.contador++;
+              if(h1!=null)
+              {padre.addHijo(h1);}
+              if(h2!=null)
+              {padre.addHijo(h2);}
               RESULT = padre;
             :}
             | opentag cb closetag IMAGEN:h1 opentag finCb closetag
@@ -781,6 +837,24 @@ CELDA ::= opentag ct closetag opentag finCt closetag
           parser.contador++;
           RESULT = padre;
         :}
+        | opentag ct L_ATTS:h1 closetag opentag finCt closetag
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "CELDA");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          RESULT = padre;
+        :}
+        | opentag ct L_ATTS:h1 closetag TXT:h2 opentag finCt closetag
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "CELDA");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
         | opentag ct closetag TXT:h1 opentag finCt closetag
         {:
           ASTNodo padre = new ASTNodo(parser.contador, "CELDA");
@@ -789,12 +863,32 @@ CELDA ::= opentag ct closetag opentag finCt closetag
           {padre.addHijo(h1);}
           RESULT = padre;
         :}
+        | opentag ct L_ATTS:h1 closetag BOTON:h2 opentag finCt closetag
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "CELDA");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
         | opentag ct closetag BOTON:h1 opentag finCt closetag
         {:
           ASTNodo padre = new ASTNodo(parser.contador, "CELDA");
           parser.contador++;
           if(h1!=null)
           {padre.addHijo(h1);}
+          RESULT = padre;
+        :}
+        | opentag ct L_ATTS:h1 closetag IMAGEN:h2 opentag finCt closetag
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "CELDA");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          if(h2!=null)
+          {padre.addHijo(h2);}
           RESULT = padre;
         :}
         | opentag ct closetag IMAGEN:h1 opentag finCt closetag

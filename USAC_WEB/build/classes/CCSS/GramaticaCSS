@@ -1,0 +1,99 @@
+////////////////////////////////////////////////////////////////////
+ER COMENTARIO UNA LINEA = \/\/(.)*
+ER COMENTARIO MULTILINEA = \/\*[^]*\*\/
+--------------------------------------------------------------------
+INICIO ::= LISTA_CSS
+--------------------------------------------------------------------
+LISTA_CSS ::= LISTA_CSS DEFINICION
+            | DEFINICION
+--------------------------------------------------------------------
+DEFINICION ::= id "[" CUERPO_DEFINCION "]"
+--------------------------------------------------------------------
+CUERPO_DEFINCION ::= CUERPO_DEFINCION GRUPO
+                  | CUERPO_DEFINCION ID
+                  | GRUPO
+                  | ID
+--------------------------------------------------------------------
+GRUPO ::= "grupo" "(" identificador ")" ";" LISTA_PROPIEDADEDS
+--------------------------------------------------------------------
+ID ::= "id" "(" identificador ")" ";" LISTA_PROPIEDADEDS
+--------------------------------------------------------------------
+LISTA_PROPIEDADEDS ::= LISTA_PROPIEDADEDS ALINEADO
+                  | LISTA_PROPIEDADEDS P_TEXTO
+                  | LISTA_PROPIEDADEDS P_FORMATO
+                  | LISTA_PROPIEDADEDS P_LETRA
+                  | LISTA_PROPIEDADEDS P_FONDO
+                  | LISTA_PROPIEDADEDS P_AUTOSIZE
+                  | LISTA_PROPIEDADEDS P_VIS
+                  | LISTA_PROPIEDADEDS P_BORDE
+                  | LISTA_PROPIEDADEDS P_OPAQUE
+                  | LISTA_PROPIEDADEDS P_COLOR
+                  | P_OPAQUE
+                  | P_COLOR
+                  | P_VIS
+                  | P_AUTOSIZE
+                  | P_FONDO
+                  | P_FORMATO
+                  | P_LETRA
+                  | P_TEXTO
+                  | ALINEADO
+--------------------------------------------------------------------
+ALINEADO ::= "alineado" ":" "=" ALINEACIONES ";"
+ALINEACIONES ::= "izquierda"
+              | "derecha"
+              | "centrado"
+              | "justificado"
+--------------------------------------------------------------------
+P_TEXTO ::= "texto" ":" "=" CADENAS ";"
+--------------------------------------------------------------------
+P_FORMATO ::= "formato" ":" "=" LISTA_FORMATOS ";"
+LISTA_FORMATOS ::= LISTA_FORMATOS "," "negrilla"
+                | LISTA_FORMATOS "," "cursiva"
+                | LISTA_FORMATOS "," "mayuscula"
+                | LISTA_FORMATOS "," "minuscula"
+                | LISTA_FORMATOS "," "capital-t"
+                | "negrilla"
+                | "cursiva"
+                | "mayuscula"
+                | "minuscula"
+                | "capital-t"
+--------------------------------------------------------------------
+P_LETRA ::= "letra" ":" "=" CADENAS ";"
+--------------------------------------------------------------------
+P_TAMTEXT ::= "tamtext" ":" "=" EXP ";"
+--------------------------------------------------------------------
+P_FONDO ::= "fondoelemento" ":" "=" CADENAS ";"
+--------------------------------------------------------------------
+P_AUTOSIZE ::= "autoredimension" ":" "=" "[" BOOL "," DIR "]" ";"
+--------------------------------------------------------------------
+P_VIS ::= "visible" ":" "=" BOOL ";"
+--------------------------------------------------------------------
+P_BORDE ::= "borde" ":" "=" "[" EXP "," CADENAS "," BOOL "]" ";"
+--------------------------------------------------------------------
+P_OPAQUE ::= "opaque" ":" "=" BOOL ";"
+--------------------------------------------------------------------
+P_COLOR :: = "colortext" ":" "=" CADENAS ";"
+///////////////////////OTROS////////////////////////////////////////
+EXP ::= E
+E ::= E "+" T
+    | E "-" T
+    | T
+T ::= T "*" F
+    | T "/" F
+    | F
+F ::= entero
+    | decimal
+    | cadena
+    | (E)
+--------------------------------------------------------------------
+CADENAS ::= A
+A ::= A "+" B
+    |B
+B ::= cadena
+--------------------------------------------------------------------
+BOOL ::= true
+        | false
+--------------------------------------------------------------------
+DIR ::= horizontal
+      | vertical
+////////////////////////////////////////////////////////////////////

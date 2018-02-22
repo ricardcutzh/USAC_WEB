@@ -1,0 +1,24 @@
+
+ese_es_id[
+GRUPO(grupo_1);
+ "hola" Alineado := izquierda;
+Texto := "hola "+"mundo";
+formato := minuscula, mayuscula, negrilla;
+formato 85+4 :=minuscula ;
+Letra := "Arial";
+tamtext := 45;
+fondoelemento = := "verde";
+autoredimension :=[false, horizontal];
+]
+
+ese_es_id[
+GRUPO(grupo_1);
+ "hola" Alineado := izquierda;
+Texto := "hola "+"mundo";
+formato := minuscula, mayuscula, negrilla;
+formato 85+4 :=minuscula ;
+Letra := "Arial";
+tamtext := 45;
+fondoelemento = := "verde";
+autoredimension :=[false, horizontal];
+]

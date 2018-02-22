@@ -1,0 +1,854 @@
+/*----------------------------------------AREA DE CODIGO DE USUARIO---------------------------------------------------------*/
+//------->PAQUETES E IMPORTACIONES
+package CCSS;
+import java_cup.runtime.*;
+import AST.*;
+import java.util.ArrayList;
+
+//--------------------->CODIGO DE PARSER, VARIABLES Y METODOS
+parser code
+{:
+    public static ASTNodo raiz;
+    int contador;
+    public static ArrayList<TError> errores;
+    //METODO PARA ERROR RECUPERABLE
+    public void syntax_error(Symbol s)
+    {
+      try
+      {
+        TError errorSint = new TError(s.value.toString(), "Error Sintactico", "Token no Esperado", (s.right+1), s.left);
+        errores.add(errorSint);
+      }
+      catch(Exception ex)
+      {
+        System.out.println("ERROR RECUPERADO");
+      }
+      /*String lexema = s.value.toString();
+      int fila = s.right;
+      int columna = s.left;
+
+      System.out.println("--------------Error Sintactico Recuperado------------------------");
+      System.out.println("Lexema: "+lexema);
+      System.out.println("Fila: "+fila);
+      System.out.println("Columna: "+columna);*/
+
+    }
+
+    //METODO PARA ERRORES QUE NO SE RECUPERAN
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
+    {
+      try
+      {
+        /*String lexema = s.value.toString();
+        int fila = s.right;
+        int columna = s.left;
+
+        System.out.println("--------------Error Sintactico PANICO------------------------");
+        System.out.println("Lexema: "+lexema);
+        System.out.println("Fila: "+fila);
+        System.out.println("Columna: "+columna);*/
+        TError errorSint = new TError(s.value.toString(), "Error Sintactico", "Token no Esperado", (s.right+1), s.left);
+        errores.add(errorSint);
+      }
+      catch(Exception ex)
+      {
+        System.out.println("ERROR IRRECUPERABLE");
+      }
+    }
+
+:}
+
+//-------------->CODIGO PARA LAS ACCIONES GRAMATICALES
+action code
+{:
+
+:}
+/*----------------------------------------AREA DE DECLARACIONES-------------------------------------------------------------*/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+terminal String identificador, oBracket, cBracket, cadena, Ttrue, Tfalse, entero, decimal, mas, menos, por, div, op, cp, grupo, id;
+terminal String pcoma, alineado, izquierda, derecha, justificado, centrado, dosP, igual, cadena2, texto, formato, negrilla;
+terminal String cursiva, mayus, minus, capital, coma, letra, tamtext, felemento, horizontal, vertical, autoRed, visible, borde;
+terminal String opaque, colortext;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+non terminal ASTNodo INICIO_CSS, L_CSS, DEF, EXP, E, T, F, C_DEF, GRUPO, ID, PRODIEDADES, ALINEADO, ALINEACIONES;
+non terminal ASTNodo EXPCAD, A, B, TEXTO, FORMATO, L_FORMATO, LETRA, TAMTEXT, FONDOELEM, BOOLEAN, DIRECCION, AUTOREM, VISIBLE;
+non terminal ASTNodo BORDE, OPAQUE, COLORTEXT, PERROR;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//---------->PRECENDENCIAS DE MENOR A MAYOR
+
+//--------------> DONDE INICIA
+start with INICIO_CSS;
+/*----------------------------------------AREA DE ACCIONES SEMANTICAS-------------------------------------------------------*/
+//-------------------------------------------------------------------------------------------
+INICIO_CSS  ::= {:parser.errores = new ArrayList<>(); parser.contador = 0;:} L_CSS:h1
+                {:
+                  ASTNodo padre = new ASTNodo(parser.contador, "INICIO_CSS");
+                  parser.contador++;
+                  if(h1!=null)
+                  {padre.addHijo(h1);}
+                  parser.raiz = padre;
+                :}
+                ;
+////////////////////////////DEFINICIONES DEL CCSS/////////////////////////////////////////////
+L_CSS ::= L_CSS:h1 DEF:h2
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "L_CSS");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        | DEF:h1
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "L_CSS");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          RESULT = padre;
+        :}
+        ;
+//----------------------------------------------------------------------------------------------
+DEF ::= identificador:nom oBracket cBracket
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "DEF");
+          parser.contador++;
+          ASTNodo nombre = new ASTNodo(parser.contador, nom);
+          parser.contador++;
+          padre.addHijo(nombre);
+          RESULT = padre;
+        :}
+        |identificador:nom oBracket C_DEF:h1 cBracket
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "DEF");
+          parser.contador++;
+          ASTNodo nombre = new ASTNodo(parser.contador, nom);
+          parser.contador++;
+          padre.addHijo(nombre);
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          RESULT = padre;
+        :}
+        | error cBracket
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "DEF");
+          parser.contador++;
+          RESULT = padre;
+        :}
+        ;
+//----------------------------------------------------------------------------------------------
+C_DEF ::= C_DEF:h1 GRUPO:h2
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "C_DEF");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        | C_DEF:h1 ID:h2
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "C_DEF");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        | GRUPO:h1
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "C_DEF");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          RESULT = padre;
+        :}
+        | ID:h1
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "C_DEF");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          RESULT = padre;
+        :}
+        ;
+//----------------------------------------------------------------------------------------------
+GRUPO ::= grupo op identificador:ide cp pcoma PRODIEDADES:h2
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "GRUPO");
+          parser.contador++;
+          ASTNodo hij = new ASTNodo(parser.contador, ide);
+          parser.contador++;
+          padre.addHijo(hij);
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        | grupo op identificador:ide cp pcoma
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "GRUPO");
+          parser.contador++;
+          ASTNodo hij = new ASTNodo(parser.contador, ide);
+          parser.contador++;
+          padre.addHijo(hij);
+          RESULT = padre;
+        :}
+        ;
+//----------------------------------------------------------------------------------------------
+ID ::= id op identificador:ide cp pcoma PRODIEDADES:h2
+     {:
+       ASTNodo padre = new ASTNodo(parser.contador, "ID");
+       parser.contador++;
+       ASTNodo hij = new ASTNodo(parser.contador, ide);
+       parser.contador++;
+       padre.addHijo(hij);
+       if(h2!=null)
+       {padre.addHijo(h2);}
+       RESULT = padre;
+     :}
+     | id op identificador:ide cp pcoma
+     {:
+       ASTNodo padre = new ASTNodo(parser.contador, "ID");
+       parser.contador++;
+       ASTNodo hij = new ASTNodo(parser.contador, ide);
+       parser.contador++;
+       padre.addHijo(hij);
+       RESULT = padre;
+     :}
+     ;
+//----------------------------------------------------------------------------------------------
+PRODIEDADES ::= PRODIEDADES:h1 ALINEADO:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | PRODIEDADES:h1 TEXTO:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | PRODIEDADES:h1 FORMATO:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | PRODIEDADES:h1 LETRA:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | PRODIEDADES:h1 TAMTEXT:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | PRODIEDADES:h1 FONDOELEM:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | PRODIEDADES:h1 AUTOREM:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | PRODIEDADES:h1 VISIBLE:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | PRODIEDADES:h1 BORDE:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | PRODIEDADES:h1 OPAQUE:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | PRODIEDADES:h1 COLORTEXT:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | COLORTEXT:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | OPAQUE:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | BORDE:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | VISIBLE:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | AUTOREM:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | FONDOELEM:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | TAMTEXT:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | LETRA:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | FORMATO:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | TEXTO:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | ALINEADO:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "PRODIEDADES");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              ;
+////////////////////////////////////////////////////////////////////////////////////////////////
+ALINEADO ::= alineado dosP igual ALINEACIONES:h1 pcoma
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "ALINEADO");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            RESULT = padre;
+          :}
+          | PERROR
+          ;
+ALINEACIONES ::= izquierda:iz
+              {:
+                ASTNodo al = new ASTNodo(parser.contador, iz);
+                parser.contador++;
+                RESULT = al;
+              :}
+              | derecha:der
+              {:
+                ASTNodo al = new ASTNodo(parser.contador, der);
+                parser.contador++;
+                RESULT = al;
+              :}
+              | centrado:ce
+              {:
+                ASTNodo al = new ASTNodo(parser.contador, ce);
+                parser.contador++;
+                RESULT = al;
+              :}
+              | justificado:js
+              {:
+                ASTNodo al = new ASTNodo(parser.contador, js);
+                parser.contador++;
+                RESULT = al;
+              :}
+              ;
+//----------------------------------------------------------------------------------------------
+TEXTO ::= texto dosP igual EXPCAD:h1 pcoma
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "TEXTO");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            RESULT = padre;
+          :}
+          ;
+//----------------------------------------------------------------------------------------------
+FORMATO ::= formato dosP igual L_FORMATO:h1 pcoma
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "FORMATO");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            RESULT = padre;
+          :}
+          | error igual
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "FORMATO");
+            parser.contador++;
+            RESULT = padre;
+          :}
+          ;
+L_FORMATO ::= L_FORMATO:h1 coma negrilla:n
+            {:
+              ASTNodo padre = new ASTNodo(parser.contador, "L_FORMATO");
+              parser.contador++;
+              if(h1!=null)
+              {padre.addHijo(h1);}
+              padre.addHijo(new ASTNodo(parser.contador, n));
+              parser.contador++;
+              RESULT = padre;
+            :}
+            | L_FORMATO:h1 coma cursiva:n
+            {:
+              ASTNodo padre = new ASTNodo(parser.contador, "L_FORMATO");
+              parser.contador++;
+              if(h1!=null)
+              {padre.addHijo(h1);}
+              padre.addHijo(new ASTNodo(parser.contador, n));
+              parser.contador++;
+              RESULT = padre;
+            :}
+            | L_FORMATO:h1 coma mayus:n
+            {:
+              ASTNodo padre = new ASTNodo(parser.contador, "L_FORMATO");
+              parser.contador++;
+              if(h1!=null)
+              {padre.addHijo(h1);}
+              padre.addHijo(new ASTNodo(parser.contador, n));
+              parser.contador++;
+              RESULT = padre;
+            :}
+            | L_FORMATO:h1 coma minus:n
+            {:
+              ASTNodo padre = new ASTNodo(parser.contador, "L_FORMATO");
+              parser.contador++;
+              if(h1!=null)
+              {padre.addHijo(h1);}
+              padre.addHijo(new ASTNodo(parser.contador, n));
+              parser.contador++;
+              RESULT = padre;
+            :}
+            | L_FORMATO:h1 coma capital:n
+            {:
+              ASTNodo padre = new ASTNodo(parser.contador, "L_FORMATO");
+              parser.contador++;
+              if(h1!=null)
+              {padre.addHijo(h1);}
+              padre.addHijo(new ASTNodo(parser.contador, n));
+              parser.contador++;
+              RESULT = padre;
+            :}
+            | negrilla:n1
+            {:
+              ASTNodo padre = new ASTNodo(parser.contador, "L_FORMATO");
+              parser.contador++;
+              padre.addHijo(new ASTNodo(parser.contador, n1));
+              parser.contador++;
+              RESULT = padre;
+            :}
+            | cursiva:n1
+            {:
+              ASTNodo padre = new ASTNodo(parser.contador, "L_FORMATO");
+              parser.contador++;
+              padre.addHijo(new ASTNodo(parser.contador, n1));
+              parser.contador++;
+              RESULT = padre;
+            :}
+            | mayus:n1
+            {:
+              ASTNodo padre = new ASTNodo(parser.contador, "L_FORMATO");
+              parser.contador++;
+              padre.addHijo(new ASTNodo(parser.contador, n1));
+              parser.contador++;
+              RESULT = padre;
+            :}
+            | minus:n1
+            {:
+              ASTNodo padre = new ASTNodo(parser.contador, "L_FORMATO");
+              parser.contador++;
+              padre.addHijo(new ASTNodo(parser.contador, n1));
+              parser.contador++;
+              RESULT = padre;
+            :}
+            | capital:n1
+            {:
+              ASTNodo padre = new ASTNodo(parser.contador, "L_FORMATO");
+              parser.contador++;
+              padre.addHijo(new ASTNodo(parser.contador, n1));
+              parser.contador++;
+              RESULT = padre;
+            :}
+            ;
+//----------------------------------------------------------------------------------------------
+LETRA ::= letra dosP igual EXPCAD:h1 pcoma
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "LETRA");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            RESULT = padre;
+          :}
+          ;
+//----------------------------------------------------------------------------------------------
+TAMTEXT ::= tamtext dosP igual EXP:h1 pcoma
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "TAMTEXT");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            RESULT = padre;
+          :}
+          ;
+//----------------------------------------------------------------------------------------------
+FONDOELEM ::= felemento dosP igual EXPCAD:h1 pcoma
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "FONDOELEM");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            RESULT = padre;
+          :}
+          ;
+//----------------------------------------------------------------------------------------------
+AUTOREM ::= autoRed dosP igual oBracket BOOLEAN:h1 coma DIRECCION:h2 cBracket pcoma
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "AUTOREM");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            if(h2!=null)
+            {padre.addHijo(h2);}
+            RESULT = padre;
+          :}
+          ;
+//----------------------------------------------------------------------------------------------
+VISIBLE ::= visible dosP igual BOOLEAN:h1 pcoma
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "VISIBLE");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            RESULT = padre;
+          :}
+          ;
+//----------------------------------------------------------------------------------------------
+BORDE ::= borde dosP igual oBracket EXP:h1 coma EXPCAD:h2 coma BOOLEAN:h3 cBracket
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "BORDE");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          if(h3!=null)
+          {padre.addHijo(h3);}
+          RESULT = padre;
+        :}
+        ;
+//----------------------------------------------------------------------------------------------
+OPAQUE ::= opaque dosP igual BOOLEAN:h1 pcoma
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "OPAQUE");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          RESULT = padre;
+        :}
+        ;
+//----------------------------------------------------------------------------------------------
+COLORTEXT ::= colortext dosP igual EXPCAD:h1 pcoma
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "COLORTEXT");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          RESULT = padre;
+        :}
+        ;
+////////////////////////////////////////////////////////////////////////////////////////////////
+EXP ::= E:h1
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "EXP");
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      RESULT = padre;
+    :}
+    ;
+E ::= E:h1 mas T:h2
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "E");
+      parser.contador++;
+      ASTNodo oper = new ASTNodo(parser.contador, "+");
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      padre.addHijo(oper);
+      if(h2!=null)
+      {padre.addHijo(h2);}
+      RESULT = padre;
+    :}
+    | E:h1 menos T:h2
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "E");
+      parser.contador++;
+      ASTNodo oper = new ASTNodo(parser.contador, "-");
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      padre.addHijo(oper);
+      if(h2!=null)
+      {padre.addHijo(h2);}
+      RESULT = padre;
+    :}
+    | T:h1
+    {:
+      RESULT = h1;
+    :}
+    ;
+T ::= T:h1 por F:h2
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "T");
+      parser.contador++;
+      ASTNodo oper = new ASTNodo(parser.contador, "*");
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      padre.addHijo(oper);
+      if(h2!=null)
+      {padre.addHijo(h2);}
+      RESULT = padre;
+    :}
+    | T:h1 div F:h2
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "T");
+      parser.contador++;
+      ASTNodo oper = new ASTNodo(parser.contador, "/");
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      padre.addHijo(oper);
+      if(h2!=null)
+      {padre.addHijo(h2);}
+      RESULT = padre;
+    :}
+    | F:f
+    {:
+      RESULT = f;
+    :}
+    ;
+F ::= entero:ent
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "ENTERO");
+      parser.contador++;
+      ASTNodo hijo = new ASTNodo(parser.contador,ent);
+      parser.contador++;
+      padre.addHijo(hijo);
+      RESULT = padre;
+    :}
+    | decimal:dec
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "DECIMAL");
+      parser.contador++;
+      ASTNodo hijo = new ASTNodo(parser.contador,dec);
+      parser.contador++;
+      padre.addHijo(hijo);
+    :}
+    | cadena:cad
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "CADENA");
+      parser.contador++;
+      cad = cad.replace("\"","");
+      ASTNodo hijo = new ASTNodo(parser.contador,cad);
+      parser.contador++;
+      padre.addHijo(hijo);
+      RESULT = padre;
+    :}
+    | op E:h1 cp
+    {:
+      RESULT = h1;
+    :}
+    ;
+//----------------------------------------------------------------------------------------------
+EXPCAD ::= A:h1
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "EXPCAD");
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        RESULT = padre;
+      :}
+      ;
+
+A ::= A:h1 mas B:h2
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "EXPCAD");
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      padre.addHijo(new ASTNodo(parser.contador, "+"));
+      parser.contador++;
+      if(h2!=null)
+      {padre.addHijo(h2);}
+      RESULT = padre;
+    :}
+    |B:h1
+    {:
+      RESULT = h1;
+    :}
+    ;
+B ::= cadena:cad
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "CADENA");
+        parser.contador++;
+        cad = cad.replace("\"","");
+        ASTNodo cade = new ASTNodo(parser.contador, cad);
+        parser.contador++;
+        padre.addHijo(cade);
+        RESULT = padre;
+      :}
+      | cadena2: cad
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "CADENA");
+        parser.contador++;
+        cad = cad.replace("\'","");
+        ASTNodo cade = new ASTNodo(parser.contador, cad);
+        parser.contador++;
+        padre.addHijo(cade);
+        RESULT = padre;
+      :}
+      ;
+//----------------------------------------------------------------------------------------------
+BOOLEAN ::= Tfalse:h1
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "BOOLEAN");
+            parser.contador++;
+            padre.addHijo(new ASTNodo(parser.contador, h1));
+            RESULT = padre;
+          :}
+          | Ttrue:h1
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "BOOLEAN");
+            parser.contador++;
+            padre.addHijo(new ASTNodo(parser.contador, h1));
+            RESULT = padre;
+          :}
+          ;
+//----------------------------------------------------------------------------------------------
+DIRECCION ::= horizontal:h1
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "DIRECCION");
+            parser.contador++;
+            padre.addHijo(new ASTNodo(parser.contador, h1));
+            parser.contador++;
+            RESULT = padre;
+          :}
+          | vertical:h1
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "DIRECCION");
+            parser.contador++;
+            padre.addHijo(new ASTNodo(parser.contador, h1));
+            parser.contador++;
+            RESULT = padre;
+          :}
+          ;
+//----------------------------------------------------------------------------------------------
+PERROR::= error pcoma
+        {:
+          RESULT = null;
+        :}
+        ;
+////////////////////////////////////////////////////////////////////////////////////////////////
