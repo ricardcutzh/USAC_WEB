@@ -1,0 +1,52 @@
+//----------------------------------------------------------------------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+VAR ::= dimv C_VAR:h1 pcoma
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "VAR");
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        RESULT = padre;
+      :}
+      | dimv error pcoma
+      {:
+        RESULT = null;
+      :}
+      ;
+
+C_VAR ::= L_ID:h1
+      {:
+          ASTNodo padre = new ASTNodo(parser.contador, "C_VAR");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          RESULT = padre;
+      :}
+      ;
+
+L_ID ::= L_ID:h1 coma identificador:ide
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "L_ID");
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        ASTNodo ide = new ASTNodo(parser.contador, id);
+        parser.contador++;
+        padre.addHijo(ide);
+        RESULT = padre;
+      :}
+      | identificador:id
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "L_ID");
+        parser.contador++;
+        ASTNodo ide = new ASTNodo(parser.contador, id);
+        parser.contador++;
+        padre.addHijo(ide);
+        RESULT = padre;
+      :}
+      | identificador error coma
+      {:RESULT = null;}
+      | error identificador
+      {:RESULT = null;}
+      ;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

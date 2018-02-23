@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 public class USAC_WEB {
 
     /**
@@ -30,7 +32,10 @@ public class USAC_WEB {
     
     public static void main(String[] args) throws IOException {
         //pruebaCCSS();
-        pruebaCHTML();
+        //pruebaCHTML();
+        pruebaCJS();
+        //System.out.println(es_fecha("0"));
+        //System.out.println(es_fecha_tiempo("01/12/201719:45:22"));
     }
     
     public static void pruebaCHTML()
@@ -84,4 +89,82 @@ public class USAC_WEB {
         }
     }
     
+    public static void pruebaCJS()
+    {
+        try
+        {
+            CJS.LexCJS lexer = new CJS.LexCJS(new FileReader("CJSP.txt"));
+            CJS.parser p = new CJS.parser(lexer);
+            p.parse();
+            if(CJS.parser.raiz!=null)
+            {
+                System.out.println(CJS.parser.raiz.graficaAST(CJS.parser.raiz));
+            }
+            System.out.println("//----------------------------------------------------------------------------------------------");
+            System.out.println("//-----------------------------------ERRORES----------------------------------------------------");
+            int er =  CJS.parser.errores.size();
+            for(int x = 0; x< er; x++)
+            {
+                System.out.println("Error: "+CJS.parser.errores.get(x).getLexema()+" | LINEA: "+CJS.parser.errores.get(x).getLine()+" | COLUMNA: "+CJS.parser.errores.get(x).getColumn());
+            }
+            System.out.println("//----------------------------------------------------------------------------------------------");
+            System.out.println("//----------------------------------------------------------------------------------------------");
+        }
+        catch(Exception ex)
+        {
+            System.out.println("ERROR AL PARSEAR...");
+        }
+    }
+
+    public static boolean es_fecha(String valor)
+    {
+        try
+        {
+            SimpleDateFormat d = new SimpleDateFormat("dd/MM/yyyy");
+            Date da = d.parse(valor);
+            if(valor.equals(d.format(da)))
+            {
+                return true;
+            }
+            return false;
+        }
+        catch(Exception ex)
+        {
+            return false;
+        }
+    }
+    
+    public static boolean es_fecha_tiempo(String valor)
+    {
+        try
+        {
+            SimpleDateFormat d = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Date da = d.parse(valor);
+            if(valor.equals(d.format(da)))
+            {
+                return true;
+            }
+            return false;
+        }
+        catch(Exception ex)
+        {
+            return false;
+        }
+    }
+    
+    public static boolean es_booleano(String valor)
+    {
+        try
+        {
+            if(valor.equals("false") || valor.equals("true"))
+            {
+                return true;
+            }
+            return false;
+        }
+        catch(Exception ex)
+        {
+            return false;
+        }
+    }
 }

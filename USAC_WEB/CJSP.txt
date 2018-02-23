@@ -1,0 +1,7 @@
+si (((2+3)>(2+4)) && (a<b) || true)
+{
+  dimv k:48;
+}
+SINO{
+  si(a > b){dimv c: "hola";}
+}
