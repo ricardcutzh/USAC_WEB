@@ -28,10 +28,13 @@ import java.util.ArrayList;
 entero = [0-9]+
 palabra = [a-zA-Z]([a-zA-Z]|[0-9]|_|-)*
 cadena = \"(\\.|[^\"\\])*\"
-comentarios = \<\/\/\-[^]*\-\/\/\>
-tokenTexto = \<TEXTO(.|[\n])*?FIN-TEXTO\>
-tokenTexA = \<TEXTO_A(.|[\n])*?FIN-TEXTO_A\>
+//comentarios = \<\/\/\-[^]*\-\/\/\>
+comentarios = "<//-"[^*]~"-//>"|"<//-"+"-//>"
+
+finTexto = >(.|\n)[^>]*<FIN-TEXTO>|>+<FIN-TEXTO>
+finTextoA = >(.|\n)[^>]*<FIN-TEXTO_A>|>+<FIN-TEXTO_A>
 path = [a-zA-Z]:\/[\\\S|*\S]?.[^\s\<\>]*
+especiales = ([#-\-]|\!|\:|[?-@]|\=|\^)+
 //------------> ESTADOS
 
 %%
@@ -74,6 +77,8 @@ path = [a-zA-Z]:\/[\\\S|*\S]?.[^\s\<\>]*
 <YYINITIAL> "spinner"           {/*System.out.println("Encontre:  spinner");*/ return new Symbol(Simbolos.spinner, yycolumn, yyline, yytext());}
 <YYINITIAL> "fin-spinner"       {/*System.out.println("Encontre:  fin-spinner");*/ return new Symbol(Simbolos.finSpinner, yycolumn, yyline, yytext());}
 <YYINITIAL> "salto-fin"         {/*System.out.println("Encontre:  salto-fin");*/ return new Symbol(Simbolos.saltoFin, yycolumn, yyline, yytext());}
+<YYINITIAL> "texto"             {/*System.out.println("Encontre:  salto-fin");*/ return new Symbol(Simbolos.texto, yycolumn, yyline, yytext());}
+<YYINITIAL> "texto_a"           {/*System.out.println("Encontre:  salto-fin");*/ return new Symbol(Simbolos.texto_a, yycolumn, yyline, yytext());}
 //---------->SIMBOLOS
 <YYINITIAL> "<"                 {/*System.out.println("Encontre:  opentag");*/ return new Symbol(Simbolos.opentag, yycolumn, yyline, yytext());}
 <YYINITIAL> ">"                 {/*System.out.println("Encontre:  closetag");*/ return new Symbol(Simbolos.closetag, yycolumn, yyline, yytext());}
@@ -94,10 +99,13 @@ path = [a-zA-Z]:\/[\\\S|*\S]?.[^\s\<\>]*
 <YYINITIAL> {entero}            {/*System.out.println("Encontre cadena: "+yytext());*/ return new Symbol(Simbolos.entero, yycolumn, yyline, yytext());}
 <YYINITIAL> {cadena}            {/*System.out.println("Encontre cadena: "+yytext());*/ return new Symbol(Simbolos.cadena, yycolumn, yyline, yytext());}
 <YYINITIAL> {path}              { System.out.println("Encontre Token PATH: "+yytext()); return new Symbol(Simbolos.path, yycolumn, yyline, yytext());}
-<YYINITIAL> {tokenTexto}        { System.out.println("Encontre Token texto: "+yytext()); return new Symbol(Simbolos.tTexto, yycolumn, yyline, yytext());}
-<YYINITIAL> {tokenTexA}         { System.out.println("Encontre Token Texto_A: "+yytext()); return new Symbol(Simbolos.tTexA, yycolumn, yyline, yytext());}
+<YYINITIAL> {finTexto}          { System.out.println("Encontre Token fin TEXTO: "+yytext()); return new Symbol(Simbolos.finTexto, yycolumn, yyline, yytext());}
+<YYINITIAL> {finTextoA}         { System.out.println("Encontre Token fin TEXTO A: "+yytext()); return new Symbol(Simbolos.finTextoA, yycolumn, yyline, yytext());}
+/*<YYINITIAL> {tokenTexto}        { System.out.println("Encontre Token texto: "+yytext()); return new Symbol(Simbolos.tTexto, yycolumn, yyline, yytext());}
+<YYINITIAL> {tokenTexA}         { System.out.println("Encontre Token Texto_A: "+yytext()); return new Symbol(Simbolos.tTexA, yycolumn, yyline, yytext());}*/
 <YYINITIAL> {palabra}           { /*System.out.println("Encontre Token titulo: "+yytext());*/ return new Symbol(Simbolos.palabra, yycolumn, yyline, yytext());}
 <YYINITIAL> {comentarios}       {/*System.out.println("Encontre comentario: "+yytext());*/ /*return new Symbol(Simbolos.entero, yycolumn, yyline, yytext());*/}
+<YYINITIAL> {especiales}        {/*System.out.println("Encontre comentario: "+yytext());*/ return new Symbol(Simbolos.especiales, yycolumn, yyline, yytext());}
 [ \t\r\f\n]                     {/*System.out.println("Encontre delimitador: "+yytext()); return new Symbol(Simbolos.delim, yycolumn, yyline, yytext());*/}
 //----------->ERRORES LEXICOS
 .                              {

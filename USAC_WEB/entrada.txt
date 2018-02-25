@@ -1,9 +1,76 @@
 <CHTML>
-  <ENCABEZADO TITULO>
-  <FIN-ENCABEZADO>
-  <CUERPO>
-
-    <TEXTO>  hhghggj <FIN-TEXTO>
-    <Texto_A> PRUEBA DEFINITIVA <FIN-TEXTO_A>
-  <FIN-CUERPO>
+<ENCABEZADO>
+<CCSS ruta="C:\proyecto1\archivo_entrada_estilo.ccss";><FIN-CCSS>
+<CJS ruta="C:\proyecto1\archivo_entrada_estilo.cjs";><FIN-CJS>
+<TITULO>PAGINA 1<FIN-TITULO>
+<FIN-ENCABEZADO>
+<CUERPO>
+  <PANEL id = "panel_1"; grupo= "panel_redireccion"; ancho = "716"; alto = "50";>
+    <BOTON grupo = "boton_redireccion"; alto = "35"; ancho = "120"; ruta= "C:\proyecto1\informacion.chtml";>Informacion<FIN-BOTON>
+    <BOTON grupo = "boton_redireccion"; alto = "35"; ancho = "160"; ruta= "C:\proyecto1\tabla.chtml";>Tabla Estudiante<FIN-BOTON>
+    <BOTON grupo = "boton_redireccion"; alto = "35"; ancho = "100"; ruta= "C:\proyecto1\index.chtml";> Principal <FIN-BOTON>
+  <FIN-PANEL>
+  <SALTO-FIN>
+  <PANEL id = "panel_2"; grupo="titulo"; ancho = "716"; alto = "50";>
+  <//- esta linea contiene salto de linea en el texto -//>
+  <TEXTO id="titulo_doc"; grupo= "titulo";>Calificacion Compiladores 2
+  Proyecto 2<FIN-TEXTO>
+  <SALTO-FIN>
+  <SALTO-FIN>
+  <SALTO-FIN>
+  <PANEL id = "panel_3"; grupo="titulo"; ancho = "716"; alto = "320";>
+    <PANEL id = "panel_4"; alto ="320"; ancho="400"; grupo="formulario_1";>
+    <TEXTO alto= "30"; ancho ="210"; id="titulo_fomulario"; grupo="formulario_1";>Formulario de Notas:<FIN-TEXTO>
+      <SALTO-FIN>
+      <SALTO-FIN>
+      <SALTO-FIN>
+      <TEXTO alto= "16"; ancho ="90"; grupo="formulario_1";>Nota Proyecto 1: <FIN-TEXTO>
+      <SPINNER ancho = "50"; alto ="25"; id="nota_1"; id="nota_1"; grupo="formulario_2";> <FIN-SPINNER>
+      <//- ingreso de espacios en blanco para las separaciones entre etiquetas -//>
+      <TEXTO>
+      <FIN-TEXTO>
+      <TEXTO alto= "16"; ancho ="90"; grupo="formulario_1";>Nota Proyecto 2: <FIN-TEXTO>
+      <SPINNER ancho = "50"; alto ="25"; id="nota_2"; id="nota_2"; grupo="formulario_2";> <FIN-SPINNER>
+      <SALTO-FIN>
+      <SALTO-FIN>
+      <TEXTO alto= "16"; ancho ="105"; grupo="formulario_1";>Nombre Estudiante:<FIN-TEXTO>
+      <CAJA_TEXTO alto= "20"; ancho ="200"; id="nombre"; grupo="formulario_2";>Nombre<FIN-CAJA_TEXTO>
+      <SALTO-FIN>
+      <TEXTO alto= "16"; ancho ="65"; grupo="formulario_1";>Comentario:<FIN-TEXTO>
+      <TEXTO_A alto="95"; ancho="200" ;id="comentario"; grupo="formulario_2";><FIN-TEXTO_A>
+      <SALTO-FIN>
+      <CAJA id="caja_1"; grupo="formulario_2";>
+        <OPCION valor= "promedio"; >Promedio<FIN-OPCION>
+        <OPCION valor= "suma"; >Suma<FIN-OPCION>
+        <OPCION valor= "resta"; >Resta<FIN-OPCION>
+        <OPCION valor= "multiplicar"; >Multiplicacion<FIN-OPCION>
+        <OPCION valor= "7"; >Modulo P1 % 7<FIN-OPCION>
+        <OPCION valor= "11"; >Modulo P2 % 11<FIN-OPCION>
+    <FIN-CAJA>
+    <BOTON click="operacion_datos()"; alto= "30"; ancho ="210"; id="boto_cal"; grupo="formulario_2";> Calcular <FIN-BOTON>
+    <FIN-PANEL>
+    <TEXTO> <FIN-TEXTO>
+    <TEXTO> <FIN-TEXTO>
+  <FIN-PANEL>
+  <TEXTO grupo = "salida_texto_1";>Opcion Seleccionada:<FIN-TEXTO>
+  <TEXTO alto = "15"; ancho="55"; grupo = "salida_texto_2"; id= "r_opcion";>--------<FIN-TEXTO>
+  <SALTO-FIN>
+  <TEXTO grupo = "salida_texto_1";>Nombre del Estudiante<FIN-TEXTO>
+  <TEXTO alto = "15"; ancho="55"; grupo = "salida_texto_2"; id= "r_nombre"; >--------<FIN-TEXTO>
+  <SALTO-FIN>
+  <TEXTO grupo = "salida_texto_1";>Resultado: <FIN-TEXTO>
+  <TEXTO alto = "15"; ancho="55"; grupo = "salida_texto_2"; id= "r_resultado"; >--------<FIN-TEXTO>
+  <SALTO-FIN>
+  <TEXTO grupo = "salida_texto_1";>Comentario Realizado<FIN-TEXTO>
+  <TEXTO alto = "120"; ancho="200"; grupo = "salida_texto_2"; id= "r_comentario"; >--------<FIN-TEXTO>
+  <SALTO-FIN>
+  <TEXTO grupo = "salida_texto_1";>Nota P1:<FIN-TEXTO>
+  <TEXTO alto = "15"; ancho="55"; grupo = "salida_texto_2"; id= "r_nota_1"; >--------<FIN-TEXTO>
+  <SALTO-FIN>
+  <TEXTO grupo = "salida_texto_1";>Nota P2:<FIN-TEXTO>
+  <TEXTO alto = "15"; ancho="55"; grupo = "salida_texto_2"; id= "r_nota_2"; >--------<FIN-TEXTO>
+  <SALTO-FIN>
+  <IMAGEN alto = "90"; ancho = "200"; id="imagen_1";><FIN-IMAGEN>
+ <FIN-PANEL>
+<FIN-CUERPO>
 <FIN-CHTML>

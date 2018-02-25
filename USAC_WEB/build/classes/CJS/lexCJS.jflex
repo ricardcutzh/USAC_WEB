@@ -43,6 +43,16 @@ cadena2 = \'(\\.|[^\'\\])*\'
 <YYINITIAL> "si"                          {return new Symbol(Simbolos.si ,yycolumn, yyline, yytext());}
 <YYINITIAL> "sino"                        {return new Symbol(Simbolos.sino ,yycolumn, yyline, yytext());}
 <YYINITIAL> "selecciona"                  {return new Symbol(Simbolos.selecciona ,yycolumn, yyline, yytext());}
+<YYINITIAL> "caso"                        {return new Symbol(Simbolos.caso ,yycolumn, yyline, yytext());}
+<YYINITIAL> "defecto"                     {return new Symbol(Simbolos.defecto ,yycolumn, yyline, yytext());}
+<YYINITIAL> "para"                        {return new Symbol(Simbolos.para ,yycolumn, yyline, yytext());}
+<YYINITIAL> "mientras"                    {return new Symbol(Simbolos.mientras ,yycolumn, yyline, yytext());}
+<YYINITIAL> "detener"                     {return new Symbol(Simbolos.detener ,yycolumn, yyline, yytext());}
+<YYINITIAL> "imprimir"                    {return new Symbol(Simbolos.imprimir ,yycolumn, yyline, yytext());}
+<YYINITIAL> "funcion"                     {return new Symbol(Simbolos.funcion ,yycolumn, yyline, yytext());}
+<YYINITIAL> "retornar"                    {return new Symbol(Simbolos.retornar ,yycolumn, yyline, yytext());}
+<YYINITIAL> "mensaje"                     {return new Symbol(Simbolos.mensaje ,yycolumn, yyline, yytext());}
+<YYINITIAL> "documento"                   {return new Symbol(Simbolos.documento ,yycolumn, yyline, yytext());}
 //---------->SIMBOLOS
 <YYINITIAL> ";"                           {return new Symbol(Simbolos.pcoma, yycolumn, yyline, yytext());}
 <YYINITIAL> ":"                           {return new Symbol(Simbolos.dosP, yycolumn, yyline, yytext());}

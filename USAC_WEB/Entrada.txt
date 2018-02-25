@@ -1,0 +1,360 @@
+
+<//-
+< ENLACE "hola"  %& > bcb < ENLACE > 546fd$%< FIN-ENLACE > < FIN-ENLACE >
+-//>            
+
+<//-
+
+<TABLA>
+    <FIL_T>
+        <CB>Nombre<FIN-CB>
+        <CB_T>Apellido<FIN-CB>
+        <CB_T>Edad<FIN-CB>
+    <FIN-FIL_T>
+    <FIL_T>
+        <CT>Mack<FIN-CT>
+        <CT>Hill<FIN-CT>
+        <CT>15<FIN-CT>
+    <FIN-FIL_T>
+    <FIL_T>
+        <CT>Stark<FIN-CT>
+        <CT>Iron<FIN-CT>
+        <CT>50<FIN-CT>
+    <FIN-FIL_T>
+<FIN-TABLA>
+
+<TABLA>
+    <FIL_T>
+        <3243>
+    <FIN-FIL_T>
+    <FIL_T>
+        <009>
+    <FIN-FIL_T>
+    <FIL_T>
+    <FIN-FIL_T>
+<FIN-TABLA>
+-//>    
+
+<CHTML>
+
+    <ENCABEZADO >
+        <CJS ruta = "C:/fichero/fichero_1.cjs";  > <FIN-CJS>
+        <CJS ruta = "C:/fichero/fichero_1.cjs";   > <FIN-CJS>
+        <TITULO> Es un tinto <FIN-TITULO>
+        <TITULO> Es un tinto <FIN-TITULO>
+    < FIN-ENCABEZADO >
+    <CUERPO >
+    
+        <PANEL>
+        <FIN-PANEL>
+        <PANEL ruta ="hola tods";>
+            <TEXTO ruta="hoa"; ruta="hoa"; > 234234 <FIN-TEXTO>
+            <IMAGEN ruta="hoa"; ruta="hoa"; > 234234 <FIN-IMAGEN>
+        <FIN-PANEL>
+        <PANEL>
+            <IMAGEN>c/::slkfdñj8ou<FIN-IMAGEN>
+        <FIN-PANEL>
+        <PANEL>
+            <PANEL>
+                <ENLACE>slkñfj<FIN-ENLACE>
+                <PANEL>
+                    <BOTON fondo ="hola";>añdj<FIN-BOTON>
+                    <CAJA_TEXTO> Contenido en la caja de texto <FIN-CAJA_TEXTO>
+                    <TEXTO_A> Nombre <FIN-TEXTO_A>
+                    <TEXTO_A ruta="hlsdf";> Nombre <FIN-TEXTO_A>
+                    <SPINNER>34<FIN-SPINNER>
+
+                <FIN-PANEL>
+                <PANEL>
+                    <CAJA>
+                        <OPCION valor="1";>Uno<FIN-OPCION>
+                        <OPCION valor="2";>Dos<FIN-OPCION>
+                        <OPCION valor="3";>Tres<FIN-OPCION>
+                        <OPCION valor="4";>4<FIN-OPCION>
+                    <FIN-CAJA>
+                    <PANEL>
+                        <PANEL>
+                            <SPINNER>34<FIN-SPINNER>
+                        <FIN-PANEL>
+                    <FIN-PANEL>
+                <FIN-PANEL>
+            <FIN-PANEL>
+            <BOTON  fondo ="jñslfj";>texto<FIN-BOTON>
+        <FIN-PANEL>
+        <PANEL>
+            <SALTO-FIN>
+            <CAJA>
+                <OPCION valor="1";>Uno<FIN-OPCION>
+                <OPCION valor="2";>Dos<FIN-OPCION>
+            <FIN-CAJA>
+            <SALTO-FIN>
+            <CAJA_TEXTO> Contenido en la caja de texto <FIN-CAJA_TEXTO>
+
+        <FIN-PANEL>
+        <PANEL>
+            <TABLA>
+                <FIL_T> 
+                <FIN-FIL_T>
+                <FIL_T>
+                <FIN-FIL_T>
+            <FIN-TABLA>
+        <FIN-PANEL>
+        <PANEL>
+            <TABLA>
+                <FIL_T>
+                    <CB>Nombre<FIN-CB>
+                    <CB_T>Apellido<FIN-CB>
+                    <CB_T>Edad<FIN-CB>
+                <FIN-FIL_T>
+                <FIL_T>
+                    <CT_T>Mack<FIN-CT>
+                    <CT>Hill<FIN-CT_T>
+                    <CT>15<FIN-CT>
+                <FIN-FIL_T>
+                <FIL_T>
+                    <CT>Stark<FIN-CT>
+                    <CT>Iron<FIN-CT>
+                    <CT>50<FIN-CT>
+                <FIN-FIL_T>
+            <FIN-TABLA>
+        <FIN-PANEL>
+    < FIN-CUERPO >
+<FIN-CHTML>
+
+
+
+
+
+<//- Inicio CHTML -//>
+<CHTML>
+<//- Contenido encabezado -//>
+<ENCABEZADO>
+<//- Estilo de la intefaz grafica de la página web -//>
+<CCSS ruta="C:\proyecto1\archivo_entrada_estilo.ccss";><FIN-CCSS>
+<CJS ruta="C:\proyecto1\archivo_entrada_estilo.cjs";><FIN-CJS>
+<TITULO>PAGINA 1<FIN-TITULO>
+<FIN-ENCABEZADO>
+<CUERPO>
+<//- al ingresar los elementos deberá de iniciar desde la parte inicial de la página -//>
+<//- área de botones para rediccionar -//>
+<PANEL id = "panel_1"; grupo= "panel_redireccion"; ancho = "716"; alto = "50";>
+<BOTON grupo = "boton_redireccion"; alto = "35"; ancho = "120"; ruta= "C:\proyecto1\informacion.chtml";>Informacion<FIN-BOTON>
+<BOTON grupo = "boton_redireccion"; alto = "35"; ancho = "160"; ruta= "C:\proyecto1\tabla.chtml";>Tabla Estudiante<FIN-BOTON>
+<BOTON grupo = "boton_redireccion"; alto = "35"; ancho = "100"; ruta= "C:\proyecto1\index.chtml";> Principal <FIN-BOTON>
+<FIN-PANEL>
+<SALTO-FIN>
+
+
+<PANEL id = "panel_2"; grupo="titulo"; ancho = "716"; alto = "50";>
+<//- esta linea contiene salto de linea en el texto -//>
+<TEXTO id="titulo_doc"; grupo= "titulo";>Calificacion Compiladores 2
+Proyecto 2<FIN-TEXTO>
+ <FIN-PANEL>
+<//- Se agregaron tres saltos de linea -//>
+<SALTO-FIN>
+ <SALTO-FIN>
+<SALTO-FIN>
+
+<PANEL id = "panel_3"; grupo="titulo"; ancho = "716"; alto = "320";>
+<PANEL id = "panel_4"; alto ="320"; ancho="400"; grupo="formulario_1";>
+<TEXTO alto= "30"; ancho ="210"; id="titulo_fomulario"; grupo="formulario_1";>Formulario de Notas:<FIN-TEXTO>
+<SALTO-FIN>
+<SALTO-FIN>
+<SALTO-FIN>
+
+<TEXTO alto= "16"; ancho ="90"; grupo="formulario_1";>Nota Proyecto 1: <FIN-TEXTO>
+<SPINNER ancho = "50"; alto ="25"; id="nota_1"; id="nota_1"; grupo="formulario_2";> <FIN-SPINNER>
+<//- ingreso de espacios en blanco para las separaciones entre etiquetas -//>
+<TEXTO>
+ <FIN-TEXTO>
+<TEXTO alto= "16"; ancho ="90"; grupo="formulario_1";>Nota Proyecto 2: <FIN-TEXTO>
+<SPINNER ancho = "50"; alto ="25"; id="nota_2"; id="nota_2"; grupo="formulario_2";> <FIN-SPINNER>
+<//- se agregó dos salto de linea entre elementos -//>
+<SALTO-FIN>
+<SALTO-FIN>
+<TEXTO alto= "16"; ancho ="105"; grupo="formulario_1";>Nombre Estudiante:<FIN-TEXTO>
+<CAJA_TEXTO alto= "20"; ancho ="200"; id="nombre"; grupo="formulario_2";>Nombre<FIN-CAJA_TEXTO>
+<SALTO-FIN>
+<TEXTO alto= "16"; ancho ="65"; grupo="formulario_1";>Comentario:<FIN-TEXTO>
+<TEXTO_A alto="95"; ancho="200" ;id="comentario"; grupo="formulario_2";><FIN-TEXTO_A>
+<SALTO-FIN>
+<CAJA id="caja_1"; grupo="formulario_2";>
+<OPCION valor= "promedio"; >Promedio<FIN-OPCION>
+<OPCION valor= "suma"; >Suma<FIN-OPCION>
+<OPCION valor= "resta"; >Resta<FIN-OPCION>
+<OPCION valor= "multiplicar"; >Multiplicacion<FIN-OPCION>
+<OPCION valor= "7"; >Modulo P1 % 7<FIN-OPCION>
+<OPCION valor= "11"; >Modulo P2 % 11<FIN-OPCION>
+<FIN-CAJA>
+<BOTON click=operacion_datos(); alto= "30"; ancho ="210"; id="boto_cal"; grupo="formulario_2";> Calcular <FIN-BOTON>
+ <FIN-PANEL>
+<TEXTO> <FIN-TEXTO>
+
+<TEXTO> <FIN-TEXTO>
+
+
+<PANEL id = "panel_5"; alto ="320"; ancho="380";>
+<TEXTO grupo = "salida_texto_1";>Opcion Seleccionada:<FIN-TEXTO>
+<TEXTO alto = "15"; ancho="55"; grupo = "salida_texto_2"; id= "r_opcion";>--------<FIN-TEXTO>
+<SALTO-FIN>
+<TEXTO grupo = "salida_texto_1";>Nombre del Estudiante<FIN-TEXTO>
+<TEXTO alto = "15"; ancho="55"; grupo = "salida_texto_2"; id= "r_nombre"; >--------<FIN-TEXTO>
+<SALTO-FIN>
+<TEXTO grupo = "salida_texto_1";>Resultado: <FIN-TEXTO>
+<TEXTO alto = "15"; ancho="55"; grupo = "salida_texto_2"; id= "r_resultado"; >--------<FIN-TEXTO>
+<SALTO-FIN>
+<TEXTO grupo = "salida_texto_1";>Comentario Realizado<FIN-TEXTO>
+<TEXTO alto = "120"; ancho="200"; grupo = "salida_texto_2"; id= "r_comentario"; >--------<FIN-TEXTO>
+<SALTO-FIN>
+<TEXTO grupo = "salida_texto_1";>Nota P1:<FIN-TEXTO>
+<TEXTO alto = "15"; ancho="55"; grupo = "salida_texto_2"; id= "r_nota_1"; >--------<FIN-TEXTO>
+<SALTO-FIN>
+<TEXTO grupo = "salida_texto_1";>Nota P2:<FIN-TEXTO>
+<TEXTO alto = "15"; ancho="55"; grupo = "salida_texto_2"; id= "r_nota_2"; >--------<FIN-TEXTO>
+<SALTO-FIN>
+<IMAGEN alto = "90"; ancho = "200"; id="imagen_1";><FIN-IMAGEN>
+<FIN-PANEL>
+<FIN-PANEL>
+<FIN-CUERPO>
+<FIN-CHTML>  
+
+
+
+
+<//- los comentarios pueden venir donde sea y dondeasdjhjhkas jsjsjsj ajkasds jajsjsiajajajkdsa -//>
+
+<CHTML>
+	<//- los comentarios 
+	pueden venir donde sea -//>
+
+
+	<ENCABEZADO>
+		
+	<//- los comentarios 
+	pueden venir donde 
+	sea -//>
+
+		<TITULO> USACWEB <FIN-TITULO>
+		
+		<CJS ruta = "C:/fichero/fichero_2.cjs";> <FIN-CJS>
+		<CCSS ruta = "C:/fichero/estilo_2.ccss";> <FIN-CCSS>
+
+	<FIN-ENCABEZADO>
+	<//- INICIO DEL CUERPO -//>
+
+	<CUERPO fondo="blue";>
+		<ENLACE ruta="c://ruta/ruta.chtml";> Página Ruta 
+		<FIN-ENLACE>
+		<IMAGEN ruta="c://fichero/hoja.chtml"; click="metodo()"; id="r";> c://proy1/foto.jpg 
+			<FIN-IMAGEN>
+		<BOTON click="salida_consola()"; ruta="c://pro_1/index.chtml";> Este es un botón <FIN-BOTON>		
+		<PANEL id="red"; grupo="group"; alto="89"; alineado="derecha";>
+			<PANEL id="red"; grupo="group"; alto="89"; alineado="derecha";>
+			<//-54656-//>
+			<BOTON click="salida_consola()"; ruta="c://pro_1/index.chtml";> Este es un botón <FIN-BOTON>
+				<PANEL id="red"; grupo="group"; alto="89"; alineado="derecha";>
+					<TEXTO> Entrada: Esta es
+					una etiqueta
+					que permite
+					saltos
+					<FIN-TEXTO>
+				<FIN-PANEL>
+			<IMAGEN ruta="c://fichero/hoja.chtml"; click="metodo()"; id="r";> c://proy1/foto.jpg 
+			<FIN-IMAGEN>
+
+			<FIN-PANEL>
+		<TABLA id="red"; grupo="group"; alto="89"; alineado="derecha";>
+			<FIL_T id="red"; grupo="group"; alto="89"; alineado="derecha";>
+				<CB id="red"; grupo="group"; alto="89"; alineado="derecha";>Nombre<FIN-CB>
+				<CB>Apellido<FIN-CB>
+				<CB id="red"; grupo="group"; alto="89"; alineado="derecha";>Edad<FIN-CB>
+			<FIN-FIL_T>
+			<FIL_T id="red"; grupo="group"; alto="89"; alineado="derecha";>
+				<CT>
+					<IMAGEN ruta="c://fichero/hoja.chtml"; click="metodo()"; id="r";> c://proy1/foto.jpg 
+					<FIN-IMAGEN>
+				<FIN-CT>
+				<CT>Hill<FIN-CT>
+				<CT>a<FIN-CT>
+				<CT>a<FIN-CT>
+			<FIN-FIL_T>
+			<FIL_T>
+				<CT id="red"; grupo="group"; alto="89"; alineado="derecha";>Stark<FIN-CT>
+				<CT>
+					<BOTON click="salida_consola()"; ruta="c://pro_1/index.chtml";> Este es un botón <FIN-BOTON>		
+				<FIN-CT>
+				<CT>50<FIN-CT>
+			<FIN-FIL_T>
+		<FIN-TABLA>
+		<TABLA> <//- Contenido de la tabla -//> <FIN-TABLA>
+		<TABLA>
+			<FIL_T> <//- Contenido de las filas de la tabla -//> <FIN-FIL_T>
+		<FIN-TABLA>
+		<FIN-PANEL>
+		<PANEL>
+			<PANEL>
+				<TEXTO_A> Nombre <FIN-TEXTO_A>
+				<PANEL>
+					<TEXTO_A> Nombre <FIN-TEXTO_A>
+				<FIN-PANEL>
+			<FIN-PANEL>
+			<PANEL>
+				<PANEL>
+					<CAJA click="metodo()"; > 
+						 <OPCION valor="1";>Uno<FIN-OPCION>
+						 <OPCION valor="2";>Dos<FIN-OPCION>
+						 <OPCION valor="3";>Tres<FIN-OPCION>
+						 <OPCION valor="4";><FIN-OPCION>
+					<FIN-CAJA>
+						<SALTO-FIN> 
+						<SALTO-FIN> 
+					<PANEL>
+						<PANEL>
+							<SPINNER> 15 <FIN-SPINNER> 
+
+							<SPINNER> <FIN-SPINNER> 
+
+						<FIN-PANEL>
+						<TEXTO_A id="red"; grupo="group";> Nombre <FIN-TEXTO_A>
+						<CAJA_TEXTO id="red"; grupo="group";> Contenido en la caja de texto <FIN-CAJA_TEXTO>
+					<FIN-PANEL>
+				<FIN-PANEL>
+			<FIN-PANEL>
+		<FIN-PANEL>
+
+
+		<PANEL id = "panel_3"; grupo="titulo"; ancho = "716"; alto = "320";>
+			<PANEL id = "panel_4"; alto ="320"; ancho="400"; grupo="formulario_1";>
+				<TEXTO alto= "30"; ancho ="210"; id="titulo_fomulario"; grupo="formulario_1";>Formulario de Notas:<FIN-TEXTO>
+			 <SALTO-FIN>
+ <SALTO-FIN>
+			 <SALTO-FIN>
+		<TEXTO alto= "16"; ancho ="90"; grupo="formulario_1";>Nota Proyecto 1: <FIN-TEXTO>
+		<SPINNER ancho = "50"; alto ="25"; id="nota_1"; id="nota_1"; grupo="formulario_2";> <FIN-SPINNER>
+		<//- ingreso de espacios en blanco para las separaciones entre etiquetas -//>
+		<TEXTO> <FIN-TEXTO>
+		<TEXTO alto= "16"; ancho ="90"; grupo="formulario_1";>Nota Proyecto 2: <FIN-TEXTO>
+			<SPINNER ancho = "50"; alto ="25"; id="nota_2"; id="nota_2"; grupo="formulario_2";> <FIN-SPINNER>
+		 <//- se agregó dos salto de linea entre elementos -//>
+		<SALTO-FIN>
+		<SALTO-FIN>
+		<TEXTO alto="16"; ancho="105"; grupo="formulario_1";>Nombre Estudiante:<FIN-TEXTO>
+		<CAJA_TEXTO alto= "20"; ancho ="200"; id="nombre"; grupo="formulario_2";>Nombre<FIN-CAJA_TEXTO>
+		<SALTO-FIN>
+			<TEXTO alto="16"; ancho="65"; grupo="formulario_1";>Comentario:<FIN-TEXTO>
+			<TEXTO_A alto="95"; ancho="200"; id="comentario"; grupo="formulario_2";><FIN-TEXTO_A>
+		<SALTO-FIN>
+		<CAJA id="caja_1"; grupo="formulario_2";>
+			<OPCION valor= "promedio"; >Promedio<FIN-OPCION>
+			<OPCION valor= "suma"; >Suma<FIN-OPCION>
+			<OPCION valor= "resta"; >Resta<FIN-OPCION>
+			<OPCION valor= "multiplicar"; >Multiplicacion<FIN-OPCION>
+			<OPCION valor= "7"; >Modulo P1 % 7<FIN-OPCION>
+			<OPCION valor= "11"; >Modulo P2 % 11<FIN-OPCION>
+		<FIN-CAJA>
+			<BOTON click="operacion_datos()"; alto= "30"; ancho ="210"; id="boto_cal"; grupo="formulario_2";> Calcular <FIN-BOTON>
+			<FIN-PANEL>
+		<FIN-PANEL>
+		<TEXTO> <FIN-TEXTO>
+	<FIN-CUERPO>	
+<FIN-CHTML>

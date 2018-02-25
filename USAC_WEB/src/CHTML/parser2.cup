@@ -15,14 +15,21 @@ parser code
     //METODO PARA ERROR RECUPERABLE
     public void syntax_error(Symbol s)
     {
-      String lexema = s.value.toString();
-      int fila = s.right;
-      int columna = s.left;
+      try
+      {
+        String lexema = s.value.toString();
+        int fila = s.right;
+        int columna = s.left;
 
-      System.out.println("--------------Error Sintactico Recuperado- PRINCIPAL-----------------------");
-      System.out.println("Lexema: "+lexema);
-      System.out.println("Fila: "+fila);
-      System.out.println("Columna: "+columna);
+        System.out.println("--------------Error Sintactico RECUPERABLE------------------------");
+        System.out.println("Lexema: "+lexema);
+        System.out.println("Fila: "+fila);
+        System.out.println("Columna: "+columna);
+      }
+      catch(Exception ex)
+      {
+        System.out.println("ERROR IRRECUPERABLE");
+      }
 
     }
 
@@ -55,14 +62,14 @@ action code
 :}
 /*----------------------------------------AREA DE DECLARACIONES-------------------------------------------------------------*/
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-terminal String opentag,closetag,igual,pcoma, coma, cadena, tTexto, chtml, finChtml, encabezado, finEncabezado, cuerpo, finCuerpo;
-terminal String cjs, finCjs, ccss, finCcss, titulo, finTitulo, panel, finPanel, imagen, finImagen, enlace, finEnlace, saltoFin;
+terminal String opentag,closetag,igual,pcoma, coma, cadena, tTexto, chtml, finChtml, encabezado, finEncabezado, cuerpo, finCuerpo, especiales;
+terminal String cjs, finCjs, ccss, finCcss, titulo, finTitulo, panel, finPanel, imagen, finImagen, enlace, finEnlace, saltoFin, texto_a, finTextoA;
 terminal String fondo, ruta, palabra, click, id, grupo, alto, ancho, alineado, path, boton, finBoton, tabla, finTabla, spinner, finSpinner;
-terminal String fil_t, finFil_t, cb, finCb, ct, finCt, tTexA, caja_texto, finCaja_texto, caja, finCaja, opcion, finOpcion, valor, entero;
+terminal String fil_t, finFil_t, cb, finCb, ct, finCt, tTexA, caja_texto, finCaja_texto, caja, finCaja, opcion, finOpcion, valor, entero, texto, finTexto;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 non terminal ASTNodo INICIO_CHTML, ENCABEZADO, CUERPO, FONDO, L_ENCABEZADO, CJS, RUTA, CCSS, TITULO, TXT, PANEL;
 non terminal ASTNodo ATRIBUTO, NOM_A, L_CUERPO, L_ATTS, IMAGEN, BOTON, ENLACE, TABLA, FILATABLA, C_ENCABEZADO, CELDA;
-non terminal ASTNodo L_CELDAS, L_FILAS, CAJA_TEXTO, CAJA, OPCION, L_OPCIONES, SPINNER, SALTO;
+non terminal ASTNodo L_CELDAS, L_FILAS, CAJA_TEXTO, CAJA, OPCION, L_OPCIONES, SPINNER, SALTO, TEXTO, TEXTO_A, RESERVADAS;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //---------->PRECENDENCIAS DE MENOR A MAYOR
 precedence right opentag;
@@ -275,7 +282,7 @@ L_CUERPO::= L_CUERPO:h1 PANEL:h2
             {padre.addHijo(h2);}
             RESULT = padre;
           :}
-          | L_CUERPO:h1 tTexto:tex
+          /*| L_CUERPO:h1 tTexto:tex
           {:
             ASTNodo padre = new ASTNodo(parser.contador, "L_CUERPO");
             parser.contador++;
@@ -297,6 +304,16 @@ L_CUERPO::= L_CUERPO:h1 PANEL:h2
             /////////////////////////////////////////////////////////////
             padre.addHijo(h1);
             if(tx!=null){padre.addHijo(tx);}
+            RESULT = padre;
+          :}*/
+          | L_CUERPO:h1 TEXTO:h2
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "L_CUERPO");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            if(h2!=null)
+            {padre.addHijo(h2);}
             RESULT = padre;
           :}
           | L_CUERPO:h1 IMAGEN:h2
@@ -338,7 +355,7 @@ L_CUERPO::= L_CUERPO:h1 PANEL:h2
             {padre.addHijo(h2);}
             RESULT = padre;
           :}
-          | L_CUERPO:h1 tTexA:ttexa
+          /*| L_CUERPO:h1 tTexA:ttexa
           {:
             ASTNodo padre = new ASTNodo(parser.contador, "L_CUERPO");
             parser.contador++;
@@ -360,6 +377,16 @@ L_CUERPO::= L_CUERPO:h1 PANEL:h2
             ///////////////////////////////////////////////////////////////
             padre.addHijo(h1);
             if(tx!=null){padre.addHijo(tx);}
+            RESULT = padre;
+          :}*/
+          | L_CUERPO:h1 TEXTO_A:h2
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "L_CUERPO");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            if(h2!=null)
+            {padre.addHijo(h2);}
             RESULT = padre;
           :}
           | L_CUERPO:h1 CAJA_TEXTO:h2
@@ -434,7 +461,7 @@ L_CUERPO::= L_CUERPO:h1 PANEL:h2
             {padre.addHijo(h1);}
             RESULT = padre;
           :}
-          | tTexA:ttexa
+          /*| tTexA:ttexa
           {:
             ASTNodo padre = new ASTNodo(parser.contador, "L_CUERPO");
             parser.contador++;
@@ -456,8 +483,8 @@ L_CUERPO::= L_CUERPO:h1 PANEL:h2
             /////////////////////////////////////////////////////////////
             if(tx!=null){padre.addHijo(tx);}
             RESULT = padre;
-          :}
-          | tTexto:tex
+          :}*/
+          /*| tTexto:tex
           {:
             ASTNodo padre = new ASTNodo(parser.contador, "L_CUERPO");
             parser.contador++;
@@ -478,6 +505,22 @@ L_CUERPO::= L_CUERPO:h1 PANEL:h2
             }
             /////////////////////////////////////////////////////////////
             if(tx!=null){padre.addHijo(tx);}
+            RESULT = padre;
+          :}*/
+          | TEXTO_A:h1
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "L_CUERPO");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            RESULT = padre;
+          :}
+          | TEXTO:h1
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "L_CUERPO");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
             RESULT = padre;
           :}
           |PANEL:h1
@@ -1182,6 +1225,66 @@ SALTO ::= opentag saltoFin closetag
         :}
         ;
 //-------------------------------------------------------------------------------------
+TEXTO ::= opentag texto finTexto:tex
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "TEXTO");
+          parser.contador++;
+          tex = tex.replace("<FIN-TEXTO","");
+          tex = tex.replace("<fin-texto","");
+          tex = tex.replace(">","");
+          tex = tex.replace("\"", "");
+          ASTNodo hij = new ASTNodo(parser.contador, tex);
+          parser.contador++;
+          padre.addHijo(hij);
+          RESULT = padre;
+        :}
+        | opentag texto L_ATTS:h1 finTexto:tex
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "TEXTO");
+          parser.contador++;
+          tex = tex.replace("<FIN-TEXTO","");
+          tex = tex.replace("<fin-texto","");
+          tex = tex.replace(">","");
+          tex = tex.replace("\"", "");
+          ASTNodo hij = new ASTNodo(parser.contador, tex);
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          padre.addHijo(hij);
+          RESULT = padre;
+        :}
+        ;
+//-------------------------------------------------------------------------------------
+TEXTO_A ::= opentag texto_a finTextoA:tex
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "TEXTO_A");
+          parser.contador++;
+          tex = tex.replace("<FIN-TEXTO_A","");
+          tex = tex.replace("<fin-texto_a","");
+          tex = tex.replace(">","");
+          tex = tex.replace("\"", "");
+          ASTNodo hij = new ASTNodo(parser.contador, tex);
+          parser.contador++;
+          padre.addHijo(hij);
+          RESULT = padre;
+        :}
+        | opentag texto_a L_ATTS:h1 finTextoA:tex
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "TEXTO_A");
+          parser.contador++;
+          tex = tex.replace("<FIN-TEXTO_A","");
+          tex = tex.replace("<fin-texto_a","");
+          tex = tex.replace(">","");
+          tex = tex.replace("\"", "");
+          ASTNodo hij = new ASTNodo(parser.contador, tex);
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          padre.addHijo(hij);
+          RESULT = padre;
+        :}
+        ;
+//-------------------------------------------------------------------------------------
 ///////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////ATRIBUTOS//////////////////////////////////////////
 FONDO ::= fondo igual cadena:cad pcoma
@@ -1324,6 +1427,22 @@ TXT ::= TXT:h1 palabra:pal
         parser.contador++;
         RESULT = ret;
       :}
+      | TXT:h1 especiales:pal
+      {:
+        ASTNodo aux = h1;
+        String cad = h1.getEtiqueta() +" " + pal;
+        ASTNodo ret = new ASTNodo(parser.contador, cad);
+        parser.contador++;
+        RESULT = ret;
+      :}
+      | TXT:h1 RESERVADAS:h2
+      {:
+        ASTNodo aux = h1;
+        String cad = h1.getEtiqueta() +" " + h2.getEtiqueta();
+        ASTNodo ret = new ASTNodo(parser.contador, cad);
+        parser.contador++;
+        RESULT = ret;
+      :}
       |entero:pal
       {:
         ASTNodo ret = new ASTNodo(parser.contador, pal);
@@ -1336,5 +1455,114 @@ TXT ::= TXT:h1 palabra:pal
         parser.contador++;
         RESULT = ret;
       :}
+      |especiales:pal
+      {:
+        ASTNodo ret = new ASTNodo(parser.contador, pal);
+        parser.contador++;
+        RESULT = ret;
+      :}
+      | RESERVADAS:h1
+      {:
+        ASTNodo ret = new ASTNodo(parser.contador, h1.getEtiqueta());
+        parser.contador++;
+        RESULT = ret;
+      :}
       ;
 //------------------------------------------------------------------
+RESERVADAS ::= chtml:pal
+          {:
+            ASTNodo ret = new ASTNodo(parser.contador, pal);
+            parser.contador++;
+            RESULT = ret;
+          :}
+          | encabezado:pal
+          {:
+            ASTNodo ret = new ASTNodo(parser.contador, pal);
+            parser.contador++;
+            RESULT = ret;
+          :}
+          | cuerpo:pal
+          {:
+            ASTNodo ret = new ASTNodo(parser.contador, pal);
+            parser.contador++;
+            RESULT = ret;
+          :}
+          | cjs:pal
+          {:
+            ASTNodo ret = new ASTNodo(parser.contador, pal);
+            parser.contador++;
+            RESULT = ret;
+          :}
+          | ccss:pal
+          {:
+            ASTNodo ret = new ASTNodo(parser.contador, pal);
+            parser.contador++;
+            RESULT = ret;
+          :}
+          | titulo:pal
+          {:
+            ASTNodo ret = new ASTNodo(parser.contador, pal);
+            parser.contador++;
+            RESULT = ret;
+          :}
+          | panel:pal
+          {:
+            ASTNodo ret = new ASTNodo(parser.contador, pal);
+            parser.contador++;
+            RESULT = ret;
+          :}
+          | imagen:pal
+          {:
+            ASTNodo ret = new ASTNodo(parser.contador, pal);
+            parser.contador++;
+            RESULT = ret;
+          :}
+          | boton:pal
+          {:
+            ASTNodo ret = new ASTNodo(parser.contador, pal);
+            parser.contador++;
+            RESULT = ret;
+          :}
+          | enlace:pal
+          {:
+            ASTNodo ret = new ASTNodo(parser.contador, pal);
+            parser.contador++;
+            RESULT = ret;
+          :}
+          | tabla:pal
+          {:
+            ASTNodo ret = new ASTNodo(parser.contador, pal);
+            parser.contador++;
+            RESULT = ret;
+          :}
+          | caja:pal
+          {:
+            ASTNodo ret = new ASTNodo(parser.contador, pal);
+            parser.contador++;
+            RESULT = ret;
+          :}
+          | opcion:pal
+          {:
+            ASTNodo ret = new ASTNodo(parser.contador, pal);
+            parser.contador++;
+            RESULT = ret;
+          :}
+          | spinner:pal
+          {:
+            ASTNodo ret = new ASTNodo(parser.contador, pal);
+            parser.contador++;
+            RESULT = ret;
+          :}
+          | texto:pal
+          {:
+            ASTNodo ret = new ASTNodo(parser.contador, pal);
+            parser.contador++;
+            RESULT = ret;
+          :}
+          | ruta:pal
+          {:
+            ASTNodo ret = new ASTNodo(parser.contador, pal);
+            parser.contador++;
+            RESULT = ret;
+          :}
+          ;

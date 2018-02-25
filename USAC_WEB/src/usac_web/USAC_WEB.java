@@ -36,13 +36,14 @@ public class USAC_WEB {
         pruebaCJS();
         //System.out.println(es_fecha("0"));
         //System.out.println(es_fecha_tiempo("01/12/201719:45:22"));
+       
     }
     
     public static void pruebaCHTML()
     {
         try {
             // TODO code application logic here
-            LexCHTML lex = new LexCHTML(new FileReader("entrada.txt"));
+            LexCHTML lex = new LexCHTML(new FileReader("PRUEBA2.txt"));
             parser p = new parser(lex);
             try {
                 p.parse();
