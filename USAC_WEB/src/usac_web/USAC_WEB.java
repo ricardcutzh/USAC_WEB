@@ -23,6 +23,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import GUI.*;
+
 public class USAC_WEB {
 
     /**
@@ -31,12 +33,13 @@ public class USAC_WEB {
     
     
     public static void main(String[] args) throws IOException {
-        //pruebaCCSS();
+        pruebaCCSS();
         //pruebaCHTML();
-        pruebaCJS();
+        //pruebaCJS();
         //System.out.println(es_fecha("0"));
         //System.out.println(es_fecha_tiempo("01/12/201719:45:22"));
-       
+       //USAC_WEB_GUI ventana = new USAC_WEB_GUI();
+       //ventana.setVisible(true);
     }
     
     public static void pruebaCHTML()
@@ -72,7 +75,9 @@ public class USAC_WEB {
             p.parse();
             if(CCSS.parser.raiz!=null)
             {
-                System.out.println(CCSS.parser.raiz.graficaAST(CCSS.parser.raiz));
+                //System.out.println(CCSS.parser.raiz.graficaAST(CCSS.parser.raiz));
+                CCSS_EXEC.Interprete_CCSS ex = new CCSS_EXEC.Interprete_CCSS(CCSS.parser.raiz);
+                ex.ejecutaCSS();
             }
             System.out.println("//----------------------------------------------------------------------------------------------");
             System.out.println("//-----------------------------------ERRORES----------------------------------------------------");

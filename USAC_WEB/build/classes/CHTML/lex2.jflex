@@ -31,8 +31,8 @@ cadena = \"(\\.|[^\"\\])*\"
 //comentarios = \<\/\/\-[^]*\-\/\/\>
 comentarios = "<//-"[^*]~"-//>"|"<//-"+"-//>"
 
-finTexto = >(.|\n)[^>]*<FIN-TEXTO>|>+<FIN-TEXTO>
-finTextoA = >(.|\n)[^>]*<FIN-TEXTO_A>|>+<FIN-TEXTO_A>
+finTexto = >(.|\n)[^>]*<(\s)*FIN-TEXTO(\s)*>|>+<(\s)*FIN-TEXTO(\s)*>
+finTextoA = >(.|\n)[^>]*<(\s)*FIN-TEXTO_A(\s)*>|>+<(\s)*FIN-TEXTO_A(\s)*>
 path = [a-zA-Z]:\/[\\\S|*\S]?.[^\s\<\>]*
 especiales = ([#-\-]|\!|\:|[?-@]|\=|\^)+
 //------------> ESTADOS
@@ -98,9 +98,9 @@ especiales = ([#-\-]|\!|\:|[?-@]|\=|\^)+
 //---------->EXPRESIONES ER
 <YYINITIAL> {entero}            {/*System.out.println("Encontre cadena: "+yytext());*/ return new Symbol(Simbolos.entero, yycolumn, yyline, yytext());}
 <YYINITIAL> {cadena}            {/*System.out.println("Encontre cadena: "+yytext());*/ return new Symbol(Simbolos.cadena, yycolumn, yyline, yytext());}
-<YYINITIAL> {path}              { System.out.println("Encontre Token PATH: "+yytext()); return new Symbol(Simbolos.path, yycolumn, yyline, yytext());}
-<YYINITIAL> {finTexto}          { System.out.println("Encontre Token fin TEXTO: "+yytext()); return new Symbol(Simbolos.finTexto, yycolumn, yyline, yytext());}
-<YYINITIAL> {finTextoA}         { System.out.println("Encontre Token fin TEXTO A: "+yytext()); return new Symbol(Simbolos.finTextoA, yycolumn, yyline, yytext());}
+<YYINITIAL> {path}              {/*System.out.println("Encontre Token PATH: "+yytext());*/ return new Symbol(Simbolos.path, yycolumn, yyline, yytext());}
+<YYINITIAL> {finTexto}          {/*System.out.println("Encontre Token fin TEXTO: "+yytext());*/ return new Symbol(Simbolos.finTexto, yycolumn, yyline, yytext());}
+<YYINITIAL> {finTextoA}         {/*System.out.println("Encontre Token fin TEXTO A: "+yytext());*/ return new Symbol(Simbolos.finTextoA, yycolumn, yyline, yytext());}
 /*<YYINITIAL> {tokenTexto}        { System.out.println("Encontre Token texto: "+yytext()); return new Symbol(Simbolos.tTexto, yycolumn, yyline, yytext());}
 <YYINITIAL> {tokenTexA}         { System.out.println("Encontre Token Texto_A: "+yytext()); return new Symbol(Simbolos.tTexA, yycolumn, yyline, yytext());}*/
 <YYINITIAL> {palabra}           { /*System.out.println("Encontre Token titulo: "+yytext());*/ return new Symbol(Simbolos.palabra, yycolumn, yyline, yytext());}

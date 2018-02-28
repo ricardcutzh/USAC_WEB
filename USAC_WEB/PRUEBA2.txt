@@ -1,137 +1,148 @@
-<//- los comentarios pueden venir donde sea y dondeasdjhjhkas jsjsjsj ajkasds jajsjsiajajajkdsa -//>
+<CHTML  >
 
-<CHTML>
-	<//- los comentarios 
-	pueden venir donde sea -//>
-
-
-	<ENCABEZADO>
-		
-	<//- los comentarios 
-	pueden venir donde 
-	sea -//>
-
-		<TITULO> USACWEB <FIN-TITULO>
-		
-		<CJS ruta = "C:/fichero/fichero_2.cjs";> <FIN-CJS>
-		<CCSS ruta = "C:/fichero/estilo_2.ccss";> <FIN-CCSS>
-
+	<ENCABEZADO  >
+		<CCSS ruta = "C:\Users\JulioAlberto\Desktop\Entrada3.ccss";><FIN-CCSS>
+		<CJS ruta = "C:\Users\JulioAlberto\Desktop\Entrada2.cjs";><FIN-CJS>
+		<TITULO  >USAC WEB<FIN-TITULO>
 	<FIN-ENCABEZADO>
-	<//- INICIO DEL CUERPO -//>
 
-	<CUERPO fondo="blue";>
-		<ENLACE ruta="c://ruta/ruta.chtml";> Página Ruta 
-		<FIN-ENLACE>
-		<IMAGEN ruta="c://fichero/hoja.chtml"; click="metodo()"; id="r";> c://proy1/foto.jpg 
-			<FIN-IMAGEN>
-		<BOTON click="salida_consola()"; ruta="c://pro_1/index.chtml";> Este es un botón <FIN-BOTON>		
-		<PANEL id="red"; grupo="group"; alto="89"; alineado="derecha";>
-			<PANEL id="red"; grupo="group"; alto="89"; alineado="derecha";>
-			<//-54656-//>
-			<BOTON click="salida_consola()"; ruta="c://pro_1/index.chtml";> Este es un botón <FIN-BOTON>
-				<PANEL id="red"; grupo="group"; alto="89"; alineado="derecha";>
-					<TEXTO> Entrada: Esta es
-					una etiqueta
-					que permite
-					saltos
-					<FIN-TEXTO>
+	<CUERPO  >
+	<SALTO-FIN>
+		<PANEL Alto = "25"; Alto = "32"; id = "panel1";>
+			<TEXTO>Esto es una etiqueta<FIN-TEXTO>
+			<TEXTO>Esta es
+			una etiqueta<FIN-TEXTO>
+			<PANEL Alto = "5"; Alto = "42"; id = "panel2";>
+				<IMAGEN click = "metodoimagen()";>c:/Folder/imagen.png<FIN-IMAGEN>
+				<PANEL Alto = "31"; Ancho = "142"; id = "panel3";>
+					<BOTON click = "salida_consola()"; ruta = "http://facebook.com";>Boton redirige a facebook<FIN-BOTON>
+					<ENLACE ruta = "http://ruta.chtml";>Siguiente CHTML<FIN-ENLACE>
 				<FIN-PANEL>
-			<IMAGEN ruta="c://fichero/hoja.chtml"; click="metodo()"; id="r";> c://proy1/foto.jpg 
-			<FIN-IMAGEN>
-
+				<PANEL Alto = "1"; Ancho = "1"; id = "panel de tabla";>
+					<TABLA>
+						<FIL_T>
+							<CB>
+								<TEXTO>fila 1 columna 1<FIN-TEXTO>
+							<FIN-CB>
+							<CB>
+								<TEXTO>fila 1 columna 2
+								con salto<FIN-TEXTO>
+							<FIN-CB>
+							<CB>
+								<TEXTO>prueba texto<FIN-TEXTO>
+							<FIN-CB>
+							<CB>
+								contenido
+							<FIN-CB>
+							<CB>
+								<BOTON>Boton de tabla<FIN-BOTON>
+							<FIN-CB>
+						<FIN-FIL_T>
+						<FIL_T>
+							<CT>
+								TEXTO NORMAL
+							<FIN-CT>
+							<CT>
+								texto de prueba 2
+							<FIN-CT>
+							<CT>texto sin salto<FIN-CT>
+						<FIN-FIL_T>
+						<FIL_T>
+							<CB><TEXTO>prueba texto<FIN-TEXTO><FIN-CB>
+							<CT><BOTON>Boton de tabla<FIN-BOTON><FIN-CT>
+						<FIN-FIL_T>
+						<FIL_T>
+							<CT><FIN-CT>
+						<FIN-FIL_T>
+						<FIL_T>
+							<CB>texto<FIN-CB>
+							<CB>primer<FIN-CB>
+							<CB>segundo<FIN-CB>
+							<CB>tercero<FIN-CB>
+							<CB><IMAGEN alineado="derecha"; ruta = "c:/imagen.png";>C://FOLDER/IMAGE.png<FIN-IMAGEN><FIN-CB>
+							<CB><IMAGEN alineado="derecha"; ruta = "c:/imagen.png";><FIN-IMAGEN><FIN-CB>
+						<FIN-FIL_T>
+					<FIN-TABLA>
+				<FIN-PANEL>
 			<FIN-PANEL>
-		<TABLA id="red"; grupo="group"; alto="89"; alineado="derecha";>
-			<FIL_T id="red"; grupo="group"; alto="89"; alineado="derecha";>
-				<CB id="red"; grupo="group"; alto="89"; alineado="derecha";>Nombre<FIN-CB>
-				<CB>Apellido<FIN-CB>
-				<CB id="red"; grupo="group"; alto="89"; alineado="derecha";>Edad<FIN-CB>
-			<FIN-FIL_T>
-			<FIL_T id="red"; grupo="group"; alto="89"; alineado="derecha";>
-				<CT>
-					<IMAGEN ruta="c://fichero/hoja.chtml"; click="metodo()"; id="r";> c://proy1/foto.jpg 
-					<FIN-IMAGEN>
-				<FIN-CT>
-				<CT>Hill<FIN-CT>
-				<CT>a<FIN-CT>
-				<CT>a<FIN-CT>
+		<FIN-PANEL>
+		<TEXTO>Esto es una etiqueta<FIN-TEXTO>
+		<TEXTO>Esta es
+		una etiqueta
+		con saltos<FIN-TEXTO>
+		<BOTON click = "refrescar()";>RECARGAR PAGINA<FIN-BOTON>
+		<IMAGEN alineado="derecha"; ruta = "c:/imagen.png";><FIN-IMAGEN>
+		<ENLACE ruta = "http://ruta.chtml"; Ancho = "23"; Alineado = "izquierda";>Siguiente CHTML<FIN-ENLACE>
+		<SALTO-FIN>
+		<TABLA>
+			<FIL_T>
+				<CB>
+					<TEXTO>fila 1 columna 1<FIN-TEXTO>
+				<FIN-CB>
+				<CB>
+					<TEXTO>fila 1 columna 2
+					con salto<FIN-TEXTO>
+				<FIN-CB>
+				<CB>
+					<TEXTO>prueba texto<FIN-TEXTO>
+				<FIN-CB>
+				<CB>
+				contenido
+				<FIN-CB>
+				<CB>
+					<BOTON>Boton de tabla<FIN-BOTON>
+				<FIN-CB>
 			<FIN-FIL_T>
 			<FIL_T>
-				<CT id="red"; grupo="group"; alto="89"; alineado="derecha";>Stark<FIN-CT>
 				<CT>
-					<BOTON click="salida_consola()"; ruta="c://pro_1/index.chtml";> Este es un botón <FIN-BOTON>		
+				TEXTO NORMAL
 				<FIN-CT>
-				<CT>50<FIN-CT>
+				<CT>
+				texto de prueba 2
+				<FIN-CT>
+				<CT>texto sin salto<FIN-CT>
+			<FIN-FIL_T>
+			<FIL_T>
+				<CB><TEXTO>prueba texto<FIN-TEXTO><FIN-CB>
+				<CT><BOTON>Boton de tabla<FIN-BOTON><FIN-CT>
+			<FIN-FIL_T>
+			<FIL_T>
+				<CT><FIN-CT>
+			<FIN-FIL_T>
+			<FIL_T>
+				<CB>texto<FIN-CB>
+				<CB>primer<FIN-CB>
+				<CB>segundo<FIN-CB>
+				<CB>tercero<FIN-CB>
+				<CB>cuarto<FIN-CB>
+				<CB>quinto<FIN-CB>
 			<FIN-FIL_T>
 		<FIN-TABLA>
-		<TABLA> <//- Contenido de la tabla -//> <FIN-TABLA>
-		<TABLA>
-			<FIL_T> <//- Contenido de las filas de la tabla -//> <FIN-FIL_T>
-		<FIN-TABLA>
-		<FIN-PANEL>
-		<PANEL>
-			<PANEL>
-				<TEXTO_A> Nombre <FIN-TEXTO_A>
-				<PANEL>
-					<TEXTO_A> Nombre <FIN-TEXTO_A>
-				<FIN-PANEL>
-			<FIN-PANEL>
-			<PANEL>
-				<PANEL>
-					<CAJA click="metodo()"; > 
-						 <OPCION valor="1";>Uno<FIN-OPCION>
-						 <OPCION valor="2";>Dos<FIN-OPCION>
-						 <OPCION valor="3";>Tres<FIN-OPCION>
-						 <OPCION valor="4";><FIN-OPCION>
+		<PANEL Alto = "31"; Ancho = "14"; id = "panel final"; alineado = "centrado";>
+					<TEXTO_A>ejemplo de texto sin saltos<FIN-TEXTO_A>
+					<CAJA_TEXTO> CAJA DE TEXTO CON CONTENIDO <FIN-CAJA_TEXTO>
+					<SALTO-FIN>
+					<SPINNER>cadena invalida<FIN-SPINNER>
+					<CAJA click = "metodo()";>
+						<OPCION valor = "1"; Ancho = "21"; id = "op1";>uno<FIN-OPCION>
+						<OPCION id = "op1";><FIN-OPCION>
+						<OPCION>DOS<FIN-OPCION>
+						<OPCION valor = "4"; >TRES<FIN-OPCION>
+						<OPCION valor = "5";>CUATRO<FIN-OPCION>
 					<FIN-CAJA>
-						<SALTO-FIN> 
-						<SALTO-FIN> 
-					<PANEL>
-						<PANEL>
-							<SPINNER> 15 <FIN-SPINNER> 
-
-							<SPINNER> <FIN-SPINNER> 
-
-						<FIN-PANEL>
-						<TEXTO_A id="red"; grupo="group";> Nombre <FIN-TEXTO_A>
-						<CAJA_TEXTO id="red"; grupo="group";> Contenido en la caja de texto <FIN-CAJA_TEXTO>
-					<FIN-PANEL>
-				<FIN-PANEL>
-			<FIN-PANEL>
 		<FIN-PANEL>
-
-
-		<PANEL id = "panel_3"; grupo="titulo"; ancho = "716"; alto = "320";>
-			<PANEL id = "panel_4"; alto ="320"; ancho="400"; grupo="formulario_1";>
-				<TEXTO alto= "30"; ancho ="210"; id="titulo_fomulario"; grupo="formulario_1";>Formulario de Notas:<FIN-TEXTO>
-			 <SALTO-FIN>
- <SALTO-FIN>
-			 <SALTO-FIN>
-		<TEXTO alto= "16"; ancho ="90"; grupo="formulario_1";>Nota Proyecto 1: <FIN-TEXTO>
-		<SPINNER ancho = "50"; alto ="25"; id="nota_1"; id="nota_1"; grupo="formulario_2";> <FIN-SPINNER>
-		<//- ingreso de espacios en blanco para las separaciones entre etiquetas -//>
-		<TEXTO> <FIN-TEXTO>
-		<TEXTO alto= "16"; ancho ="90"; grupo="formulario_1";>Nota Proyecto 2: <FIN-TEXTO>
-			<SPINNER ancho = "50"; alto ="25"; id="nota_2"; id="nota_2"; grupo="formulario_2";> <FIN-SPINNER>
-		 <//- se agregó dos salto de linea entre elementos -//>
 		<SALTO-FIN>
-		<SALTO-FIN>
-		<TEXTO alto="16"; ancho="105"; grupo="formulario_1";>Nombre Estudiante:<FIN-TEXTO>
-		<CAJA_TEXTO alto= "20"; ancho ="200"; id="nombre"; grupo="formulario_2";>Nombre<FIN-CAJA_TEXTO>
-		<SALTO-FIN>
-			<TEXTO alto="16"; ancho="65"; grupo="formulario_1";>Comentario:<FIN-TEXTO>
-			<TEXTO_A alto="95"; ancho="200"; id="comentario"; grupo="formulario_2";><FIN-TEXTO_A>
-		<SALTO-FIN>
-		<CAJA id="caja_1"; grupo="formulario_2";>
-			<OPCION valor= "promedio"; >Promedio<FIN-OPCION>
-			<OPCION valor= "suma"; >Suma<FIN-OPCION>
-			<OPCION valor= "resta"; >Resta<FIN-OPCION>
-			<OPCION valor= "multiplicar"; >Multiplicacion<FIN-OPCION>
-			<OPCION valor= "7"; >Modulo P1 % 7<FIN-OPCION>
-			<OPCION valor= "11"; >Modulo P2 % 11<FIN-OPCION>
+		<TEXTO_A>ejemplo de texto 
+		con saltos<FIN-TEXTO_A>
+		<TEXTO_A><FIN-TEXTO_A>
+		<CAJA_TEXTO><FIN-CAJA_TEXTO>
+		<SPINNER Ancho = "20"; Alto = "32"; id = "spi";>15<FIN-SPINNER>
+		<CAJA click = "metodo()";>
+			<OPCION valor = "1"; Ancho = "21"; id = "op1";>uno<FIN-OPCION>
+			<OPCION id = "op1";><FIN-OPCION>
+			<OPCION>DOS<FIN-OPCION>
+			<OPCION valor = "4"; >TRES<FIN-OPCION>
+			<OPCION valor = "5"; Ancho = "21";>CUATRO<FIN-OPCION>
 		<FIN-CAJA>
-			<BOTON click="operacion_datos()"; alto= "30"; ancho ="210"; id="boto_cal"; grupo="formulario_2";> Calcular <FIN-BOTON>
-			<FIN-PANEL>
-		<FIN-PANEL>
-		<TEXTO> <FIN-TEXTO>
-	<FIN-CUERPO>	
+	<FIN-CUERPO>
 <FIN-CHTML>

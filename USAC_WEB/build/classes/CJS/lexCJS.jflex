@@ -53,6 +53,9 @@ cadena2 = \'(\\.|[^\'\\])*\'
 <YYINITIAL> "retornar"                    {return new Symbol(Simbolos.retornar ,yycolumn, yyline, yytext());}
 <YYINITIAL> "mensaje"                     {return new Symbol(Simbolos.mensaje ,yycolumn, yyline, yytext());}
 <YYINITIAL> "documento"                   {return new Symbol(Simbolos.documento ,yycolumn, yyline, yytext());}
+<YYINITIAL> "obtener"                     {return new Symbol(Simbolos.obtener ,yycolumn, yyline, yytext());}
+<YYINITIAL> "setElemento"                 {return new Symbol(Simbolos.setElemento ,yycolumn, yyline, yytext());}
+<YYINITIAL> "observador"                  {return new Symbol(Simbolos.observador ,yycolumn, yyline, yytext());}
 //---------->SIMBOLOS
 <YYINITIAL> ";"                           {return new Symbol(Simbolos.pcoma, yycolumn, yyline, yytext());}
 <YYINITIAL> ":"                           {return new Symbol(Simbolos.dosP, yycolumn, yyline, yytext());}
@@ -82,10 +85,10 @@ cadena2 = \'(\\.|[^\'\\])*\'
 //---------->EXPRESIONES ER
 <YYINITIAL> {identificador}               {return new Symbol(Simbolos.iden, yycolumn, yyline, yytext());}
 <YYINITIAL> {numerico}                    {return new Symbol(Simbolos.numeric, yycolumn, yyline, yytext());}
+<YYINITIAL> {cadena2}                     {System.out.println(yytext()); return new Symbol(Simbolos.cadena2, yycolumn, yyline, yytext());}
 <YYINITIAL> {cadena}                      {return new Symbol(Simbolos.cadena1, yycolumn, yyline, yytext());}
-<YYINITIAL> {cadena2}                     {return new Symbol(Simbolos.cadena2, yycolumn, yyline, yytext());}
-<YYINITIAL> {comentMultilinea}            {/*System.out.println(yytext());/*IGNORA LOS COMENTARIOS*/}
-<YYINITIAL> {comentarioLinea}             {/*System.out.println(yytext());/*IGNORA LOS COMENTARIOS*/}
+<YYINITIAL> {comentMultilinea}            {System.out.println(yytext());/*System.out.println(yytext());/*IGNORA LOS COMENTARIOS*/}
+<YYINITIAL> {comentarioLinea}             {System.out.println(yytext());/*System.out.println(yytext());/*IGNORA LOS COMENTARIOS*/}
 [ \t\r\f\n]                               {/*NO HAGO NADA*/}
 //----------->ERRORES LEXICOS
 .                              {

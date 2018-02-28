@@ -1,52 +1,1745 @@
+/*----------------------------------------AREA DE CODIGO DE USUARIO---------------------------------------------------------*/
+//------->PAQUETES E IMPORTACIONES
+package CJS;
+import java_cup.runtime.*;
+import AST.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
+//--------------------->CODIGO DE PARSER, VARIABLES Y METODOS
+parser code
+{:
+    public static ASTNodo raiz;
+    int contador;
+    public static ArrayList<TError> errores;
+    //METODO PARA ERROR RECUPERABLE
+    public void syntax_error(Symbol s)
+    {
+      try
+      {
+        TError errorSint = new TError(s.value.toString(), "Error Sintactico", "Token no Esperado", (s.right+1), s.left);
+        errores.add(errorSint);
+      }
+      catch(Exception ex)
+      {
+        System.out.println("ERROR RECUPERADO");
+      }
+
+    }
+
+    //METODO PARA ERRORES QUE NO SE RECUPERAN
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
+    {
+      try
+      {
+        /*String lexema = s.value.toString();
+        int fila = s.right;
+        int columna = s.left;
+
+        System.out.println("--------------Error Sintactico PANICO------------------------");
+        System.out.println("Lexema: "+lexema);
+        System.out.println("Fila: "+fila);
+        System.out.println("Columna: "+columna);*/
+        TError errorSint = new TError(s.value.toString(), "Error Sintactico", "Token no Esperado", (s.right+1), s.left);
+        errores.add(errorSint);
+      }
+      catch(Exception ex)
+      {
+        System.out.println("ERROR IRRECUPERABLE");
+      }
+    }
+
+:}
+
+//-------------->CODIGO PARA LAS ACCIONES GRAMATICALES
+action code
+{:
+  public static boolean es_fecha(String valor)
+    {
+        try
+        {
+            SimpleDateFormat d = new SimpleDateFormat("dd/MM/yyyy");
+            Date da = d.parse(valor);
+            if(valor.equals(d.format(da)))
+            {
+                return true;
+            }
+            return false;
+        }
+        catch(Exception ex)
+        {
+            return false;
+        }
+    }
+  public static boolean es_fecha_tiempo(String valor)
+  {
+      try
+      {
+          SimpleDateFormat d = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+          Date da = d.parse(valor);
+          if(valor.equals(d.format(da)))
+          {
+              return true;
+          }
+          return false;
+      }
+      catch(Exception ex)
+      {
+          return false;
+      }
+  }
+
+  public static boolean es_booleano(String valor)
+    {
+        try
+        {
+            if(valor.equals("false") || valor.equals("true"))
+            {
+                return true;
+            }
+            return false;
+        }
+        catch(Exception ex)
+        {
+            return false;
+        }
+    }
+:}
+/*----------------------------------------AREA DE DECLARACIONES-------------------------------------------------------------*/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+terminal String dimv, pcoma, iden, dosP, coma, mas, menos, por, divi, elev, mod, aum, dism, numeric, cadena1, cadena2, tTrue, tFalse;
+terminal String oParent, cParent, igualacion, diferente, mayor, menor, menorigual, mayorigual, and, or, not, oKey, cKey, retornar, obtener;
+terminal String conteo, atexto, punto, si, sino, selecciona, caso, defecto, para, mientras, detener, imprimir, funcion, mensaje, documento;
+terminal String setElemento, observador;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+non terminal ASTNodo INICIO_CJS, CUERPO_CJS, C_VAR, L_ID, EXP, E, T, F, G, H, SINO, OPER, SENT_MIENTRAS, IMPRIMIR, FUNCION, RETORNAR, MENSAJE;
+non terminal ASTNodo RELACIONALES, A, EXPLOGICA, B, C, D, S, ARRAY, AS_VAR, SENT_SI, SELECCIONA, SENT_PARA, L_CASOS, CASO, DEFECTO, PARAMS, EXE_FUNC;
+non terminal ASTNodo SETELEMT, OBSERVADOR, EXPRESION;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//---------->PRECENDENCIAS DE MENOR A MAYOR
+precedence left igualacion, diferente, mayor, menor, mayorigual, menorigual;
+precedence right cParent;
+
+//--------------> DONDE INICIA
+start with INICIO_CJS;
+/*----------------------------------------AREA DE ACCIONES SEMANTICAS-------------------------------------------------------*/
+INICIO_CJS ::= {:parser.errores = new ArrayList<>(); parser.contador = 0;:} CUERPO_CJS:h1
+              {:
+                  ASTNodo padre = new ASTNodo(parser.contador, "INICIO_CJS");
+                  parser.contador++;
+                  if(h1!=null)
+                  {padre.addHijo(h1);}
+                  parser.raiz = padre;
+              :}
+              ;
+//----------------------------------------------------------------------------------------------------------------------------
+CUERPO_CJS ::= CUERPO_CJS:h1 C_VAR:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | CUERPO_CJS:h1 AS_VAR:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | CUERPO_CJS:h1 SENT_SI:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | CUERPO_CJS:h1 SELECCIONA:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | CUERPO_CJS:h1 SENT_PARA:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | CUERPO_CJS:h1 SENT_MIENTRAS:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | CUERPO_CJS:h1 detener
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                padre.addHijo(new ASTNodo(parser.contador,"DETENER"));
+                parser.contador++;
+                RESULT = padre;
+              :}
+              | CUERPO_CJS:h1 IMPRIMIR:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | CUERPO_CJS:h1 FUNCION:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | CUERPO_CJS:h1 RETORNAR:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | CUERPO_CJS:h1 MENSAJE:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | CUERPO_CJS:h1 EXE_FUNC:h2 pcoma
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | CUERPO_CJS:h1 SETELEMT:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | CUERPO_CJS:h1 OBSERVADOR:h2
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                if(h2!=null)
+                {padre.addHijo(h2);}
+                RESULT = padre;
+              :}
+              | OBSERVADOR:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | SETELEMT:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | EXE_FUNC:h1 pcoma
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | MENSAJE:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | RETORNAR:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | FUNCION:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | IMPRIMIR:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | detener
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "DETENER");
+                parser.contador++;
+                RESULT = padre;
+              :}
+              | SENT_MIENTRAS:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | SENT_PARA:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | SELECCIONA:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | SENT_SI:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | AS_VAR:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | C_VAR:h1
+              {:
+                ASTNodo padre = new ASTNodo(parser.contador, "CUERPO_CJS");
+                parser.contador++;
+                if(h1!=null)
+                {padre.addHijo(h1);}
+                RESULT = padre;
+              :}
+              | error
+              {:RESULT = null;:}
+              ;
 //----------------------------------------------------------------------------------------------------------------------------
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-VAR ::= dimv C_VAR:h1 pcoma
+C_VAR ::= dimv L_ID:h1 pcoma
       {:
-        ASTNodo padre = new ASTNodo(parser.contador, "VAR");
+        ASTNodo padre = new ASTNodo(parser.contador, "C_VAR_1");//SIN ASIGNACION
         parser.contador++;
         if(h1!=null)
         {padre.addHijo(h1);}
         RESULT = padre;
       :}
-      | dimv error pcoma
+      | dimv L_ID:h1 dosP EXP:h2 pcoma
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "C_VAR_2");//SIMPLE ASIGNACION
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        if(h2!=null)
+        {padre.addHijo(h2);}
+        RESULT = padre;
+      :}
+      | dimv L_ID:h1 dosP EXPLOGICA:h2 pcoma
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "C_VAR_2_5");//SIMPLE ASIGNACION DE UNA BOOLEAN
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        if(h2!=null)
+        {padre.addHijo(h2);}
+        RESULT = padre;
+      :}
+      | dimv L_ID:h1 oKey EXP:h2 cKey pcoma
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "C_VAR_3");//VECTOR SIN ASIGNACION
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        ASTNodo di = new ASTNodo(parser.contador, "DIMENSION");
+        parser.contador++;
+        if(h2!=null)
+        {di.addHijo(h2);}
+        padre.addHijo(di);
+        RESULT = padre;
+      :}
+      | dimv L_ID:h1 oKey EXP:h2 cKey dosP oKey EXP:h3 ARRAY:h4 pcoma//VECTOR CON ASIGNACION Y DIMENSION
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "C_VAR_4");
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        ASTNodo di = new ASTNodo(parser.contador, "DIMENSION");
+        parser.contador++;
+        if(h2!=null)
+        {di.addHijo(h2);}
+        padre.addHijo(di);
+        if(h3!=null)
+        {padre.addHijo(h3);}
+        if(h4!=null)
+        {padre.addHijo(h4);}
+        RESULT = padre;
+      :}
+      | dimv L_ID:h1 dosP oKey EXP:h2 ARRAY:h3 pcoma//VECTOR CON ASIGNACION SIN DIMENSION
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "C_VAR_5");
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        if(h2!=null)
+        {padre.addHijo(h2);}
+        if(h3!=null)
+        {padre.addHijo(h3);}
+        RESULT = padre;
+      :}
+      | dimv L_ID:h1 dosP documento punto obtener oParent cadena1:cad cParent pcoma
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "C_VAR_6");//ASIGNACION DE UN OBJETO CHTML
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        cad = cad.replace("\"","");
+        padre.addHijo(new ASTNodo(parser.contador, cad));
+        parser.contador++;
+        RESULT = padre;
+      :}
+      /*| dimv error pcoma
       {:
         RESULT = null;
       :}
+      | error dimv
+      {:RESULT = null;:}
+      |oKey error cKey
+      {:RESULT = null;:}*/
       ;
 
-C_VAR ::= L_ID:h1
+L_ID ::= L_ID:h1 coma iden:ide
       {:
-          ASTNodo padre = new ASTNodo(parser.contador, "C_VAR");
+        ASTNodo padre = new ASTNodo(parser.contador, "L_ID");
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        ASTNodo id = new ASTNodo(parser.contador, ide);
+        parser.contador++;
+        padre.addHijo(id);
+        RESULT = padre;
+      :}
+      | iden:id
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "L_ID");
+        parser.contador++;
+        ASTNodo ide = new ASTNodo(parser.contador, id);
+        parser.contador++;
+        padre.addHijo(ide);
+        RESULT = padre;
+      :}
+      /*| iden error coma
+      {:RESULT = null;:}
+      | error iden
+      {:RESULT = null;:}*/
+      ;
+
+ARRAY ::= coma EXP:h1 ARRAY:h2
+        {:
+           ASTNodo padre = new ASTNodo(parser.contador, "ARRAY");
+           parser.contador++;
+           if(h1!=null)
+           {padre.addHijo(h1);}
+           if(h2!=null)
+           {padre.addHijo(h2);}
+           RESULT = padre;
+        :}
+        | cKey
+        {:RESULT = null;:}
+        ;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+AS_VAR ::= L_ID:h1 dosP EXP:h2 pcoma
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "AS_VAR_1");//ASIGNACION SIMPLE A VARIABLE SIMPLE
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}//ID O IDS
+        if(h2!=null)
+        {padre.addHijo(h2);}//VALOR DE LA VARIABLE
+        RESULT = padre;
+      :}
+      | L_ID:h1 oKey EXP:h2 cKey dosP EXP:h3 pcoma //ASIGNACION A UNA POSICION DEL VECTOR
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "AS_VAR_2");
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        ASTNodo index = new ASTNodo(parser.contador, "INDEX");
+        parser.contador++;
+        if(h2!=null)
+        {index.addHijo(h2);}
+        padre.addHijo(index);
+        if(h3!=null)
+        {padre.addHijo(h3);}
+        RESULT = padre;
+      :}
+      | L_ID:h1 dosP oKey EXP:h2 ARRAY:h3 pcoma
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "AS_VAR_3");//ASIGNACION DE UN ARRAY A UNA VARIABLE
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        if(h2!=null)
+        {padre.addHijo(h2);}
+        if(h3!=null)
+        {padre.addHijo(h3);}
+        RESULT = padre;
+      :}
+      | L_ID:h1 dosP documento punto obtener oParent cadena1:cad cParent pcoma
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "AS_VAR_4");//ASIGNACION DE UN OBJETO DEL DOCUMENTO
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        cad = cad.replace("\"","");
+        padre.addHijo(new ASTNodo(parser.contador, cad));
+        parser.contador++;
+        RESULT = padre;
+      :}
+      ;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+SENT_SI ::= si oParent EXPLOGICA:h1 cParent oKey cKey
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "SENT_SI");//IGUAL QUE 3
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            RESULT = padre;
+          :}
+          | si oParent EXPLOGICA:h1 cParent oKey CUERPO_CJS:h2 cKey //igual que 4
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "SENT_SI");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            if(h2!=null)
+            {padre.addHijo(h2);}
+            RESULT = padre;
+          :}
+          | si oParent EXPLOGICA:h1 cParent oKey cKey SINO:h2
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "SENT_SI");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            if(h2!=null)
+            {padre.addHijo(h2);}
+            RESULT = padre;
+          :}
+          | si oParent EXPLOGICA:h1 cParent oKey CUERPO_CJS:h2 cKey SINO:h3
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "SENT_SI");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            if(h2!=null)
+            {padre.addHijo(h2);}
+            if(h3!=null)
+            {padre.addHijo(h3);}
+            RESULT = padre;
+          :}
+          | si error cKey
+          {:RESULT = null;:}
+          ;
+SINO ::= sino oKey cKey
+        {:
+          RESULT = null;
+        :}
+        | sino oKey CUERPO_CJS:h1 cKey
+        {:
+          RESULT = h1;
+        :}
+        | sino error cKey
+        {:RESULT = null;:}
+        ;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+SELECCIONA ::= selecciona oParent EXP:h1 cParent oKey L_CASOS:h2 DEFECTO:h3
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "SELECCIONA");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            if(h2!=null)
+            {padre.addHijo(h2);}
+            if(h3!=null)
+            {padre.addHijo(h3);}
+            RESULT = padre;
+          :}
+          | selecciona error cKey
+          {:RESULT = null;:}
+          ;
+L_CASOS ::= CASO:h1 L_CASOS:h2
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "L_CASOS");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        | CASO:h1
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "L_CASOS");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          RESULT = padre;
+        :}
+        ;
+CASO ::= caso EXP:h1 dosP CUERPO_CJS:h2
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "CASO");
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        if(h2!=null)
+        {padre.addHijo(h2);}
+        RESULT = padre;
+      :}
+      | caso error dosP
+      {:RESULT = null;:}
+      ;
+DEFECTO ::= defecto dosP CUERPO_CJS:h1 cKey
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "DEFECTO");
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        RESULT = padre;
+      :}
+      | cKey
+      {:RESULT = null;:}
+      ;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+SENT_PARA ::= para oParent iden:ide dosP EXP:h1 pcoma EXPLOGICA:h2 pcoma iden OPER:h3 cParent oKey cKey
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "SENT_PARA");
+            parser.contador++;
+            padre.addHijo(new ASTNodo(parser.contador,ide));
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            if(h2!=null)
+            {padre.addHijo(h2);}
+            if(h3!=null)
+            {padre.addHijo(h3);}
+            RESULT = padre;
+          :}
+          |para oParent iden:ide dosP EXP:h1 pcoma EXPLOGICA:h2 pcoma iden OPER:h3 cParent oKey CUERPO_CJS:h4 cKey
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "SENT_PARA");
+            parser.contador++;
+            padre.addHijo(new ASTNodo(parser.contador,ide));
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            if(h2!=null)
+            {padre.addHijo(h2);}
+            if(h3!=null)
+            {padre.addHijo(h3);}
+            if(h4!=null)
+            {padre.addHijo(h4);}
+            RESULT = padre;
+          :}
+          | para error cKey
+          {:RESULT = null;:}
+          ;
+
+OPER ::= aum:am
+      {:
+        ASTNodo n = new ASTNodo(parser.contador, am);
+        parser.contador++;
+        RESULT = n;
+      :}
+      | dism:dm
+      {:
+        ASTNodo n = new ASTNodo(parser.contador, dm);
+        parser.contador++;
+        RESULT = n;
+      :}
+      ;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+SENT_MIENTRAS ::= mientras oParent EXPLOGICA:h1 cParent oKey cKey
+               {:
+                 ASTNodo padre = new ASTNodo(parser.contador,"SENT_MIENTRAS");
+                 parser.contador++;
+                 if(h1!=null)
+                 {padre.addHijo(h1);}
+                 RESULT = padre;
+               :}
+               |mientras oParent EXPLOGICA:h1 cParent oKey CUERPO_CJS:h2 cKey
+               {:
+                 ASTNodo padre = new ASTNodo(parser.contador,"SENT_MIENTRAS");
+                 parser.contador++;
+                 if(h1!=null)
+                 {padre.addHijo(h1);}
+                 if(h2!=null)
+                 {padre.addHijo(h2);}
+                 RESULT = padre;
+               :}
+               |mientras error cKey
+               {:RESULT = null;:}
+               ;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+IMPRIMIR ::= imprimir oParent EXP:h1 cParent pcoma
+      {:
+          ASTNodo padre = new ASTNodo(parser.contador, "IMPRIMIR");
           parser.contador++;
           if(h1!=null)
           {padre.addHijo(h1);}
           RESULT = padre;
       :}
       ;
-
-L_ID ::= L_ID:h1 coma identificador:ide
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+FUNCION ::= funcion iden:ide oParent L_ID:h1 cParent oKey cKey //CASO QUE VENGAN PARAMETROS PERO LA FUNCION NO TENGA INSTRUCCIONES
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "FUNCION");
+          parser.contador++;
+          ASTNodo nom = new ASTNodo(parser.contador, ide);
+          parser.contador++;
+          padre.addHijo(nom);
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          RESULT = padre;
+        :}
+        | funcion iden:ide oParent  cParent oKey cKey //CASO EN QUE NO EXISTAN PARAMETROS NI HAYAN INSTRUCCIONES
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "FUNCION");
+          parser.contador++;
+          ASTNodo nom = new ASTNodo(parser.contador, ide);
+          parser.contador++;
+          padre.addHijo(nom);
+          RESULT = padre;
+        :}
+        | funcion iden:ide oParent L_ID:h1 cParent oKey CUERPO_CJS:h2 cKey //EN CASO QUE VENGAN AMBOS
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "FUNCION");
+          parser.contador++;
+          ASTNodo nom = new ASTNodo(parser.contador, ide);
+          parser.contador++;
+          padre.addHijo(nom);
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        | funcion iden:ide oParent cParent oKey CUERPO_CJS:h1 cKey //EN CASO DE QUE SOLO VENGAN INSTRUCCIONES
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "FUNCION");
+          parser.contador++;
+          ASTNodo nom = new ASTNodo(parser.contador, ide);
+          parser.contador++;
+          padre.addHijo(nom);
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          RESULT = padre;
+        :}
+        | funcion error cKey
+        {:RESULT = null;:}
+        ;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+RETORNAR ::= retornar EXP:h1 pcoma
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "RETORNAR");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          RESULT = padre;
+        :}
+        | retornar error pcoma
+        {:RESULT = null;:}
+        ;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+MENSAJE ::= mensaje oParent EXP:h1 cParent pcoma
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "MENSAJE");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          RESULT = padre;
+        :}
+        ;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+SETELEMT ::= iden:id punto setElemento oParent cadena1:elem coma cadena1:nuevoval cParent pcoma
+            {:
+              ASTNodo padre = new ASTNodo(parser.contador, "SETELEMT");
+              parser.contador++;
+              //tomando id
+              padre.addHijo(new ASTNodo(parser.contador, id));
+              parser.contador++;
+              elem = elem.replace("\"", "");
+              //tomando la propiedad
+              padre.addHijo(new ASTNodo(parser.contador, elem));
+              parser.contador++;
+              //tomando el nuevo VALOR
+              nuevoval = nuevoval.replace("\"","");
+              padre.addHijo(new ASTNodo(parser.contador,nuevoval));
+              parser.contador++;
+              RESULT = padre;
+            :}
+            | documento punto obtener oParent cadena1:id cParent punto setElemento oParent cadena1:elem coma cadena1:nuevoval cParent pcoma
+            {:
+              ASTNodo padre = new ASTNodo(parser.contador, "SETELEMT");
+              parser.contador++;
+              //tomanod el id
+              id = id.replace("\"","");
+              padre.addHijo(new ASTNodo(parser.contador, id));
+              parser.contador++;
+              elem = elem.replace("\"", "");
+              //tomando la propiedad
+              padre.addHijo(new ASTNodo(parser.contador, elem));
+              parser.contador++;
+              //tomando el nuevo VALOR
+              nuevoval = nuevoval.replace("\"","");
+              padre.addHijo(new ASTNodo(parser.contador,nuevoval));
+              parser.contador++;
+              RESULT = padre;
+            :}
+            ;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+OBSERVADOR ::= documento punto observador oParent cadena1:tipo coma FUNCION:h1 cParent pcoma
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "OBSERVADOR_DOC");
+            parser.contador++;
+            tipo = tipo.replace("\"","");
+            padre.addHijo(new ASTNodo(parser.contador, tipo));
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            RESULT = padre;
+          :}
+          | documento punto observador oParent cadena1:tipo coma iden:fun oParent cParent cParent pcoma
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "OBSERVADOR_DOC");
+            parser.contador++;
+            tipo = tipo.replace("\"","");
+            padre.addHijo(new ASTNodo(parser.contador, tipo));
+            parser.contador++;
+            padre.addHijo(new ASTNodo(parser.contador, fun));
+            parser.contador++;
+            RESULT = padre;
+          :}
+          | iden:id punto observador oParent cadena1:tipo coma FUNCION:h1 cParent pcoma
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "OBSERVADOR_ID");
+            parser.contador++;
+            padre.addHijo(new ASTNodo(parser.contador, id));
+            parser.contador++;
+            tipo = tipo.replace("\"","");
+            padre.addHijo(new ASTNodo(parser.contador, tipo));
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            RESULT = padre;
+          :}
+          | iden:id punto observador oParent cadena1:tipo coma iden:fun oParent cParent cParent pcoma
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "OBSERVADOR_ID");
+            parser.contador++;
+            padre.addHijo(new ASTNodo(parser.contador, id));
+            parser.contador++;
+            tipo = tipo.replace("\"","");
+            padre.addHijo(new ASTNodo(parser.contador, tipo));
+            parser.contador++;
+            padre.addHijo(new ASTNodo(parser.contador, fun));
+            parser.contador++;
+            RESULT = padre;
+          :}
+          ;
+/*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+EXP ::= E:h1
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "EXP");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          RESULT = padre;
+        :}
+        ;
+E ::= E:h1 mas T:h2
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "E");
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      ASTNodo sig = new ASTNodo(parser.contador, "+");
+      parser.contador++;
+      padre.addHijo(sig);
+      if(h2!=null)
+      {padre.addHijo(h2);}
+      RESULT = padre;
+    :}
+    | E:h1 menos T:h2
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "E");
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      ASTNodo sig = new ASTNodo(parser.contador, "-");
+      parser.contador++;
+      padre.addHijo(sig);
+      if(h2!=null)
+      {padre.addHijo(h2);}
+      RESULT = padre;
+    :}
+    | T:h1
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "E");
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      RESULT = padre;
+    :}
+    ;
+T ::= T:h1 por F:h2
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "T");
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      ASTNodo sig = new ASTNodo(parser.contador, "*");
+      parser.contador++;
+      padre.addHijo(sig);
+      if(h2!=null)
+      {padre.addHijo(h2);}
+      RESULT = padre;
+    :}
+    | T:h1 divi F:h2
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "T");
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      ASTNodo sig = new ASTNodo(parser.contador, "/");
+      parser.contador++;
+      padre.addHijo(sig);
+      if(h2!=null)
+      {padre.addHijo(h2);}
+      RESULT = padre;
+    :}
+    | F:h1
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "T");
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      RESULT = padre;
+    :}
+    ;
+F::= F:h1 elev G:h2
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "F");
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      ASTNodo sig = new ASTNodo(parser.contador, "^");
+      parser.contador++;
+      padre.addHijo(sig);
+      if(h2!=null)
+      {padre.addHijo(h2);}
+      RESULT = padre;
+    :}
+    | F:h1 mod G:h2
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "F");
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      ASTNodo sig = new ASTNodo(parser.contador, "%");
+      parser.contador++;
+      padre.addHijo(sig);
+      if(h2!=null)
+      {padre.addHijo(h2);}
+      RESULT = padre;
+    :}
+    | G:h1
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "F");
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      RESULT = padre;
+    :}
+    ;
+G::= H:h1 aum
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "G");
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      padre.addHijo(new ASTNodo(parser.contador, "++"));
+      parser.contador++;
+      RESULT = padre;
+    :}
+    | H:h1 dism
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "G");
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      padre.addHijo(new ASTNodo(parser.contador, "--"));
+      parser.contador++;
+      RESULT = padre;
+    :}
+    | H:h1
+    {:
+      if(h1!=null)
+      {RESULT = h1;}
+      else
+      {RESULT = null;}
+    :}
+    ;
+H ::= numeric:val
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "NUMERICO");
+      parser.contador++;
+      ASTNodo valor = new ASTNodo(parser.contador, val);
+      parser.contador++;
+      padre.addHijo(valor);
+      RESULT = padre;
+    :}
+    | iden:val
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "IDENTIFICADOR");
+      parser.contador++;
+      ASTNodo valor = new ASTNodo(parser.contador, val);
+      parser.contador++;
+      padre.addHijo(valor);
+      RESULT = padre;
+    :}
+    | cadena1:val
+    {:
+      ASTNodo padre;
+      val = val.replace("\"","");
+      if(es_fecha(val))
+      {padre = new ASTNodo(parser.contador, "DATE");}
+      else if(es_fecha_tiempo(val))
+      {padre = new ASTNodo(parser.contador, "DATETIME");}
+      else if(es_booleano(val))
+      {padre = new ASTNodo(parser.contador, "BOOLEAN");}
+      else
+      {padre = new ASTNodo(parser.contador, "CADENA");}
+      parser.contador++;
+      ASTNodo valor = new ASTNodo(parser.contador, val);
+      parser.contador++;
+      padre.addHijo(valor);
+      RESULT = padre;
+    :}
+    | cadena2:val
+    {:
+      ASTNodo padre;
+      val = val.replace("\'","");
+      if(es_fecha(val))
+      {padre = new ASTNodo(parser.contador, "DATE");}
+      else if(es_fecha_tiempo(val))
+      {padre = new ASTNodo(parser.contador, "DATETIME");}
+      else if(es_booleano(val))
+      {padre = new ASTNodo(parser.contador, "BOOLEAN");}
+      else
+      {padre = new ASTNodo(parser.contador, "CADENA");}
+      parser.contador++;
+      ASTNodo valor = new ASTNodo(parser.contador, val);
+      parser.contador++;
+      padre.addHijo(valor);
+      RESULT = padre;
+    :}
+    | tTrue:h1
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "BOOLEAN");
+      parser.contador++;
+      padre.addHijo(new ASTNodo(parser.contador, h1));
+      parser.contador++;
+      RESULT = padre;
+    :}
+    | tFalse:h1
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "BOOLEAN");
+      parser.contador++;
+      padre.addHijo(new ASTNodo(parser.contador, h1));
+      parser.contador++;
+      RESULT = padre;
+    :}
+    | iden:ide oKey EXP:h1 cKey //ACCESO A VECTOR
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "VALOR_VECTOR");
+      parser.contador++;
+      padre.addHijo(new ASTNodo(parser.contador, ide));
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      RESULT = padre;
+    :}
+    | oParent EXP:h1 cParent // EXPRESION EN PARENTESIS
+    {:
+      RESULT = h1;
+    :}
+    | iden:ide punto conteo oParent cParent // .SIZE() DE VECTORES
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "CONTEO");
+      parser.contador++;
+      padre.addHijo(new ASTNodo(parser.contador, ide));
+      parser.contador++;
+      RESULT = padre;
+    :}
+    | iden:ide punto conteo // .SIZE DE VECTORES
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "CONTEO");
+      parser.contador++;
+      padre.addHijo(new ASTNodo(parser.contador, ide));
+      parser.contador++;
+      RESULT = padre;
+    :}
+    | iden:ide punto atexto oParent cParent // .TOString()
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "ATEXTO");
+      parser.contador++;
+      padre.addHijo(new ASTNodo(parser.contador, ide));
+      parser.contador++;
+      RESULT = padre;
+    :}
+    | iden:ide punto atexto //.TOString
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "ATEXTO");
+      parser.contador++;
+      padre.addHijo(new ASTNodo(parser.contador, ide));
+      parser.contador++;
+      RESULT = padre;
+    :}
+    | EXE_FUNC:h1
+    {:
+      if(h1!=null)
+      {RESULT = h1;}
+    :}
+    ;
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+PARAMS::= PARAMS:h1 coma EXP:h2
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "PARAMS");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        | EXP:h1
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "PARAMS");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          RESULT = padre;
+        :}
+        ;
+EXE_FUNC::= iden:ide oParent cParent
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador,"EXE_FUNC");
+          parser.contador++;
+          padre.addHijo(new ASTNodo(parser.contador, ide));
+          parser.contador++;
+          RESULT = padre;
+        :}
+        | iden:ide oParent PARAMS:h2 cParent //LLAMADA A UNA FUNCION CON PARAMETROS
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador,"EXEC_FUNC");
+          parser.contador++;
+          padre.addHijo(new ASTNodo(parser.contador, ide));
+          parser.contador++;
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        ;
+/*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+RELACIONALES ::= A:h1
       {:
-        ASTNodo padre = new ASTNodo(parser.contador, "L_ID");
+        ASTNodo padre = new ASTNodo(parser.contador, "RELACIONALES");
         parser.contador++;
         if(h1!=null)
         {padre.addHijo(h1);}
-        ASTNodo ide = new ASTNodo(parser.contador, id);
-        parser.contador++;
-        padre.addHijo(ide);
         RESULT = padre;
       :}
-      | identificador:id
-      {:
-        ASTNodo padre = new ASTNodo(parser.contador, "L_ID");
-        parser.contador++;
-        ASTNodo ide = new ASTNodo(parser.contador, id);
-        parser.contador++;
-        padre.addHijo(ide);
-        RESULT = padre;
-      :}
-      | identificador error coma
-      {:RESULT = null;}
-      | error identificador
-      {:RESULT = null;}
       ;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+A ::= A:h1 igualacion A:h2
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "A");
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        padre.addHijo(new ASTNodo(parser.contador, "=="));
+        parser.contador++;
+        if(h2!=null)
+        {padre.addHijo(h2);}
+        RESULT = padre;
+      :}
+      | A:h1 diferente A:h2
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "A");
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        padre.addHijo(new ASTNodo(parser.contador, "!="));
+        parser.contador++;
+        if(h2!=null)
+        {padre.addHijo(h2);}
+        RESULT = padre;
+      :}
+      | A:h1 menor A:h2
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "A");
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        padre.addHijo(new ASTNodo(parser.contador, "<"));
+        parser.contador++;
+        if(h2!=null)
+        {padre.addHijo(h2);}
+        RESULT = padre;
+      :}
+      | A:h1 mayor A:h2
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "A");
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        padre.addHijo(new ASTNodo(parser.contador, ">"));
+        parser.contador++;
+        if(h2!=null)
+        {padre.addHijo(h2);}
+        RESULT = padre;
+      :}
+      | A:h1 menorigual A:h2
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "A");
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        padre.addHijo(new ASTNodo(parser.contador, "<="));
+        parser.contador++;
+        if(h2!=null)
+        {padre.addHijo(h2);}
+        RESULT = padre;
+      :}
+      | A:h1 mayorigual A:h2
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "A");
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        padre.addHijo(new ASTNodo(parser.contador, ">="));
+        parser.contador++;
+        if(h2!=null)
+        {padre.addHijo(h2);}
+        RESULT = padre;
+      :}
+      | EXP:h1
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "A");
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        RESULT = padre;
+      :}
+      ;
+
+EXPLOGICA ::= B:h1
+      {:
+        ASTNodo padre = new ASTNodo(parser.contador, "EXPLOGICA");
+        parser.contador++;
+        if(h1!=null)
+        {padre.addHijo(h1);}
+        RESULT = padre;
+      :}
+      ;
+B::= B:h1 or C:h2
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "B");
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      padre.addHijo(new ASTNodo(parser.contador, "OR"));
+      parser.contador++;
+      if(h2!=null)
+      {padre.addHijo(h2);}
+      RESULT = padre;
+    :}
+    | C:h1
+    {:
+      RESULT = h1;
+    :}
+    ;
+
+C::= C:h1 and D:h2
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "B");
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      padre.addHijo(new ASTNodo(parser.contador, "AND"));
+      parser.contador++;
+      if(h2!=null)
+      {padre.addHijo(h2);}
+      RESULT = padre;
+    :}
+    | D:h1
+    {:
+      RESULT = h1;
+    :}
+    ;
+
+D ::= not S:h1
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador, "D");
+      parser.contador++;
+      padre.addHijo(new ASTNodo(parser.contador, "NOT"));
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      RESULT = padre;
+    :}
+    | S:h1
+    {:
+      RESULT = h1;
+    :}
+    ;
+S ::= RELACIONALES:h1
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador,"S");
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      RESULT = padre;
+    :}
+    | oParent EXPLOGICA:h1 cParent
+    {:
+      ASTNodo padre = new ASTNodo(parser.contador,"S");
+      parser.contador++;
+      if(h1!=null)
+      {padre.addHijo(h1);}
+      RESULT = padre;
+    :}
+    ;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+EXPRESION ::= E:h1
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "EXPRESION");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            RESULT = padre;
+          :}
+          ;
+E::=    E:h1 mas E:h2
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "E");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          ASTNodo sig = new ASTNodo(parser.contador, "+");
+          parser.contador++;
+          padre.addHijo(sig);
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        |E:h1 menos E:h2
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "E");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          ASTNodo sig = new ASTNodo(parser.contador, "-");
+          parser.contador++;
+          padre.addHijo(sig);
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        |E:h1 por E:h2
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "E");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          ASTNodo sig = new ASTNodo(parser.contador, "*");
+          parser.contador++;
+          padre.addHijo(sig);
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        |E:h1 div E:h2
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "E");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          ASTNodo sig = new ASTNodo(parser.contador, "/");
+          parser.contador++;
+          padre.addHijo(sig);
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        |E:h1 mod E:h2
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "E");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          ASTNodo sig = new ASTNodo(parser.contador, "%");
+          parser.contador++;
+          padre.addHijo(sig);
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        |E:h1 elev E:h2
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "E");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          ASTNodo sig = new ASTNodo(parser.contador, "^");
+          parser.contador++;
+          padre.addHijo(sig);
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        //RELACIONAL
+        |E:h1 igualacion E:h2
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "E");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          ASTNodo sig = new ASTNodo(parser.contador, "==");
+          parser.contador++;
+          padre.addHijo(sig);
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        |E:h1 diferente E:h2
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "E");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          ASTNodo sig = new ASTNodo(parser.contador, "!=");
+          parser.contador++;
+          padre.addHijo(sig);
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        |E:h1 menor E:h2
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "E");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          ASTNodo sig = new ASTNodo(parser.contador, "<");
+          parser.contador++;
+          padre.addHijo(sig);
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        |E:h1 mayor E:h2
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "E");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          ASTNodo sig = new ASTNodo(parser.contador, ">");
+          parser.contador++;
+          padre.addHijo(sig);
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        |E:h1 menorigual E:h2
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "E");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          ASTNodo sig = new ASTNodo(parser.contador, "<=");
+          parser.contador++;
+          padre.addHijo(sig);
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        |E:h1 mayorigual E:h2
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "E");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          ASTNodo sig = new ASTNodo(parser.contador, ">=");
+          parser.contador++;
+          padre.addHijo(sig);
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        //logicas
+        |E:h1 and E:h2
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "E");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          ASTNodo sig = new ASTNodo(parser.contador, "AND");
+          parser.contador++;
+          padre.addHijo(sig);
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        |E:h1 or E:h2
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "E");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          ASTNodo sig = new ASTNodo(parser.contador, "OR");
+          parser.contador++;
+          padre.addHijo(sig);
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        |E:h1 aum
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "E");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          padre.addHijo(new ASTNodo(parser.contador, "++"));
+          parser.contador++;
+          RESULT = padre;
+        :}
+        |E:h1 dism
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "E");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          padre.addHijo(new ASTNodo(parser.contador, "--"));
+          parser.contador++;
+          RESULT = padre;
+        :}
+        |not E:h1
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "E");
+          parser.contador++;
+          padre.addHijo(new ASTNodo(parser.contador, "NOT"));
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          RESULT = padre;
+        :}
+        |oParent E:h1 cParent
+        {:
+          RESULT = h1;
+        :}
+        |numeric:val
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "NUMERICO");
+          parser.contador++;
+          ASTNodo valor = new ASTNodo(parser.contador, val);
+          parser.contador++;
+          padre.addHijo(valor);
+          RESULT = padre;
+        :}
+        | iden:val
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "IDENTIFICADOR");
+          parser.contador++;
+          ASTNodo valor = new ASTNodo(parser.contador, val);
+          parser.contador++;
+          padre.addHijo(valor);
+          RESULT = padre;
+        :}
+        | cadena1:val
+        {:
+          ASTNodo padre;
+          val = val.replace("\"","");
+          if(es_fecha(val))
+          {padre = new ASTNodo(parser.contador, "DATE");}
+          else if(es_fecha_tiempo(val))
+          {padre = new ASTNodo(parser.contador, "DATETIME");}
+          else if(es_booleano(val))
+          {padre = new ASTNodo(parser.contador, "BOOLEAN");}
+          else
+          {padre = new ASTNodo(parser.contador, "CADENA");}
+          parser.contador++;
+          ASTNodo valor = new ASTNodo(parser.contador, val);
+          parser.contador++;
+          padre.addHijo(valor);
+          RESULT = padre;
+        :}
+        | cadena2:val
+        {:
+          ASTNodo padre;
+          val = val.replace("\'","");
+          if(es_fecha(val))
+          {padre = new ASTNodo(parser.contador, "DATE");}
+          else if(es_fecha_tiempo(val))
+          {padre = new ASTNodo(parser.contador, "DATETIME");}
+          else if(es_booleano(val))
+          {padre = new ASTNodo(parser.contador, "BOOLEAN");}
+          else
+          {padre = new ASTNodo(parser.contador, "CADENA");}
+          parser.contador++;
+          ASTNodo valor = new ASTNodo(parser.contador, val);
+          parser.contador++;
+          padre.addHijo(valor);
+          RESULT = padre;
+        :}
+        | tTrue:h1
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "BOOLEAN");
+          parser.contador++;
+          padre.addHijo(new ASTNodo(parser.contador, h1));
+          parser.contador++;
+          RESULT = padre;
+        :}
+        | tFalse:h1
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "BOOLEAN");
+          parser.contador++;
+          padre.addHijo(new ASTNodo(parser.contador, h1));
+          parser.contador++;
+          RESULT = padre;
+        :}
+        | iden:ide oKey EXP:h1 cKey //ACCESO A VECTOR
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "VALOR_VECTOR");
+          parser.contador++;
+          padre.addHijo(new ASTNodo(parser.contador, ide));
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          RESULT = padre;
+        :}
+        | oParent EXP:h1 cParent // EXPRESION EN PARENTESIS
+        {:
+          RESULT = h1;
+        :}
+        | iden:ide punto conteo oParent cParent // .SIZE() DE VECTORES
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "CONTEO");
+          parser.contador++;
+          padre.addHijo(new ASTNodo(parser.contador, ide));
+          parser.contador++;
+          RESULT = padre;
+        :}
+        | iden:ide punto conteo // .SIZE DE VECTORES
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "CONTEO");
+          parser.contador++;
+          padre.addHijo(new ASTNodo(parser.contador, ide));
+          parser.contador++;
+          RESULT = padre;
+        :}
+        | iden:ide punto atexto oParent cParent // .TOString()
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "ATEXTO");
+          parser.contador++;
+          padre.addHijo(new ASTNodo(parser.contador, ide));
+          parser.contador++;
+          RESULT = padre;
+        :}
+        | iden:ide punto atexto //.TOString
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "ATEXTO");
+          parser.contador++;
+          padre.addHijo(new ASTNodo(parser.contador, ide));
+          parser.contador++;
+          RESULT = padre;
+        :}
+        | EXE_FUNC:h1
+        {:
+          if(h1!=null)
+          {RESULT = h1;}
+        :}

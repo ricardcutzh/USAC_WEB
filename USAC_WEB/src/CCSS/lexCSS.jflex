@@ -51,7 +51,7 @@ cadena2 = \'(\\.|[^\'\\])*\'
 <YYINITIAL> "minuscula"                   {return new Symbol(Simbolos.minus, yycolumn, yyline, yytext());}
 <YYINITIAL> "capital-t"                   {return new Symbol(Simbolos.capital, yycolumn, yyline, yytext());}
 <YYINITIAL> "letra"                       {return new Symbol(Simbolos.letra, yycolumn, yyline, yytext());}
-<YYINITIAL> "tamtext"                     {return new Symbol(Simbolos.tamtext, yycolumn, yyline, yytext());}
+<YYINITIAL> "tamtex"                     {return new Symbol(Simbolos.tamtext, yycolumn, yyline, yytext());}
 <YYINITIAL> "fondoelemento"               {return new Symbol(Simbolos.felemento, yycolumn, yyline, yytext());}
 <YYINITIAL> "autoredimension"             {return new Symbol(Simbolos.autoRed, yycolumn, yyline, yytext());}
 <YYINITIAL> "horizontal"                  {return new Symbol(Simbolos.horizontal, yycolumn, yyline, yytext());}

@@ -80,13 +80,8 @@ INICIO_CHTML ::= {: parser.errores = new ArrayList<>();:} opentag chtml closetag
                 {:
                   ASTNodo padre = new ASTNodo(parser.contador,"INICIO_CHTML");
                   parser.contador++;
-                  ASTNodo nodo = new ASTNodo(parser.contador, "chtml");
-                  parser.contador++;
-                  ASTNodo nodo2 = new ASTNodo(parser.contador, "fin-chtml");
-                  padre.addHijo(nodo);
                   padre.addHijo(h1);
                   padre.addHijo(h2);
-                  padre.addHijo(nodo2);
                   parser.raiz = padre;
                 :}
                 |error finChtml closetag
@@ -103,25 +98,13 @@ ENCABEZADO ::= opentag encabezado closetag L_ENCABEZADO:h1 opentag finEncabezado
                 {:
                   ASTNodo padre = new ASTNodo(parser.contador, "ENCABEZADO");
                   parser.contador++;
-                  ASTNodo nodo = new ASTNodo(parser.contador, "encabezado");
-                  parser.contador++;
-                  ASTNodo nodo2 = new ASTNodo(parser.contador, "fin-encabezado");
-                  parser.contador++;
-                  padre.addHijo(nodo);
                   padre.addHijo(h1);
-                  padre.addHijo(nodo2);
                   RESULT = padre;
                 :}
                 |opentag encabezado closetag opentag finEncabezado closetag
                 {:
                   ASTNodo padre = new ASTNodo(parser.contador, "ENCABEZADO");
                   parser.contador++;
-                  ASTNodo nodo = new ASTNodo(parser.contador, "encabezado");
-                  parser.contador++;
-                  ASTNodo nodo2 = new ASTNodo(parser.contador, "fin-encabezado");
-                  parser.contador++;
-                  padre.addHijo(nodo);
-                  padre.addHijo(nodo2);
                   RESULT = padre;
                 :}
                 | error finEncabezado closetag
@@ -136,27 +119,15 @@ CUERPO ::= opentag cuerpo FONDO:h1 closetag L_CUERPO:h2 opentag finCuerpo closet
           {:
             ASTNodo padre = new ASTNodo(parser.contador, "CUERPO");
             parser.contador++;
-            ASTNodo nodo = new ASTNodo(parser.contador, "cuerpo");
-            parser.contador++;
-            ASTNodo nodo2 = new ASTNodo(parser.contador, "fin-cuerpo");
-            parser.contador++;
-            padre.addHijo(nodo);
             nodo.addHijo(h1);
             padre.addHijo(h2);
-            padre.addHijo(nodo2);
             RESULT = padre;
           :}
           |opentag cuerpo FONDO:h1 closetag opentag finCuerpo closetag
           {:
             ASTNodo padre = new ASTNodo(parser.contador, "CUERPO");
             parser.contador++;
-            ASTNodo nodo = new ASTNodo(parser.contador, "cuerpo");
-            parser.contador++;
-            ASTNodo nodo2 = new ASTNodo(parser.contador, "fin-cuerpo");
-            parser.contador++;
-            padre.addHijo(nodo);
             nodo.addHijo(h1);
-            padre.addHijo(nodo2);
             RESULT = padre;
           :}
           | error finCuerpo closetag
@@ -687,6 +658,24 @@ BOTON ::= opentag boton closetag opentag finBoton closetag
           padre.addHijo(hij);
           RESULT = padre;
         :}
+        | opentag boton L_ATTS:h1 closetag TEXTO:h2 opentag finBoton closetag
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "BOTON");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        | opentag boton closetag TEXTO:h1 opentag finBoton closetag
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "BOTON");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          RESULT = padre;
+        :}
         | error finBoton closetag
         {:
           ASTNodo padre = new ASTNodo(parser.contador, "BOTON");
@@ -866,6 +855,24 @@ C_ENCABEZADO ::= opentag cb closetag opentag finCb closetag
               {padre.addHijo(h1);}
               RESULT = padre;
             :}
+            | opentag cb L_ATTS:h1 closetag TEXTO:h2 opentag finCb closetag
+            {:
+              ASTNodo padre = new ASTNodo(parser.contador, "C_ENCABEZADO");
+              parser.contador++;
+              if(h1!=null)
+              {padre.addHijo(h1);}
+              if(h2!=null)
+              {padre.addHijo(h2);}
+              RESULT = padre;
+            :}
+            | opentag cb closetag TEXTO:h1 opentag finCb closetag
+            {:
+              ASTNodo padre = new ASTNodo(parser.contador, "C_ENCABEZADO");
+              parser.contador++;
+              if(h1!=null)
+              {padre.addHijo(h1);}
+              RESULT = padre;
+            :}
             | error finCb closetag
             {:
               ASTNodo padre = new ASTNodo(parser.contador, "C_ENCABEZADO");
@@ -935,6 +942,24 @@ CELDA ::= opentag ct closetag opentag finCt closetag
           RESULT = padre;
         :}
         | opentag ct closetag IMAGEN:h1 opentag finCt closetag
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "CELDA");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          RESULT = padre;
+        :}
+        | opentag ct L_ATTS:h1 closetag TEXTO:h2 opentag finCt closetag
+        {:
+          ASTNodo padre = new ASTNodo(parser.contador, "CELDA");
+          parser.contador++;
+          if(h1!=null)
+          {padre.addHijo(h1);}
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          RESULT = padre;
+        :}
+        | opentag ct closetag TEXTO:h1 opentag finCt closetag
         {:
           ASTNodo padre = new ASTNodo(parser.contador, "CELDA");
           parser.contador++;
@@ -1112,29 +1137,22 @@ OPCION ::= opentag opcion closetag opentag finOpcion closetag
           padre.addHijo(hij);
           RESULT = padre;
         :}
-        | opentag opcion valor igual cadena:cad pcoma closetag opentag finOpcion closetag
+        | opentag opcion L_ATTS:h1 closetag opentag finOpcion closetag
         {:
           ASTNodo padre = new ASTNodo(parser.contador,"OPCION");
           parser.contador++;
-          ASTNodo hijo = new ASTNodo(parser.contador, "VALOR");
-          parser.contador++;
-          cad = cad.replace("\"","");
-          ASTNodo str = new ASTNodo(parser.contador,cad);
-          hijo.addHijo(str);
-          padre.addHijo(hijo);
+          if(h1!=null)
+          {padre.addHijo(h1);}
           RESULT = padre;
         :}
-        | opentag opcion valor igual cadena:cad pcoma closetag TXT:h1 opentag finOpcion closetag
+        | opentag opcion L_ATTS:h2 closetag TXT:h1 opentag finOpcion closetag
         {:
           ASTNodo padre = new ASTNodo(parser.contador,"OPCION");
           parser.contador++;
-          ASTNodo hijo = new ASTNodo(parser.contador, "VALOR");
-          parser.contador++;
-          cad = cad.replace("\"","");
-          ASTNodo str = new ASTNodo(parser.contador,cad);
-          hijo.addHijo(str);
-          padre.addHijo(hijo);
-          padre.addHijo(h1);
+          if(h2!=null)
+          {padre.addHijo(h2);}
+          if(h1!=null)
+          {padre.addHijo(h1);}
           RESULT = padre;
         :}
         | error finOpcion closetag
@@ -1201,6 +1219,24 @@ SPINNER ::= opentag spinner closetag opentag finSpinner closetag
             if(h1!=null)
             {padre.addHijo(h1);}
             padre.addHijo(hijo);
+            RESULT = padre;
+          :}
+          |opentag spinner L_ATTS:h1 closetag TXT:h2 opentag finSpinner closetag
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "SPINNER");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
+            if(h2!=null)
+            {padre.addHijo(h2);}
+            RESULT = padre;
+          :}
+          |opentag spinner closetag TXT:h1 opentag finSpinner closetag
+          {:
+            ASTNodo padre = new ASTNodo(parser.contador, "SPINNER");
+            parser.contador++;
+            if(h1!=null)
+            {padre.addHijo(h1);}
             RESULT = padre;
           :}
           | error finSpinner closetag
@@ -1404,6 +1440,12 @@ NOM_A ::= click:val
             RESULT = r;
           :}
           |alineado:val
+          {:
+            ASTNodo r = new ASTNodo(parser.contador,val);
+            parser.contador++;
+            RESULT = r;
+          :}
+          | valor:val
           {:
             ASTNodo r = new ASTNodo(parser.contador,val);
             parser.contador++;

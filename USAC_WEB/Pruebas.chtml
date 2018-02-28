@@ -1,0 +1,9 @@
+<chtml>
+  <encabezado>
+    <Titulo>Mi nuevo titulo<fin-Titulo>
+  <fin-encabezado>
+  <cuerpo>
+    <panel>
+    <fin-panel>
+  <fin-cuerpo>
+<fin-chtml>

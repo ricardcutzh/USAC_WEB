@@ -3,14 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/CJS/parser.java</file>
-            <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/AST/TError.java</file>
-            <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/CCSS/parser.java</file>
-            <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/CCSS/LexCSS.java</file>
+            <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/CCSS_EXEC/Interprete_CCSS.java</file>
+            <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/CHTML_EXEC/Interprete_CHTML.java</file>
+            <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/GUI/Pestania.java</file>
+            <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/CCSS_EXEC/Atributo.java</file>
+            <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/CCSS_EXEC/Definicion.java</file>
+            <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/GUI/USAC_WEB_GUI.java</file>
             <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/AST/ASTNodo.java</file>
-            <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/CHTML/lex2.jflex</file>
             <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/usac_web/USAC_WEB.java</file>
-            <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/CJS/LexCJS.java</file>
+            <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/CCSS_EXEC/Elemento.java</file>
         </group>
     </open-files>
 </project-private>

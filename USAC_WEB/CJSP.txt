@@ -1,5 +1,140 @@
-imprimir("hola mundo");
-funcion suma(a,b)
-{
-  res:a+b;
+DimV variable: 5+5;
+variable: 10*2;
+DimV VariableBooleana: "hola";
+variable:5*variable++;
+Dimv vector: {4};
+vector: {"Hola mundo", variable.aTexto(), "01/01/2013", "01/01/2013 23:59:59", metodo()};
+DimV var: (4+4)*2>5 && (4*2)/1>100 || "true";
+DimV hola: vector{4};
+hola: vector{metodobusqueda("primero")};
+DimV nose: vector.aTexto();
+Si ("true" || "false" && 5*5>4){
+	DimV var: (4+4)*2>5 && (4*2)/1>100 || "true";
+	DimV hola: vector{4};
+	hola: vector{metodobusqueda("primero")};
+	DimV nose: vector.aTexto();
+	Si(-(5*3*1)>54 || "10/01/2012"=="23/01/2013"){
+		a:43;
+		Selecciona(4*1>3||43){
+			Caso "true":
+				Detener;
+			Caso "false":
+				Si(5*1>1){
+					Detener;
+
+				}sino{
+					Imprimir(variable);
+				}
+			Defecto:
+				Imprimir("ola ke ase? :v");
+		}
+	}sino{
+		a:43>3;
+
+	}
+}
+
+Mientras(a>45){
+	a++;
+}
+funcion primera(){
+	DimV variable: 5+5;
+	variable: 10*2;
+	DimV VariableBooleana: "True";
+	variable:5*variable++;
+	Dimv vector: {4};
+	vector: {"Hola mundo", variable.aTexto(), "01/01/2013", "01/01/2013 23:59:59", metodo()};
+	DimV var: (4+4)*2>5 && (4*2)/1>100 || "true";
+	DimV hola: vector{4};
+	hola: vector{metodobusqueda("primero")};
+	DimV nose: vector.aTexto();
+	Mientras(1<=1||3*4*1*24*5 >=23*1 && "true"){
+
+		Selecciona(4*1>3||43){
+			Caso 43:
+				Detener;
+			Caso 54:
+				Selecciona(variable){
+					Caso "primita":
+						Detener;
+					Caso "primito":
+						Si(5*1>1){
+							Detener;
+
+						}sino{
+							Imprimir(variable);
+						}
+					Defecto:
+						Si ("true" || "false" && 5*5>4){
+							DimV var: (4+4)*2>5 && (4*2)/1>100 || "true";
+							DimV hola: vector{4};
+							hola: vector{metodobusqueda("primero")};
+							DimV nose: vector.aTexto();
+							Si(-(5*3*1)>54 || "10/01/2012"=="23/01/2013"){
+								a:43;
+								Selecciona(4*1>3||43){
+									Caso "true":
+										Detener;
+									Caso "false":
+										Si(5*1>1){
+											Detener;
+
+										}sino{
+											Imprimir(variable);
+										}
+									Defecto:
+										Imprimir("ola ke ase? :v");
+								}
+							}sino{
+								a:43>3;
+
+							}
+						}
+						Imprimir("ola ke ase? :v");
+				}
+				Si(5*1>1){
+					Detener;
+
+				}sino{
+					Imprimir(variable);
+				}
+			Defecto:
+				Imprimir("ola ke ase? :v");
+		}
+	}
+}
+funcion Instrucciones(parametro1, parametro2, parametro3){
+	Retornar "ya casi xd";
+	Imprimir("variable" + "text" + var);
+	primera();
+	Instrucciones("algo", 45, Instrucciones(43, "nose", 32));
+	Si( "10/01/2012 05:32:53"<="23/01/2013"){
+		a:"true";
+		Selecciona(5++){
+			Caso 6:
+				Detener;
+				Documento.Observador("listo", primera());
+				Documento.Obtener("id_1");
+			Caso 7:
+				Si(5*1>1){
+					para(var2:43.89; var > 50 *3; --){
+						Documento.Observador("listo", primera());
+						Documento.Obtener("id_1").setElemento("ruta", 5*5||"true");
+						Detener;
+					}
+				}sino{
+					para(var:0; var > 50 *3; ++){
+						DimV varEvento: Documento.Obtener("id_1");
+						varEvento.setElemento("alineado", "true");
+						Mensaje(variable);
+					}
+				}
+			Defecto:
+				Mensaje("ola ke ase? :v");
+		}
+	}
+	Documento.Observador("listo", funcion dentro(){
+		Imprimir("hola :v");
+
+	});
 }

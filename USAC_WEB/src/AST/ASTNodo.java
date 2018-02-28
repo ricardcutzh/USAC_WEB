@@ -70,7 +70,7 @@ public class ASTNodo {
     
     public String graficaAST(ASTNodo raiz)
     {
-        this.cadenaDot = "digraph AST{\n node [shape=box];";
+        this.cadenaDot = "digraph AST{\n node [shape=box];\n";
         recorreAST(raiz);
         this.cadenaDot += "}";
         return this.cadenaDot;

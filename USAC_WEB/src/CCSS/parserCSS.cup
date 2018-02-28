@@ -625,7 +625,7 @@ VISIBLE ::= visible dosP igual BOOLEAN:h1 pcoma
           :}
           ;
 //----------------------------------------------------------------------------------------------
-BORDE ::= borde dosP igual oBracket EXP:h1 coma EXPCAD:h2 coma BOOLEAN:h3 cBracket
+BORDE ::= borde dosP igual oBracket EXP:h1 coma EXPCAD:h2 coma BOOLEAN:h3 cBracket pcoma
         {:
           ASTNodo padre = new ASTNodo(parser.contador, "BORDE");
           parser.contador++;
@@ -746,6 +746,7 @@ F ::= entero:ent
       ASTNodo hijo = new ASTNodo(parser.contador,dec);
       parser.contador++;
       padre.addHijo(hijo);
+      RESULT = padre;
     :}
     | cadena:cad
     {:
@@ -817,6 +818,7 @@ BOOLEAN ::= Tfalse:h1
             ASTNodo padre = new ASTNodo(parser.contador, "BOOLEAN");
             parser.contador++;
             padre.addHijo(new ASTNodo(parser.contador, h1));
+            parser.contador++;
             RESULT = padre;
           :}
           | Ttrue:h1
@@ -824,6 +826,7 @@ BOOLEAN ::= Tfalse:h1
             ASTNodo padre = new ASTNodo(parser.contador, "BOOLEAN");
             parser.contador++;
             padre.addHijo(new ASTNodo(parser.contador, h1));
+            parser.contador++;
             RESULT = padre;
           :}
           ;
