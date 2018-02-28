@@ -33,9 +33,9 @@ public class USAC_WEB {
     
     
     public static void main(String[] args) throws IOException {
-        pruebaCCSS();
+        //pruebaCCSS();
         //pruebaCHTML();
-        //pruebaCJS();
+        pruebaCJS();
         //System.out.println(es_fecha("0"));
         //System.out.println(es_fecha_tiempo("01/12/201719:45:22"));
        //USAC_WEB_GUI ventana = new USAC_WEB_GUI();
@@ -99,12 +99,13 @@ public class USAC_WEB {
     {
         try
         {
-            CJS.LexCJS lexer = new CJS.LexCJS(new FileReader("CJSP.txt"));
+            CJS.LexCJS lexer = new CJS.LexCJS(new FileReader("cjsP.txt"));
             CJS.parser p = new CJS.parser(lexer);
             p.parse();
             if(CJS.parser.raiz!=null)
             {
                 System.out.println(CJS.parser.raiz.graficaAST(CJS.parser.raiz));
+                
             }
             System.out.println("//----------------------------------------------------------------------------------------------");
             System.out.println("//-----------------------------------ERRORES----------------------------------------------------");

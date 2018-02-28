@@ -10,16 +10,50 @@ package CJS_EXEC;
  * @author richard
  */
 import AST.ASTNodo;
+import java.util.ArrayList;
 public class Interprete_CJS {
+    
     ASTNodo raiz;
+    ArrayList<Ambito> ambitos;
+    Tabla_Funciones funciones;
     
     public Interprete_CJS(ASTNodo raiz)
     {
         this.raiz = raiz;
+        ambitos = new ArrayList<>();
+        this.funciones = new Tabla_Funciones();
     }
     
     public boolean ejecutaCJS()
     {
-        return false;
+        try 
+        {
+            Ambito global = new Ambito("global");
+            this.ambitos.add(0, global);
+            inicio_cjs(raiz);
+            return true;
+        } catch (Exception e) 
+        {
+            System.err.println("Error en CJS: "+e.toString());
+            return false;
+        }
+    }
+    
+    //METODOS QUE INICIAN CON LA EJECUCION DEL JS
+    private Object inicio_cjs(ASTNodo raiz)
+    {
+        switch(raiz.getEtiqueta())
+        {
+            case "INICIO_CJS":
+            {
+                if(raiz.contarHijos()==1)
+                {
+                    //EJECUTA UN CUERPO DE CJS
+                }
+                break;
+            }
+            
+        }
+        return null;
     }
 }

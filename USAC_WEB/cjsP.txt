@@ -1,0 +1,3 @@
+dimv a;
+dimv a, b, c;
+dimv j : 5+9*8;
