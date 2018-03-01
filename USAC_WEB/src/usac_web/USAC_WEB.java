@@ -119,7 +119,7 @@ public class USAC_WEB {
         }
         catch(Exception ex)
         {
-            System.out.println("ERROR AL PARSEAR...");
+            System.out.println("ERROR AL PARSEAR..."+ex.toString());
         }
     }
 

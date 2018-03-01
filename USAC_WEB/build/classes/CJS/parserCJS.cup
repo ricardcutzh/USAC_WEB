@@ -108,10 +108,11 @@ action code
 :}
 /*----------------------------------------AREA DE DECLARACIONES-------------------------------------------------------------*/
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-terminal String dimv, pcoma, iden, dosP, coma, mas, menos, por, divi, elev, mod, aum, dism, numeric, cadena1, cadena2, tTrue, tFalse;
+terminal String dimv, pcoma, dosP, coma, mas, menos, por, divi, elev, mod, aum, dism;
 terminal String oParent, cParent, igualacion, diferente, mayor, menor, menorigual, mayorigual, and, or, not, oKey, cKey, retornar, obtener;
 terminal String conteo, atexto, punto, si, sino, selecciona, caso, defecto, para, mientras, detener, imprimir, funcion, mensaje, documento;
 terminal String setElemento, observador;
+terminal String iden, numeric, cadena1, cadena2, tTrue, tFalse;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 non terminal ASTNodo INICIO_CJS, CUERPO_CJS, C_VAR, L_ID, SINO, OPER, SENT_MIENTRAS, IMPRIMIR, FUNCION, RETORNAR, MENSAJE;
 non terminal ASTNodo ARRAY, AS_VAR, SENT_SI, SELECCIONA, SENT_PARA, L_CASOS, CASO, DEFECTO, PARAMS, EXE_FUNC;
@@ -482,7 +483,7 @@ C_VAR ::= dimv L_ID:h1 pcoma
         if(h1!=null)
         {padre.addHijo(h1);}
         cad = cad.replace("\"","");
-        padre.addHijo(new ASTNodo(parser.contador, cad));
+        padre.addHijo(new ASTNodo(parser.contador,cadright, cadleft, cad));
         parser.contador++;
         RESULT = padre;
       :}
@@ -498,22 +499,23 @@ C_VAR ::= dimv L_ID:h1 pcoma
 
 L_ID ::= L_ID:h1 coma iden:ide
       {:
+        //left columna, rigth fila
         ASTNodo padre = new ASTNodo(parser.contador, "L_ID");
         parser.contador++;
         if(h1!=null)
         {padre.addHijo(h1);}
-        ASTNodo id = new ASTNodo(parser.contador, ide);
+        ASTNodo id = new ASTNodo(parser.contador, ideright, ideleft,ide);
         parser.contador++;
         padre.addHijo(id);
         RESULT = padre;
       :}
-      | iden:id
+      | iden:ide
       {:
         ASTNodo padre = new ASTNodo(parser.contador, "L_ID");
         parser.contador++;
-        ASTNodo ide = new ASTNodo(parser.contador, id);
+        ASTNodo id = new ASTNodo(parser.contador, ideright, ideleft,ide );
         parser.contador++;
-        padre.addHijo(ide);
+        padre.addHijo(id);
         RESULT = padre;
       :}
       /*| iden error coma
@@ -580,7 +582,7 @@ AS_VAR ::= L_ID:h1 dosP EXPRESION:h2 pcoma
         if(h1!=null)
         {padre.addHijo(h1);}
         cad = cad.replace("\"","");
-        padre.addHijo(new ASTNodo(parser.contador, cad));
+        padre.addHijo(new ASTNodo(parser.contador,cadright, cadleft, cad));
         parser.contador++;
         RESULT = padre;
       :}
@@ -704,7 +706,7 @@ SENT_PARA ::= para oParent iden:ide dosP EXPRESION:h1 pcoma EXPRESION:h2 pcoma  
           {:
             ASTNodo padre = new ASTNodo(parser.contador, "SENT_PARA");
             parser.contador++;
-            padre.addHijo(new ASTNodo(parser.contador,ide));
+            padre.addHijo(new ASTNodo(parser.contador,ideright, ideleft, ide));
             parser.contador++;
             if(h1!=null)
             {padre.addHijo(h1);}
@@ -718,7 +720,7 @@ SENT_PARA ::= para oParent iden:ide dosP EXPRESION:h1 pcoma EXPRESION:h2 pcoma  
           {:
             ASTNodo padre = new ASTNodo(parser.contador, "SENT_PARA");
             parser.contador++;
-            padre.addHijo(new ASTNodo(parser.contador,ide));
+            padre.addHijo(new ASTNodo(parser.contador,ideright, ideleft, ide ));
             parser.contador++;
             if(h1!=null)
             {padre.addHijo(h1);}
@@ -784,7 +786,7 @@ FUNCION ::= funcion iden:ide oParent L_ID:h1 cParent oKey cKey //CASO QUE VENGAN
         {:
           ASTNodo padre = new ASTNodo(parser.contador, "FUNCION");
           parser.contador++;
-          ASTNodo nom = new ASTNodo(parser.contador, ide);
+          ASTNodo nom = new ASTNodo(parser.contador,ideright, ideleft,ide);
           parser.contador++;
           padre.addHijo(nom);
           if(h1!=null)
@@ -795,7 +797,7 @@ FUNCION ::= funcion iden:ide oParent L_ID:h1 cParent oKey cKey //CASO QUE VENGAN
         {:
           ASTNodo padre = new ASTNodo(parser.contador, "FUNCION");
           parser.contador++;
-          ASTNodo nom = new ASTNodo(parser.contador, ide);
+          ASTNodo nom = new ASTNodo(parser.contador,ideright, ideleft, ide);
           parser.contador++;
           padre.addHijo(nom);
           RESULT = padre;
@@ -804,7 +806,7 @@ FUNCION ::= funcion iden:ide oParent L_ID:h1 cParent oKey cKey //CASO QUE VENGAN
         {:
           ASTNodo padre = new ASTNodo(parser.contador, "FUNCION");
           parser.contador++;
-          ASTNodo nom = new ASTNodo(parser.contador, ide);
+          ASTNodo nom = new ASTNodo(parser.contador,ideright, ideleft, ide);
           parser.contador++;
           padre.addHijo(nom);
           if(h1!=null)
@@ -817,7 +819,7 @@ FUNCION ::= funcion iden:ide oParent L_ID:h1 cParent oKey cKey //CASO QUE VENGAN
         {:
           ASTNodo padre = new ASTNodo(parser.contador, "FUNCION");
           parser.contador++;
-          ASTNodo nom = new ASTNodo(parser.contador, ide);
+          ASTNodo nom = new ASTNodo(parser.contador,ideright, ideleft, ide);
           parser.contador++;
           padre.addHijo(nom);
           if(h1!=null)
@@ -855,11 +857,11 @@ SETELEMT ::= iden:id punto setElemento oParent cadena1:elem coma EXPRESION:h1 cP
               ASTNodo padre = new ASTNodo(parser.contador, "SETELEMT");
               parser.contador++;
               //tomando id
-              padre.addHijo(new ASTNodo(parser.contador, id));
+              padre.addHijo(new ASTNodo(parser.contador,idright,idleft, id));
               parser.contador++;
               elem = elem.replace("\"", "");
               //tomando la propiedad
-              padre.addHijo(new ASTNodo(parser.contador, elem));
+              padre.addHijo(new ASTNodo(parser.contador,elemright,elemleft, elem));
               parser.contador++;
               //tomando el nuevo VALOR
               if(h1!=null)
@@ -872,11 +874,11 @@ SETELEMT ::= iden:id punto setElemento oParent cadena1:elem coma EXPRESION:h1 cP
               parser.contador++;
               //tomanod el id
               id = id.replace("\"","");
-              padre.addHijo(new ASTNodo(parser.contador, id));
+              padre.addHijo(new ASTNodo(parser.contador,idright, idleft, id));
               parser.contador++;
               elem = elem.replace("\"", "");
               //tomando la propiedad
-              padre.addHijo(new ASTNodo(parser.contador, elem));
+              padre.addHijo(new ASTNodo(parser.contador,elemright, elemleft, elem));
               parser.contador++;
               //tomando el nuevo VALOR
               if(h1!=null)
@@ -890,7 +892,7 @@ OBSERVADOR ::= documento punto observador oParent cadena1:tipo coma FUNCION:h1 c
             ASTNodo padre = new ASTNodo(parser.contador, "OBSERVADOR_DOC");
             parser.contador++;
             tipo = tipo.replace("\"","");
-            padre.addHijo(new ASTNodo(parser.contador, tipo));
+            padre.addHijo(new ASTNodo(parser.contador,tiporight, tipoleft, tipo));
             parser.contador++;
             if(h1!=null)
             {padre.addHijo(h1);}
@@ -901,9 +903,9 @@ OBSERVADOR ::= documento punto observador oParent cadena1:tipo coma FUNCION:h1 c
             ASTNodo padre = new ASTNodo(parser.contador, "OBSERVADOR_DOC");
             parser.contador++;
             tipo = tipo.replace("\"","");
-            padre.addHijo(new ASTNodo(parser.contador, tipo));
+            padre.addHijo(new ASTNodo(parser.contador,tiporight, tipoleft, tipo));
             parser.contador++;
-            padre.addHijo(new ASTNodo(parser.contador, fun));
+            padre.addHijo(new ASTNodo(parser.contador,funright, funleft, fun));
             parser.contador++;
             RESULT = padre;
           :}
@@ -911,10 +913,10 @@ OBSERVADOR ::= documento punto observador oParent cadena1:tipo coma FUNCION:h1 c
           {:
             ASTNodo padre = new ASTNodo(parser.contador, "OBSERVADOR_ID");
             parser.contador++;
-            padre.addHijo(new ASTNodo(parser.contador, id));
+            padre.addHijo(new ASTNodo(parser.contador, idright, idleft, id));
             parser.contador++;
             tipo = tipo.replace("\"","");
-            padre.addHijo(new ASTNodo(parser.contador, tipo));
+            padre.addHijo(new ASTNodo(parser.contador,tiporight, tipoleft, tipo));
             parser.contador++;
             if(h1!=null)
             {padre.addHijo(h1);}
@@ -924,12 +926,12 @@ OBSERVADOR ::= documento punto observador oParent cadena1:tipo coma FUNCION:h1 c
           {:
             ASTNodo padre = new ASTNodo(parser.contador, "OBSERVADOR_ID");
             parser.contador++;
-            padre.addHijo(new ASTNodo(parser.contador, id));
+            padre.addHijo(new ASTNodo(parser.contador,idright, idleft, id));
             parser.contador++;
             tipo = tipo.replace("\"","");
-            padre.addHijo(new ASTNodo(parser.contador, tipo));
+            padre.addHijo(new ASTNodo(parser.contador,tiporight, tipoleft, tipo));
             parser.contador++;
-            padre.addHijo(new ASTNodo(parser.contador, fun));
+            padre.addHijo(new ASTNodo(parser.contador,funright, funleft, fun));
             parser.contador++;
             RESULT = padre;
           :}
@@ -939,7 +941,7 @@ AUM_DISM::= iden:id OPER:h1 pcoma
             {:
                 ASTNodo padre = new ASTNodo(parser.contador,"AUM_DISM");
                 parser.contador++;
-                padre.addHijo(new ASTNodo(parser.contador,id));
+                padre.addHijo(new ASTNodo(parser.contador,idright, idleft, id));
                 parser.contador++;
                 if(h1!=null)
                 {
@@ -972,7 +974,7 @@ EXE_FUNC::= iden:ide oParent cParent
         {:
           ASTNodo padre = new ASTNodo(parser.contador,"EXE_FUNC");
           parser.contador++;
-          padre.addHijo(new ASTNodo(parser.contador, ide));
+          padre.addHijo(new ASTNodo(parser.contador, ideright, ideleft, ide));
           parser.contador++;
           RESULT = padre;
         :}
@@ -980,7 +982,7 @@ EXE_FUNC::= iden:ide oParent cParent
         {:
           ASTNodo padre = new ASTNodo(parser.contador,"EXEC_FUNC");
           parser.contador++;
-          padre.addHijo(new ASTNodo(parser.contador, ide));
+          padre.addHijo(new ASTNodo(parser.contador, ideright, ideleft, ide));
           parser.contador++;
           if(h2!=null)
           {padre.addHijo(h2);}
@@ -1229,9 +1231,10 @@ E::=    E:h1 mas E:h2
         :}
         |numeric:val
         {:
+          //left columna, rigth linea
           ASTNodo padre = new ASTNodo(parser.contador, "NUMERICO");
           parser.contador++;
-          ASTNodo valor = new ASTNodo(parser.contador, val);
+          ASTNodo valor = new ASTNodo(parser.contador,valright, valleft, val);
           parser.contador++;
           padre.addHijo(valor);
           RESULT = padre;
@@ -1240,7 +1243,7 @@ E::=    E:h1 mas E:h2
         {:
           ASTNodo padre = new ASTNodo(parser.contador, "IDENTIFICADOR");
           parser.contador++;
-          ASTNodo valor = new ASTNodo(parser.contador, val);
+          ASTNodo valor = new ASTNodo(parser.contador,valright, valleft, val);
           parser.contador++;
           padre.addHijo(valor);
           RESULT = padre;
@@ -1258,9 +1261,9 @@ E::=    E:h1 mas E:h2
           else
           {padre = new ASTNodo(parser.contador, "CADENA");}
           parser.contador++;
-          ASTNodo valor = new ASTNodo(parser.contador, val);
+          ASTNodo valores = new ASTNodo(parser.contador,valright, valleft, val);
           parser.contador++;
-          padre.addHijo(valor);
+          padre.addHijo(valores);
           RESULT = padre;
         :}
         | cadena2:val
@@ -1276,16 +1279,16 @@ E::=    E:h1 mas E:h2
           else
           {padre = new ASTNodo(parser.contador, "CADENA");}
           parser.contador++;
-          ASTNodo valor = new ASTNodo(parser.contador, val);
+          ASTNodo valores = new ASTNodo(parser.contador,valright, valleft, val);
           parser.contador++;
-          padre.addHijo(valor);
+          padre.addHijo(valores);
           RESULT = padre;
         :}
         | tTrue:h1
         {:
           ASTNodo padre = new ASTNodo(parser.contador, "BOOLEAN");
           parser.contador++;
-          padre.addHijo(new ASTNodo(parser.contador, h1));
+          padre.addHijo(new ASTNodo(parser.contador,h1right, h1left, h1));
           parser.contador++;
           RESULT = padre;
         :}
@@ -1293,7 +1296,7 @@ E::=    E:h1 mas E:h2
         {:
           ASTNodo padre = new ASTNodo(parser.contador, "BOOLEAN");
           parser.contador++;
-          padre.addHijo(new ASTNodo(parser.contador, h1));
+          padre.addHijo(new ASTNodo(parser.contador,h1right, h1left, h1));
           parser.contador++;
           RESULT = padre;
         :}
@@ -1301,7 +1304,7 @@ E::=    E:h1 mas E:h2
         {:
           ASTNodo padre = new ASTNodo(parser.contador, "VALOR_VECTOR");
           parser.contador++;
-          padre.addHijo(new ASTNodo(parser.contador, ide));
+          padre.addHijo(new ASTNodo(parser.contador,ideright, ideleft, ide));
           parser.contador++;
           if(h1!=null)
           {padre.addHijo(h1);}
@@ -1315,7 +1318,7 @@ E::=    E:h1 mas E:h2
         {:
           ASTNodo padre = new ASTNodo(parser.contador, "CONTEO");
           parser.contador++;
-          padre.addHijo(new ASTNodo(parser.contador, ide));
+          padre.addHijo(new ASTNodo(parser.contador,ideright, ideleft, ide));
           parser.contador++;
           RESULT = padre;
         :}
@@ -1323,7 +1326,7 @@ E::=    E:h1 mas E:h2
         {:
           ASTNodo padre = new ASTNodo(parser.contador, "CONTEO");
           parser.contador++;
-          padre.addHijo(new ASTNodo(parser.contador, ide));
+          padre.addHijo(new ASTNodo(parser.contador,ideright, ideleft, ide));
           parser.contador++;
           RESULT = padre;
         :}
@@ -1331,7 +1334,7 @@ E::=    E:h1 mas E:h2
         {:
           ASTNodo padre = new ASTNodo(parser.contador, "ATEXTO");
           parser.contador++;
-          padre.addHijo(new ASTNodo(parser.contador, ide));
+          padre.addHijo(new ASTNodo(parser.contador,ideright, ideleft, ide));
           parser.contador++;
           RESULT = padre;
         :}
@@ -1339,7 +1342,7 @@ E::=    E:h1 mas E:h2
         {:
           ASTNodo padre = new ASTNodo(parser.contador, "ATEXTO");
           parser.contador++;
-          padre.addHijo(new ASTNodo(parser.contador, ide));
+          padre.addHijo(new ASTNodo(parser.contador,ideright, ideleft, ide));
           parser.contador++;
           RESULT = padre;
         :}

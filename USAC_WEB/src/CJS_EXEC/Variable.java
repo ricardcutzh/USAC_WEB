@@ -21,6 +21,9 @@ public class Variable {
     public Variable(String identificador)
     {
         this.identificador = identificador;
+        this.tipo = "";
+        this.valores = new ArrayList<>();
+        this.esVector = false;
     }
 
     public String getIdentificador() {
