@@ -1,1 +1,1 @@
-dimv hola : a.atexto;
+a : 5+6;

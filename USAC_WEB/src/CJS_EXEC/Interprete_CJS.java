@@ -31,6 +31,7 @@ public class Interprete_CJS {
             Ambito global = new Ambito("global");
             this.ambitos.add(0, global);
             inicio_cjs(raiz);
+            this.ambitos.get(0).imprime_tabla();
             return true;
         } catch (Exception e) 
         {
@@ -49,6 +50,8 @@ public class Interprete_CJS {
                 if(raiz.contarHijos()==1)
                 {
                     //EJECUTA UN CUERPO DE CJS
+                    CuerpoCJS cuerpo = new CuerpoCJS(ambitos, raiz.getHijo(0), funciones);
+                    cuerpo.ejecutaCuerpo();
                 }
                 break;
             }

@@ -39,6 +39,10 @@ public class NodoOperacion {
     public int getColumna() {
         return columna;
     }
+
+    public void setValor(String valor) {
+        this.valor = valor;
+    }
     
     
     

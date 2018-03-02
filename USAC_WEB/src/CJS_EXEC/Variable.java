@@ -17,6 +17,8 @@ public class Variable {
     String tipo;//TIPO DE DATO
     boolean esVector;
     ArrayList<String> valores;
+    ArrayList<NodoOperacion> valVectores;
+    int dimension;
     
     public Variable(String identificador)
     {
@@ -24,6 +26,7 @@ public class Variable {
         this.tipo = "";
         this.valores = new ArrayList<>();
         this.esVector = false;
+        this.valVectores = new ArrayList<>();
     }
 
     public String getIdentificador() {
@@ -58,9 +61,46 @@ public class Variable {
         this.valores = valores;
     }
     
+    public void addValor(String val)
+    {
+        this.valores.add(val);
+    }
+    
     public String getValor()
     {
         return this.valores.get(0);
     }
+
+    public ArrayList<NodoOperacion> getValVectores() {
+        return valVectores;
+    }
+
+    public void setValVectores(ArrayList<NodoOperacion> valVectores) {
+        this.valVectores = valVectores;
+    }
+    
+    public NodoOperacion index_vector(int index)
+    {
+        return this.valVectores.get(index);
+    }
+    
+    public void set_val_index(int index, NodoOperacion val)
+    {
+        this.valVectores.set(index, val);
+    }
+    
+    public int getSizeVector()
+    {
+        return this.valVectores.size();
+    }
+
+    public int getDimension() {
+        return dimension;
+    }
+
+    public void setDimension(int dimension) {
+        this.dimension = dimension;
+    }
+    
     
 }

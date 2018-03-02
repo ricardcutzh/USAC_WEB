@@ -19,6 +19,7 @@ public class Ambito {
     public Ambito(String nombre)
     {
         this.nombre = nombre;
+        tabla_simbolos = new Tabla_Variables();
     }
 
     public Tabla_Variables getTabla_simbolos() {
@@ -44,5 +45,10 @@ public class Ambito {
         {
             return false;
         }
+    }
+    
+    public void imprime_tabla()
+    {
+        this.tabla_simbolos.imprime_variables();
     }
 }

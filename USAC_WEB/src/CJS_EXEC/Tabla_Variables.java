@@ -5,6 +5,7 @@
  */
 package CJS_EXEC;
 import java.util.ArrayList;
+import jdk.nashorn.internal.parser.TokenType;
 /**
  *
  * @author richard
@@ -44,5 +45,32 @@ public class Tabla_Variables {
         {
             return false;
         }
+    }
+    
+    public void imprime_variables()
+    {
+        System.out.println("/////////////////////////////// TABLA DE SIMBOLOS /////////////////////////////////////");
+        for(int x = 0; x < this.variables.size(); x++)
+        {
+            
+            if(variables.get(x).esVector)
+            {
+                System.out.print("/// *- Vector: "+variables.get(x).getIdentificador()+" | valores: [");
+                for(int c = 0; c < variables.get(x).getSizeVector();c++)
+                {
+                    System.out.print(variables.get(x).index_vector(c).getValor()+",");
+                }
+                System.out.println("]");
+            }
+            else if(variables.get(x).getValores().size()>0)
+            {
+                System.out.println("/// *- "+variables.get(x).getIdentificador()+" | valor: "+variables.get(x).getValor());
+            }
+            else
+            {
+                System.out.println("/// *- "+variables.get(x).getIdentificador()+" | valor: null");
+            }
+        }
+        System.out.println("///////////////////////////////////////////////////////////////////////////////////////");
     }
 }
