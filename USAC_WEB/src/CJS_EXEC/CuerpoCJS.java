@@ -26,6 +26,33 @@ public class CuerpoCJS {
         this.errores_semanticas = new ArrayList<>();
     }
     
+    public Variable busca_en_Ambitos(String nombre)
+    {
+        Variable aux = null;
+        for(int x = 0; x < this.ambitos.size(); x++)
+        {
+            aux = this.ambitos.get(x).busca_Variable(nombre);
+            if(aux!=null)
+            {
+                return aux;
+            }
+        }
+        return aux;
+    }
+    
+    public Variable busca_vector_Ambitos(String nombre)
+    {
+        Variable aux = null;
+        for(int x = 0; x < this.ambitos.size(); x++)
+        {
+            aux = this.ambitos.get(x).busca_vector(nombre);
+            if(aux!=null)
+            {
+                return aux;
+            }
+        }
+        return aux;
+    }
     
     
     public boolean ejecutaCuerpo()
@@ -246,19 +273,131 @@ public class CuerpoCJS {
                     //OBTENER LA EXPRESION
                     Expresion exp = new Expresion(funciones, ambitos, raiz.getHijo(1), errores_semanticas);
                     NodoOperacion res = (NodoOperacion)exp.evaluaExpresion();
-                    if(ids!=null && res.getValor().equals("error"))
+                    if(ids!=null && !res.getValor().equals("error"))
                     {
                         for(int x = 0; x < ids.size(); x++)
                         {
-                            
+                            Variable var = busca_en_Ambitos(ids.get(x).getEtiqueta());
+                            if(var!=null)
+                            {
+                                var.setEsVector(false);
+                                var.setTipo(res.getTipo());
+                                var.setValor(res.getValor());
+                            }
+                            else
+                            {
+                                //ERROR SEMANTICO
+                                TError error = new TError(ids.get(x).getEtiqueta(), "Error Semantico", "Asignacion a variable no declarada", ids.get(x).getLine(), ids.get(x).getColumn());
+                                this.errores_semanticas.add(error);
+                            }
                         }
                     }
                     else
                     {
                         //ERROR SEMANTICO
-                        TError error = new TError("Declaracion Invalida","Error Semantico","Parametros invalidos al declara un vector",res.getLinea(), res.getColumna());
+                        TError error = new TError("Asingnacion Invalida","Error Semantico","Parametros invalidos para la asignacion",res.getLinea(), res.getColumna());
                        this.errores_semanticas.add(error);
                     }
+                }
+                break;
+            }
+            case "AS_VAR_2":
+            {
+                if(raiz.contarHijos()==3)
+                {
+                    //OBTENGO LOS IDS
+                    ArrayList<ASTNodo> ids = (ArrayList<ASTNodo>)inicia_ejecucion(raiz.getHijo(0));
+                    //OBTENER EL INDEX AL QUE ME ESTOY REFIRIENDO
+                    NodoOperacion index = (NodoOperacion)inicia_ejecucion(raiz.getHijo(1));
+                    //EL NUEVO VALOR A ASIGNAR
+                    Expresion exp = new Expresion(funciones, ambitos, raiz.getHijo(2), errores_semanticas);
+                    NodoOperacion valor = (NodoOperacion)exp.evaluaExpresion();
+                    if(ids!=null && index.getTipo().equals("numerico") && !valor.getValor().equals("error"))
+                    {
+                        for(int x = 0; x < ids.size(); x++)
+                        {
+                            Variable var = busca_vector_Ambitos(ids.get(x).getEtiqueta());
+                            if(var!=null)
+                            {
+                                int dimension = var.getDimension();
+                                int indice = Integer.parseInt(index.getValor());
+                                if(indice < dimension)
+                                {
+                                    var.set_val_index(indice, valor);
+                                }
+                                else
+                                {
+                                    TError error = new TError(ids.get(x).getEtiqueta(), "Error Semantico", "Indice fuera de limites del Vector", ids.get(x).getLine(), ids.get(x).getColumn());
+                                }
+                            }
+                            else
+                            {
+                                TError error = new TError(ids.get(x).getEtiqueta(), "Error Semantico", "Asignacion a vector no declarada", ids.get(x).getLine(), ids.get(x).getColumn());
+                                this.errores_semanticas.add(error);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        TError error = new TError("Asignacion Invalida","Error Semantico","Parametros invalidos para la asignaciona un vector",valor.getLinea(), valor.getColumna());
+                       this.errores_semanticas.add(error);
+                    }
+                }
+                break;
+            }
+            case "AS_VAR_3":
+            {
+                if(raiz.contarHijos()==3)
+                {
+                    //LISTA DE IDS
+                    ArrayList<ASTNodo> ids = (ArrayList<ASTNodo>)inicia_ejecucion(raiz.getHijo(0));
+                    //PRIMERA EXPRESION
+                    Expresion primera = new Expresion(funciones, ambitos, raiz.getHijo(1), errores_semanticas);
+                    NodoOperacion first = (NodoOperacion)primera.evaluaExpresion();
+                    //OBTENGO LOS DEMAS VALORES
+                    ArrayList<NodoOperacion> valores = (ArrayList<NodoOperacion>)inicia_ejecucion(raiz.getHijo(2));
+                    if(ids!=null && !first.getValor().equals("error") && valores!=null)
+                    {
+                        valores.add(0, first);
+                        for(int x = 0; x < ids.size(); x++)
+                        {
+                            Variable vec = busca_vector_Ambitos(ids.get(x).getEtiqueta());
+                            if(vec!=null)
+                            {
+                                int dimension = vec.getDimension();
+                                int vals = valores.size();
+                                if(dimension == vals)
+                                {
+                                    vec.setValVectores(valores);
+                                }
+                                else
+                                {
+                                   TError error = new TError(ids.get(x).getEtiqueta(), "Error Semantico", "Dimension y Cantidad de Valores no Coinciden", ids.get(x).getLine(), ids.get(x).getColumn());
+                                    this.errores_semanticas.add(error); 
+                                }
+                            }
+                            else
+                            {
+                                TError error = new TError(ids.get(x).getEtiqueta(), "Error Semantico", "Asignacion a vector no declarada", ids.get(x).getLine(), ids.get(x).getColumn());
+                                this.errores_semanticas.add(error);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        TError error = new TError("Asignacion Invalida","Error Semantico","Parametros invalidos para la asignaciona un vector",first.getLinea(), first.getColumna());
+                       this.errores_semanticas.add(error);
+                    }
+                }
+                break;
+            }
+            case "INDEX":
+            {
+                if(raiz.contarHijos()==1)
+                {
+                    Expresion exp = new Expresion(funciones, ambitos, raiz.getHijo(0), errores_semanticas);
+                    NodoOperacion op = (NodoOperacion)exp.evaluaExpresion();
+                    return op;
                 }
                 break;
             }

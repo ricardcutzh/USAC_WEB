@@ -35,6 +35,11 @@ public class Ambito {
         return tabla_simbolos.buscaVariable(nombre);
     }
     
+    public Variable busca_vector(String nombre)
+    {
+        return tabla_simbolos.buscaVector(nombre);
+    }
+    
     public boolean agregaVariableAlAmbito(Variable var)
     {
         if(tabla_simbolos.AddVariable(var))

@@ -5,7 +5,6 @@
  */
 package CJS_EXEC;
 import java.util.ArrayList;
-import jdk.nashorn.internal.parser.TokenType;
 /**
  *
  * @author richard
@@ -26,6 +25,20 @@ public class Tabla_Variables {
         {
             aux = this.variables.get(x);
             if(aux.getIdentificador().equals(nombre))
+            {
+                return aux;
+            }
+        }
+        return null;
+    }
+    
+    public Variable buscaVector(String nombre)
+    {
+        Variable aux;
+        for(int x = 0; x < this.variables.size(); x++)
+        {
+            aux = this.variables.get(x);
+            if(aux.getIdentificador().equals(nombre) && aux.isEsVector())
             {
                 return aux;
             }

@@ -87,6 +87,7 @@ public class Variable {
     public void set_val_index(int index, NodoOperacion val)
     {
         this.valVectores.set(index, val);
+        //this.valVectores.remove(index+1);
     }
     
     public int getSizeVector()
@@ -102,5 +103,9 @@ public class Variable {
         this.dimension = dimension;
     }
     
-    
+    public void setValor(String valor)
+    {
+        this.valores.clear();
+        this.valores.add(valor);
+    }
 }
