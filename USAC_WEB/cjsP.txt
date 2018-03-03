@@ -1,2 +1,11 @@
-dimv vec{3};
-vec : {1,2,3};
+dimv control : 0;
+
+mientras(true)
+{
+  control:control+1;
+  si(control == 7)
+  {
+    control :90;
+    detener;
+  }
+}

@@ -17,6 +17,9 @@ public class CuerpoCJS {
     ArrayList<Ambito> ambitos;
     ASTNodo raiz;
     ArrayList<TError> errores_semanticas;
+    NodoOperacion retorno;
+    boolean huboDetener;
+    boolean huboReturn;
     
     public CuerpoCJS(ArrayList<Ambito> ambitos, ASTNodo raiz, Tabla_Funciones funciones)
     {
@@ -24,7 +27,24 @@ public class CuerpoCJS {
         this.raiz = raiz;
         this.funciones = funciones;
         this.errores_semanticas = new ArrayList<>();
+        this.retorno = new NodoOperacion("error", "error", 0, 0);
+        huboDetener = false;
+        huboReturn = false;
     }
+
+    public NodoOperacion getRetorno() {
+        return retorno;
+    }
+
+    public boolean isHuboDetener() {
+        return huboDetener;
+    }
+
+    public boolean isHuboReturn() {
+        return huboReturn;
+    }
+    
+    
     
     public Variable busca_en_Ambitos(String nombre)
     {
@@ -80,7 +100,10 @@ public class CuerpoCJS {
                     //ME VOY MAS A LA IZQUIERDA
                     inicia_ejecucion(raiz.getHijo(0));
                     //ME VOY A LA DERECHA
-                    inicia_ejecucion(raiz.getHijo(1));
+                    if(!huboDetener && !huboReturn)
+                    {
+                        inicia_ejecucion(raiz.getHijo(1));
+                    }
                 }
                 if(raiz.contarHijos()==1)
                 {
@@ -391,6 +414,46 @@ public class CuerpoCJS {
                 }
                 break;
             }
+            case "AS_VAR_4":
+            {
+                //ASIGNACION DE UN OBJETO DEL DOCUMENTO AUN PENDIENTE
+                break;
+            }
+            case "SENT_SI":
+            {
+                //INSERTO UN AMBITO TEMPORAL, EL CUAL SIMULA LA VISUALIZACION DE LAS VARIABLES
+                Ambito ambito = new Ambito("sentencia si");
+                this.ambitos.add(0, ambito);//PSUH
+                evaluaSentenciaSi(raiz);
+                this.ambitos.remove(0);//POP
+                break;
+            }
+            case "SELECCIONA":
+            {
+                evaluaSentenciaSelecciona(raiz);
+                break;
+            }
+            case "SENT_PARA":
+            {
+                Ambito ambito = new Ambito("PARA");
+                this.ambitos.add(0, ambito);
+                evaluaSentenciaPara(raiz);
+                this.ambitos.remove(0);
+                break;
+            }
+            case "SENT_MIENTRAS":
+            {
+                Ambito ambito = new Ambito("MIENTRAS");
+                this.ambitos.add(0, ambito);
+                evaluaSentenciaMientras(raiz);
+                this.ambitos.remove(0);
+                break;
+            }
+            case "DETENER":
+            {
+                this.huboDetener = true;
+                break;
+            }
             case "INDEX":
             {
                 if(raiz.contarHijos()==1)
@@ -464,6 +527,290 @@ public class CuerpoCJS {
         }
         return null;
     }
-     
     
+    //SENTENCIA SI - SINO
+    private Object evaluaSentenciaSi(ASTNodo raiz)
+    {
+        switch(raiz.getEtiqueta())
+        {
+            case "SENT_SI":
+            {
+                //SI ES UNA SENTENCIA SI SIN SINO
+                if(raiz.contarHijos()==2)
+                {
+                    //OBTENGO EXPRESION
+                    Expresion exp = new Expresion(funciones, ambitos, raiz.getHijo(0), errores_semanticas);
+                    NodoOperacion res = (NodoOperacion)exp.evaluaExpresion();
+                    //EVALUO EL RESULTADO DE LA OPERACION:
+                    if(!res.getValor().equals("error") && res.getTipo().equals("boolean"))
+                    {
+                        if(res.getValor().equals("true"))
+                        {
+                            //EJECUTO LAS ACCIONES QUE VIENEN ADENTRO
+                            inicia_ejecucion(raiz.getHijo(1));
+                        }
+                    }
+                    else
+                    {
+                        //ERROR SEMANTICO
+                        TError error = new TError("Expresion invalida","Error Semantico","La expresion en Sentencia SI es invalida",res.getLinea(), res.getColumna());
+                       this.errores_semanticas.add(error);
+                    }
+                }
+                //SI ES UNA SENTENCIA SI CON SINO
+                if(raiz.contarHijos()==3)
+                {
+                    //OBTENGO EXPRESION
+                    Expresion exp = new Expresion(funciones, ambitos, raiz.getHijo(0), errores_semanticas);
+                    NodoOperacion res = (NodoOperacion)exp.evaluaExpresion();
+                    //EVALUO EL RESULTADO DE LA OPERACION
+                    if(!res.getValor().equals("error") && res.getTipo().equals("boolean"))
+                    {
+                        if(res.getValor().equals("true"))
+                        {
+                            //EJECUTO LAS ACCIONES QUE VIENEN ADENTRO
+                            inicia_ejecucion(raiz.getHijo(1));
+                        }
+                        else
+                        {
+                            //SI NO ES VERDADERO ENTONCES EJECUTO LA SIGUIENTE RAMA
+                            inicia_ejecucion(raiz.getHijo(2));
+                        }
+                    }
+                    else
+                    {
+                        //ERROR SEMANTICO
+                        TError error = new TError("Expresion invalida","Error Semantico","La expresion en Sentencia SI es invalida",res.getLinea(), res.getColumna());
+                       this.errores_semanticas.add(error);
+                    }
+                }
+                break;
+            }
+        }
+        return null;
+    }
+    
+    private Object evaluaSentenciaSelecciona(ASTNodo raiz)
+    {
+        switch(raiz.getEtiqueta())
+        {
+            case "SELECCIONA":
+            {
+                Expresion exp = new Expresion(funciones, ambitos, raiz.getHijo(0), errores_semanticas);
+                NodoOperacion eval = (NodoOperacion)exp.evaluaExpresion();
+                if(!eval.getValor().equals("error"))
+                {
+                    //OBTENGO LA LISTA DE CASOS POSIBLES
+                    ArrayList<ASTNodo> casos = (ArrayList<ASTNodo>)evaluaSentenciaSelecciona(raiz.getHijo(1));
+                    if(raiz.contarHijos()>0 && casos!=null)
+                    {
+                        boolean ejecutaDefecto = true;
+                        for(int x = 0; x < casos.size(); x++)
+                        {
+                            //INGRESO UN NUEVO AMBITO
+                            Ambito am = new Ambito("Caso_"+x);
+                            this.ambitos.add(0, am);
+                            if(casos.get(x).contarHijos()>0)
+                            {
+                                Expresion exps = new Expresion(funciones, ambitos, casos.get(x).getHijo(0), errores_semanticas);
+                                NodoOperacion ope = (NodoOperacion)exps.evaluaExpresion();
+                                if(!ope.getValor().equals("error"))
+                                {
+                                    //EVALUO LA EXPRESION
+                                    if(ope.getValor().equals(eval.getValor()) && ope.getTipo().equals(eval.getTipo()))
+                                    {
+                                        //EJECUTO
+                                        ejecutaDefecto = false;
+                                        if(casos.get(x).contarHijos()==2)
+                                        {
+                                            inicia_ejecucion(casos.get(x).getHijo(1));
+                                        }
+                                    }
+                                }
+                            }
+                            //SACO EL AMBITO
+                            this.ambitos.remove(0);
+                        }
+                        if(ejecutaDefecto && raiz.contarHijos()==3)
+                        {
+                            //EJECUTO POR DEFECTO
+                            evaluaSentenciaSelecciona(raiz.getHijo(2));
+                        }
+                    }
+                }
+                else
+                {
+                    //ERROR SEMANTICO
+                    TError error = new TError("Expresion Invalida","Error Semantico","Expresion no valida en Sentencia SELECCIONA",eval.getLinea(), eval.getColumna());
+                    this.errores_semanticas.add(error);
+                }
+                break;
+            }
+            case "L_CASOS":
+            {
+                if(raiz.contarHijos()==2)
+                {
+                    ArrayList<ASTNodo> nodos = (ArrayList<ASTNodo>)evaluaSentenciaSelecciona(raiz.getHijo(1));
+                    if(nodos==null)
+                    {
+                        nodos = new ArrayList<>();
+                    }
+                    nodos.add(0, raiz.getHijo(0));
+                    return nodos;
+                }
+                if(raiz.contarHijos()==1)
+                {
+                    ArrayList<ASTNodo> nodos = new ArrayList<>();
+                    nodos.add(raiz.getHijo(0));
+                    return nodos;
+                }
+                break;
+            }
+            case "DEFECTO":
+            {
+                Ambito am = new Ambito("Defecto");
+                this.ambitos.add(0,am);
+                inicia_ejecucion(raiz.getHijo(0));
+                this.ambitos.remove(0);
+                break;
+            }
+        }
+        return null;
+    }
+
+    private Object evaluaSentenciaPara(ASTNodo raiz)
+    {
+        switch(raiz.getEtiqueta())
+        {
+            case "SENT_PARA":
+            {
+                if(raiz.contarHijos()>0)
+                {
+                    //OBTENGO LA NUEVA VARIABLE DE CONTROL
+                    String auxiliar = raiz.getHijo(0).getEtiqueta();
+                    //OBTENGO EL VALOR INICIAL DE LA EXPRESION
+                    Expresion exp = new Expresion(funciones, ambitos, raiz.getHijo(1), errores_semanticas);
+                    NodoOperacion op = (NodoOperacion)exp.evaluaExpresion();
+                    //CREO LA VARIABLE QUE LLEVA EL CONTROL...
+                    if(op.getTipo().equals("numerico"))
+                    {
+                        Variable control = new Variable(auxiliar);
+                        control.setTipo("numerico");
+                        control.setValor(op.getValor());
+                        control.setEsVector(false);
+                        if(!this.ambitos.get(0).agregaVariableAlAmbito(control))
+                        {
+                            TError error = new TError("Variable: "+auxiliar,"Error Semantico","Ya existe en este ambito",op.getLinea(), op.getColumna());
+                            this.errores_semanticas.add(error);
+                        }
+                        else
+                        {
+                            Expresion cond = new Expresion(funciones, ambitos, raiz.getHijo(2), errores_semanticas);
+                            NodoOperacion condi = (NodoOperacion)cond.evaluaExpresion();
+                            int tipo = 0;
+                            if(raiz.getHijo(3).getEtiqueta().equals("++")){tipo = 1;}
+                            if(condi.getTipo().equals("boolean"))
+                            {
+                                boolean v = toBoolean(condi);
+                                while(v)
+                                {
+                                    if(raiz.contarHijos()==5)
+                                    {
+                                        CuerpoCJS cuerpoPara = new CuerpoCJS(ambitos, raiz.getHijo(4), funciones);
+                                        cuerpoPara.ejecutaCuerpo();
+                                        //inicia_ejecucion(raiz.getHijo(4));
+                                        if(cuerpoPara.isHuboDetener())
+                                        {
+                                            break;
+                                        }
+                                        else if(cuerpoPara.isHuboReturn())
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    Variable aux = busca_en_Ambitos(auxiliar);
+                                    double aume_dec = Double.parseDouble(aux.getValor());
+                                    if(tipo == 1)
+                                    {
+                                        aume_dec = aume_dec +1;
+                                    }
+                                    else
+                                    {
+                                        aume_dec = aume_dec -1;
+                                    }
+                                    aux.setValor(String.valueOf(aume_dec));
+                                    condi = (NodoOperacion)cond.evaluaExpresion();
+                                    v = toBoolean(condi);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        TError error = new TError("Variable: "+auxiliar,"Error Semantico","Tipo no compatible para ciclo PARA",op.getLinea(), op.getColumna());
+                        this.errores_semanticas.add(error);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    
+    private boolean toBoolean(NodoOperacion op)
+    {
+        if(op.getValor().toLowerCase().equals("true"))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    private Object evaluaSentenciaMientras(ASTNodo raiz)
+    {
+        switch(raiz.getEtiqueta())
+        {
+            case "SENT_MIENTRAS":
+            {
+                if(raiz.contarHijos()>0)
+                {
+                    Expresion exp = new Expresion(funciones, ambitos, raiz.getHijo(0), errores_semanticas);
+                    NodoOperacion condi = (NodoOperacion)exp.evaluaExpresion();
+                    if(condi.getTipo().equals("boolean"))
+                    {
+                        boolean condicion = toBoolean(condi);
+                        while(condicion)
+                        {
+                            if(raiz.contarHijos()==2)
+                            {
+                                CuerpoCJS cuerpoMientras = new CuerpoCJS(ambitos, raiz.getHijo(1), funciones);
+                                cuerpoMientras.ejecutaCuerpo();
+                                if(cuerpoMientras.isHuboDetener())
+                                {
+                                    break;
+                                }
+                                else if(cuerpoMientras.huboReturn)
+                                {
+                                    break;
+                                }
+                                //inicia_ejecucion(raiz.getHijo(1));
+                            }
+                            condi = (NodoOperacion)exp.evaluaExpresion();
+                            condicion = toBoolean(condi);
+                        }
+                    }
+                    else
+                    {
+                        TError error = new TError("Condicion: "+condi.getValor(),"Error Semantico","Expresion requerdia: Boolean, encontrada: "+condi.getTipo(),condi.getLinea(), condi.getColumna());
+                        this.errores_semanticas.add(error);
+                    }
+                }
+                break;
+            }
+        }
+        return null;
+    }
+
 }
