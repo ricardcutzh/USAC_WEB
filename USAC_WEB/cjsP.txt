@@ -1,11 +1,5 @@
-dimv control : 0;
-
-mientras(true)
+retornar 10;
+para(x:1; x<10;++)
 {
-  control:control+1;
-  si(control == 7)
-  {
-    control :90;
-    detener;
-  }
+  imprimir(x);
 }

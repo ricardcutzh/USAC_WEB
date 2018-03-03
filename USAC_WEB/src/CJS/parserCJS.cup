@@ -772,9 +772,9 @@ SENT_MIENTRAS ::= mientras oParent EXPRESION:h1 cParent oKey cKey
                {:RESULT = null;:}
                ;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-IMPRIMIR ::= imprimir oParent EXPRESION:h1 cParent pcoma
+IMPRIMIR ::= imprimir:im oParent EXPRESION:h1 cParent pcoma
       {:
-          ASTNodo padre = new ASTNodo(parser.contador, "IMPRIMIR");
+          ASTNodo padre = new ASTNodo(parser.contador,imright, imleft, "IMPRIMIR");
           parser.contador++;
           if(h1!=null)
           {padre.addHijo(h1);}

@@ -11,6 +11,7 @@ package CJS_EXEC;
  */
 import java.util.ArrayList;
 import AST.*;
+import javax.swing.JOptionPane;
 public class CuerpoCJS {
     
     Tabla_Funciones funciones;
@@ -20,6 +21,7 @@ public class CuerpoCJS {
     NodoOperacion retorno;
     boolean huboDetener;
     boolean huboReturn;
+    ArrayList<NodoImprimir> imp;
     
     public CuerpoCJS(ArrayList<Ambito> ambitos, ASTNodo raiz, Tabla_Funciones funciones)
     {
@@ -30,6 +32,7 @@ public class CuerpoCJS {
         this.retorno = new NodoOperacion("error", "error", 0, 0);
         huboDetener = false;
         huboReturn = false;
+        this.imp = new ArrayList<>();
     }
 
     public NodoOperacion getRetorno() {
@@ -452,6 +455,47 @@ public class CuerpoCJS {
             case "DETENER":
             {
                 this.huboDetener = true;
+                break;
+            }
+            case "RETORNAR":
+            {
+                this.huboReturn = true;
+                if(raiz.contarHijos()==1)
+                {
+                    Expresion exp = new Expresion(funciones, ambitos, raiz.getHijo(0), errores_semanticas);
+                    NodoOperacion op = (NodoOperacion)exp.evaluaExpresion();
+                    if(!op.getValor().equals("error"))
+                    {
+                        this.retorno = op;
+                    }
+                }
+                break;
+            }
+            case "IMPRIMIR":
+            {
+                if(raiz.contarHijos()==1)
+                {
+                    Expresion exp = new Expresion(funciones, ambitos, raiz.getHijo(0), errores_semanticas);
+                    NodoOperacion op = (NodoOperacion)exp.evaluaExpresion();
+                    if(!op.getValor().equals("error"))
+                    {
+                        this.imp.add(new NodoImprimir(op.getValor(), raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn()));
+                        System.out.println("Imprimir: "+op.getValor()+" | Linea: "+op.getLinea()+" | Columna: "+op.getColumna());
+                    }
+                }
+                break;
+            }
+            case "MENSAJE":
+            {
+                if(raiz.contarHijos()==1)
+                {
+                    Expresion exp = new Expresion(funciones, ambitos, raiz.getHijo(0), errores_semanticas);
+                    NodoOperacion op = (NodoOperacion)exp.evaluaExpresion();
+                    if(!op.getValor().equals("error"))
+                    {
+                        JOptionPane.showMessageDialog(null, op.getValor());
+                    }
+                }
                 break;
             }
             case "INDEX":
