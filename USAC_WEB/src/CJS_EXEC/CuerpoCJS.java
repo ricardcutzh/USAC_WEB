@@ -508,6 +508,34 @@ public class CuerpoCJS {
                 }
                 break;
             }
+            case "AUM_DISM":
+            {
+                if(raiz.contarHijos()==2)
+                {
+                    String id = raiz.getHijo(0).getEtiqueta();
+                    Variable var = busca_en_Ambitos(id);
+                    if(var.getTipo().equals("numerico"))
+                    {
+                        double aux = Double.parseDouble(var.getValor());
+                        if(raiz.getHijo(1).getEtiqueta().equals("++"))
+                        {
+                            aux = aux+1;
+                            var.setValor(String.valueOf(aux));
+                        }
+                        else
+                        {
+                            aux = aux-1;
+                            var.setValor(String.valueOf(aux));
+                        }
+                    }
+                    else
+                    {
+                        TError error = new TError("Expresion invalida","Error Semantico","La expresion en Sentencia SI es invalida",raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
+                        this.errores_semanticas.add(error);
+                    }
+                }
+                break;
+            }
             case "ARRAY":
             {
                 if(raiz.contarHijos()==2)
