@@ -32,6 +32,7 @@ public class Interprete_CJS {
             this.ambitos.add(0, global);
             inicio_cjs(raiz);
             this.ambitos.get(0).imprime_tabla();
+            this.funciones.imprime_funciones();
             return true;
         } catch (Exception e) 
         {

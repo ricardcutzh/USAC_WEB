@@ -45,4 +45,23 @@ public class Tabla_Funciones {
             return false;
         }
     }
+    
+    public void imprime_funciones()
+    {
+        System.out.println("/////////////////////////////// TABLA DE FUNCIONES /////////////////////////////////////");
+        for(int x = 0; x < this.funciones.size(); x++)
+        {
+            System.out.print(" * - "+this.funciones.get(x).getNombre()+" | Numero de Parametros: "+this.funciones.get(x).getNumeroParametros());
+            if(this.funciones.get(x).getRaiz()==null)
+            {
+                System.out.println(" | NO TIENE INSTRUCCIONES A EJECUTAR");
+            }
+            else
+            {
+                System.out.println(" | SI TIENE INSTRUCCIONES A EJECUTAR");
+            }
+        }
+        System.out.println("////////////////////////////////////////////////////////////////////////////////////////");
+        
+    }
 }

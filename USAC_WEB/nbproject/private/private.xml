@@ -6,12 +6,14 @@
             <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/CJS_EXEC/Ambito.java</file>
             <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/CJS_EXEC/Tabla_Funciones.java</file>
             <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/CJS_EXEC/Expresion.java</file>
+            <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/CJS/parser.java</file>
+            <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/CJS_EXEC/Funcion.java</file>
+            <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/CJS_EXEC/NodoImprimir.java</file>
             <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/AST/ASTNodo.java</file>
             <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/CJS_EXEC/Interprete_CJS.java</file>
             <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/CJS_EXEC/CuerpoCJS.java</file>
             <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/usac_web/USAC_WEB.java</file>
-            <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/CJS_EXEC/Tabla_Variables.java</file>
-            <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/CJS_EXEC/Variable.java</file>
+            <file>file:/home/richard/Documents/Universidad/Compiladores%202/USAC_WEB/src/CJS_EXEC/Parametro.java</file>
         </group>
     </open-files>
 </project-private>

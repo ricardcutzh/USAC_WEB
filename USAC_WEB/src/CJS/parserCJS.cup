@@ -784,7 +784,7 @@ IMPRIMIR ::= imprimir:im oParent EXPRESION:h1 cParent pcoma
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 FUNCION ::= funcion iden:ide oParent L_ID:h1 cParent oKey cKey //CASO QUE VENGAN PARAMETROS PERO LA FUNCION NO TENGA INSTRUCCIONES
         {:
-          ASTNodo padre = new ASTNodo(parser.contador, "FUNCION");
+          ASTNodo padre = new ASTNodo(parser.contador, "FUNCION_1");
           parser.contador++;
           ASTNodo nom = new ASTNodo(parser.contador,ideright, ideleft,ide);
           parser.contador++;
@@ -795,7 +795,7 @@ FUNCION ::= funcion iden:ide oParent L_ID:h1 cParent oKey cKey //CASO QUE VENGAN
         :}
         | funcion iden:ide oParent  cParent oKey cKey //CASO EN QUE NO EXISTAN PARAMETROS NI HAYAN INSTRUCCIONES
         {:
-          ASTNodo padre = new ASTNodo(parser.contador, "FUNCION");
+          ASTNodo padre = new ASTNodo(parser.contador, "FUNCION_2");
           parser.contador++;
           ASTNodo nom = new ASTNodo(parser.contador,ideright, ideleft, ide);
           parser.contador++;
@@ -804,7 +804,7 @@ FUNCION ::= funcion iden:ide oParent L_ID:h1 cParent oKey cKey //CASO QUE VENGAN
         :}
         | funcion iden:ide oParent L_ID:h1 cParent oKey CUERPO_CJS:h2 cKey //EN CASO QUE VENGAN AMBOS
         {:
-          ASTNodo padre = new ASTNodo(parser.contador, "FUNCION");
+          ASTNodo padre = new ASTNodo(parser.contador, "FUNCION_4");
           parser.contador++;
           ASTNodo nom = new ASTNodo(parser.contador,ideright, ideleft, ide);
           parser.contador++;
@@ -817,7 +817,7 @@ FUNCION ::= funcion iden:ide oParent L_ID:h1 cParent oKey cKey //CASO QUE VENGAN
         :}
         | funcion iden:ide oParent cParent oKey CUERPO_CJS:h1 cKey //EN CASO DE QUE SOLO VENGAN INSTRUCCIONES
         {:
-          ASTNodo padre = new ASTNodo(parser.contador, "FUNCION");
+          ASTNodo padre = new ASTNodo(parser.contador, "FUNCION_5");
           parser.contador++;
           ASTNodo nom = new ASTNodo(parser.contador,ideright, ideleft, ide);
           parser.contador++;
@@ -854,7 +854,7 @@ MENSAJE ::= mensaje oParent EXPRESION:h1 cParent pcoma
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 SETELEMT ::= iden:id punto setElemento oParent cadena1:elem coma EXPRESION:h1 cParent pcoma
             {:
-              ASTNodo padre = new ASTNodo(parser.contador, "SETELEMT");
+              ASTNodo padre = new ASTNodo(parser.contador, "SETELEMT_VAR");
               parser.contador++;
               //tomando id
               padre.addHijo(new ASTNodo(parser.contador,idright,idleft, id));
@@ -870,7 +870,7 @@ SETELEMT ::= iden:id punto setElemento oParent cadena1:elem coma EXPRESION:h1 cP
             :}
             | documento punto obtener oParent cadena1:id cParent punto setElemento oParent cadena1:elem coma EXPRESION:h1 cParent pcoma
             {:
-              ASTNodo padre = new ASTNodo(parser.contador, "SETELEMT");
+              ASTNodo padre = new ASTNodo(parser.contador, "SETELEMT_OBJ");
               parser.contador++;
               //tomanod el id
               id = id.replace("\"","");
@@ -889,7 +889,7 @@ SETELEMT ::= iden:id punto setElemento oParent cadena1:elem coma EXPRESION:h1 cP
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 OBSERVADOR ::= documento punto observador oParent cadena1:tipo coma FUNCION:h1 cParent pcoma
           {:
-            ASTNodo padre = new ASTNodo(parser.contador, "OBSERVADOR_DOC");
+            ASTNodo padre = new ASTNodo(parser.contador, "OBSERVADOR_1");
             parser.contador++;
             tipo = tipo.replace("\"","");
             padre.addHijo(new ASTNodo(parser.contador,tiporight, tipoleft, tipo));
@@ -900,7 +900,7 @@ OBSERVADOR ::= documento punto observador oParent cadena1:tipo coma FUNCION:h1 c
           :}
           | documento punto observador oParent cadena1:tipo coma iden:fun oParent cParent cParent pcoma
           {:
-            ASTNodo padre = new ASTNodo(parser.contador, "OBSERVADOR_DOC");
+            ASTNodo padre = new ASTNodo(parser.contador, "OBSERVADOR_2");
             parser.contador++;
             tipo = tipo.replace("\"","");
             padre.addHijo(new ASTNodo(parser.contador,tiporight, tipoleft, tipo));
@@ -911,7 +911,7 @@ OBSERVADOR ::= documento punto observador oParent cadena1:tipo coma FUNCION:h1 c
           :}
           | iden:id punto observador oParent cadena1:tipo coma FUNCION:h1 cParent pcoma
           {:
-            ASTNodo padre = new ASTNodo(parser.contador, "OBSERVADOR_ID");
+            ASTNodo padre = new ASTNodo(parser.contador, "OBSERVADOR_3");
             parser.contador++;
             padre.addHijo(new ASTNodo(parser.contador, idright, idleft, id));
             parser.contador++;
@@ -924,7 +924,7 @@ OBSERVADOR ::= documento punto observador oParent cadena1:tipo coma FUNCION:h1 c
           :}
           | iden:id punto observador oParent cadena1:tipo coma iden:fun oParent cParent cParent pcoma
           {:
-            ASTNodo padre = new ASTNodo(parser.contador, "OBSERVADOR_ID");
+            ASTNodo padre = new ASTNodo(parser.contador, "OBSERVADOR_4");
             parser.contador++;
             padre.addHijo(new ASTNodo(parser.contador,idright, idleft, id));
             parser.contador++;

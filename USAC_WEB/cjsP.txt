@@ -1,3 +1,1 @@
-dimv a : 1;
-a--;
-mensaje(a);
+variable.observador("listo",mifuncion());

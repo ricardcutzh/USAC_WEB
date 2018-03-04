@@ -287,7 +287,16 @@ public class CuerpoCJS {
             }
             case "C_VAR_6":
             {
-                //AUN PENDIENTE
+                //AUN PENDIENTE AQUE DEBO DE LLAMAR LA TABLA DE OBJETOS CHTML QUE GENERE DESPUES DE INTERPRETARLO
+                if(raiz.contarHijos()==2)
+                {
+                    ArrayList<ASTNodo>ids = (ArrayList<ASTNodo>)inicia_ejecucion(raiz.getHijo(0));
+                    String objeto = raiz.getHijo(1).getEtiqueta();
+                    if(ids!=null)
+                    {
+                        JOptionPane.showMessageDialog(null, "ACORDATE DE PONER EL OBTENER!!!!!!");
+                    }
+                }
                 break;
             }
             case "AS_VAR_1":
@@ -419,7 +428,16 @@ public class CuerpoCJS {
             }
             case "AS_VAR_4":
             {
-                //ASIGNACION DE UN OBJETO DEL DOCUMENTO AUN PENDIENTE
+                //ASIGNACION DE UN OBJETO DEL DOCUMENTO AUN PENDIENTE IGUAL FORMA HAGO UN LLAMADO AL OBJETO QUE NECESITO PARA PODER TOMARLO
+                if(raiz.contarHijos()==2)
+                {
+                    ArrayList<ASTNodo>ids = (ArrayList<ASTNodo>)inicia_ejecucion(raiz.getHijo(0));
+                    String objeto = raiz.getHijo(1).getEtiqueta();
+                    if(ids!=null)
+                    {
+                        JOptionPane.showMessageDialog(null, "ASINGANDO A :"+ids.get(0).getEtiqueta()+" el componente: "+objeto);
+                    }
+                }
                 break;
             }
             case "SENT_SI":
@@ -593,6 +611,168 @@ public class CuerpoCJS {
                     Expresion exp = new Expresion(funciones, ambitos, raiz.getHijo(0), errores_semanticas);
                     NodoOperacion res = (NodoOperacion)exp.evaluaExpresion();
                     return res;
+                }
+                break;
+            }
+            case "FUNCION_1":
+            {
+                //UNA FUNCION CON SU NOMBRE Y  PARAMETROS SIN NINUGNA EJECUCION
+                if(raiz.contarHijos()==2)
+                {
+                    String nombreFun = raiz.getHijo(0).getEtiqueta();
+                    ArrayList<ASTNodo> nomParams = (ArrayList<ASTNodo>)inicia_ejecucion(raiz.getHijo(1));
+                    if(nomParams!=null)
+                    {
+                        Funcion f = new Funcion(nombreFun, null);
+                        ArrayList<Parametro> params = new ArrayList<>();
+                        for(int x = 0; x < nomParams.size(); x++)
+                        {
+                            Parametro p = new Parametro(nomParams.get(x).getEtiqueta(), "null");
+                            params.add(p);
+                        }
+                        f.setParametros(params);
+                        if(!this.funciones.addFuncion(f))
+                        {
+                            TError error = new TError("Funcion: "+nombreFun,"Error Semantico","Esta funcion ya existe",raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
+                            this.errores_semanticas.add(error);
+                        }
+                    }
+                }
+                break;
+            }
+            case "FUNCION_2":
+            {
+                if(raiz.contarHijos()==1)
+                {
+                    String nombreFun = raiz.getHijo(0).getEtiqueta();
+                    Funcion f = new Funcion(nombreFun, null);
+                    if(!this.funciones.addFuncion(f))
+                    {
+                        TError error = new TError("Funcion: "+nombreFun,"Error Semantico","Esta funcion ya existe",raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
+                        this.errores_semanticas.add(error);
+                    }
+                }
+                break;
+            }
+            case "FUNCION_4":
+            {
+                if(raiz.contarHijos()==3)
+                {
+                    String nombreFun = raiz.getHijo(0).getEtiqueta();
+                    ArrayList<ASTNodo> parm = (ArrayList<ASTNodo>)inicia_ejecucion(raiz.getHijo(1));
+                    if(parm!=null)
+                    {
+                        Funcion f = new Funcion(nombreFun, raiz.getHijo(2));
+                        ArrayList<Parametro>params = new ArrayList<>();
+                        for(int x = 0; x < parm.size(); x++)
+                        {
+                            Parametro p = new Parametro(parm.get(x).getEtiqueta(), "null");
+                            params.add(p);
+                        }
+                        f.setParametros(params);
+                        if(!this.funciones.addFuncion(f))
+                        {
+                            TError error = new TError("Funcion: "+nombreFun,"Error Semantico","Esta funcion ya existe",raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
+                            this.errores_semanticas.add(error);
+                        }
+                    }
+                }
+                break;
+            }
+            case "FUNCION_5":
+            {
+                if(raiz.contarHijos()==2)
+                {
+                    String nombreFun = raiz.getHijo(0).getEtiqueta();
+                    Funcion f = new Funcion(nombreFun, raiz.getHijo(1));
+                    if(!this.funciones.addFuncion(f))
+                    {
+                        TError error = new TError("Funcion: "+nombreFun,"Error Semantico","Esta funcion ya existe",raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
+                        this.errores_semanticas.add(error);
+                    }
+                }
+                break;
+            }
+            case "SETELEMT_VAR":
+            {
+                if(raiz.contarHijos()==3)
+                {
+                    String nombreVar = raiz.getHijo(0).getEtiqueta();
+                    String propiedad = raiz.getHijo(1).getEtiqueta();
+                    Expresion exp = new Expresion(funciones, ambitos, raiz.getHijo(2), errores_semanticas);
+                    NodoOperacion op = (NodoOperacion)exp.evaluaExpresion();
+                    if(!op.getTipo().equals("error"))
+                    {
+                        //AQUI SETEO LA NUEVA PROPIEDAD QUE NECEISTO CAMBIAR BUSCANDO EN LA TABLA DE VALORES PARA RECUPERAR EL OBJETO Y CAMBIARLE LA PROPIEDAD
+                    }
+                }   
+                break;
+            }
+            case "SETELEMT_OBJ":
+            {
+                if(raiz.contarHijos()==3)
+                {
+                    String nombreVar = raiz.getHijo(0).getEtiqueta();
+                    String propiedad = raiz.getHijo(1).getEtiqueta();
+                    Expresion exp = new Expresion(funciones, ambitos, raiz.getHijo(2), errores_semanticas);
+                    NodoOperacion op = (NodoOperacion)exp.evaluaExpresion();
+                    if(!op.getTipo().equals("error"))
+                    {
+                        //AQUI BUSCO DIRECTAMENTE EL ELEMENTO Y LE CAMBIO LA PROPIEDAD
+                    }
+                }
+                break;
+            }
+            case "OBSERVADOR_1":
+            {
+                if(raiz.contarHijos()==2)
+                {
+                    String nombreOBJ = raiz.getHijo(0).getEtiqueta();
+                    String nombreFun = "";
+                    if(raiz.getHijo(1).contarHijos()>0)
+                    {
+                        nombreFun = raiz.getHijo(1).getHijo(0).getEtiqueta();
+                        if(!nombreFun.equals(""))
+                        {
+                            //ANADO EL NOMBRE DE LA FUNCION AL ACTION LISTENER DEL OBJETO
+                        }
+                    }
+                }
+                break;
+            }
+            case "OBSERVADOR_2":
+            {
+                if(raiz.contarHijos()==2)
+                {
+                    String nomOBJ = raiz.getHijo(0).getEtiqueta();
+                    String nombreFun = raiz.getHijo(1).getEtiqueta();
+                    //AGREGO AL ACTION LISTENER DEL BOTON LA LLAMADA A ESTA FUNCION
+                }
+                break;
+            }
+            case "OBSERVADOR_3":
+            {
+                if(raiz.contarHijos()==3)
+                {
+                    String nombreVar = raiz.getHijo(0).getEtiqueta();
+                    String tipo = raiz.getHijo(1).getEtiqueta();
+                    String nombreFun = "";
+                    if(raiz.getHijo(2).contarHijos()>0)
+                    {
+                        nombreFun = raiz.getHijo(2).getHijo(0).getEtiqueta();
+                    }
+                    //BUSCO LA VARIABLE Y LE ASIGNO AL OBJETO QUE ESTA REFERENCIADO EN EL EVENTO QUE PIDIO EL NOMBRE DE FUNCION A BUSCAR Y EJECUTAR
+                }
+                break;
+            }
+            case "OBSERVADOR_4":
+            {
+                if(raiz.contarHijos()==3)
+                {
+                     String nombreVar = raiz.getHijo(0).getEtiqueta();
+                     String tipo = raiz.getHijo(1).getEtiqueta();
+                     String nombreFun = raiz.getHijo(2).getEtiqueta();
+                     //BUSCO LA VARIABLE Y LE ASIGNO AL BJETO EL NOMBRE DE LA FUNCION QUE ESTA REFERENCIANDO
                 }
                 break;
             }
