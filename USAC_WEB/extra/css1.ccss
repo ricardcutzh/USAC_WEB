@@ -1,0 +1,41 @@
+Titular_ccss[
+	GRUPO(grupo_areas);
+		TamTex := 16*2;
+		FondoElemento := "blue";
+		AutoRedimension := [true, Horizontal];
+		Visible := false;
+
+	ID(segudo);
+		Tamtex := 5*4.5;
+		FondoElemento := "#6365ff";
+		AutoRedimension := [true, Vertical];
+		Visible := true;
+		ColorText := "#A04343";
+
+	Grupo(tercero);
+		AutoRedimension := [false, Horizontal];
+		Visible := false;
+		Borde := [12+12*2.4, "black", true];
+		Opaque := true;
+		ColorText := "red";
+
+	ID(cuarto);
+		AutoRedimension := [false, Vertical];
+		Visible := true;
+		Borde := [12, "#FFFFFF", false];
+		Opaque := false;
+]
+
+Caraturlas[
+	GRUPO(grupo_areas);
+		TamTex := 16*2;
+		FondoElemento := "blue";
+		AutoRedimension := [true, Horizontal];
+		Visible := false;
+
+	ID(quinto);
+		AutoRedimension := [false, Vertical];
+		Visible := true;
+		Borde := [12, "#FFFFFF", false];
+		Opaque := false;
+]

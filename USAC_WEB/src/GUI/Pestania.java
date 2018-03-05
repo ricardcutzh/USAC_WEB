@@ -9,22 +9,41 @@ package GUI;
  *
  * @author richard
  */
-import AST.ASTNodo;
+import AST.*;
 import CHTML.*;
 import java.io.FileReader;
 import javax.swing.JOptionPane;
 import CHTML_EXEC.Interprete_CHTML;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.ScrollPaneLayout;
+import java.util.ArrayList;
 public class Pestania extends javax.swing.JPanel {
 
     /**
      * Creates new form Pestania
      */
     
-    
+    JTabbedPane padre;
+    int index;
+    JPanel panelPrincipal;
     public Pestania() {
         initComponents();
+        
     }
-
+    
+    public Pestania(JTabbedPane padre, int index)
+    {
+        initComponents();
+        this.padre = padre;
+        this.index = index;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -43,12 +62,12 @@ public class Pestania extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         MainPageTab = new javax.swing.JTabbedPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
         Principal = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
-        jPanel6 = new javax.swing.JPanel();
-        jPanel7 = new javax.swing.JPanel();
-        jPanel8 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        ErrorConsole = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        ErrorTable = new javax.swing.JTable();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
@@ -90,83 +109,55 @@ public class Pestania extends javax.swing.JPanel {
         jLabel1.setText("USAC WEB");
         jPanel2.add(jLabel1);
 
+        Principal.setPreferredSize(new java.awt.Dimension(5000, 5000));
+
         javax.swing.GroupLayout PrincipalLayout = new javax.swing.GroupLayout(Principal);
         Principal.setLayout(PrincipalLayout);
         PrincipalLayout.setHorizontalGroup(
             PrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1033, Short.MAX_VALUE)
+            .addGap(0, 5000, Short.MAX_VALUE)
         );
         PrincipalLayout.setVerticalGroup(
             PrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 431, Short.MAX_VALUE)
+            .addGap(0, 5000, Short.MAX_VALUE)
         );
 
-        MainPageTab.addTab("Contenido", Principal);
+        jScrollPane1.setViewportView(Principal);
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1033, Short.MAX_VALUE)
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 431, Short.MAX_VALUE)
-        );
+        MainPageTab.addTab("Contenido", jScrollPane1);
 
-        MainPageTab.addTab("Consola de Salida", jPanel4);
+        ErrorConsole.setAutoscrolls(true);
+        ErrorConsole.setPreferredSize(new java.awt.Dimension(1000, 2000));
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1033, Short.MAX_VALUE)
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 431, Short.MAX_VALUE)
-        );
+        ErrorTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(ErrorTable);
 
-        MainPageTab.addTab("Consola de Errores", jPanel5);
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1033, Short.MAX_VALUE)
+        javax.swing.GroupLayout ErrorConsoleLayout = new javax.swing.GroupLayout(ErrorConsole);
+        ErrorConsole.setLayout(ErrorConsoleLayout);
+        ErrorConsoleLayout.setHorizontalGroup(
+            ErrorConsoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 1015, Short.MAX_VALUE)
         );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 431, Short.MAX_VALUE)
+        ErrorConsoleLayout.setVerticalGroup(
+            ErrorConsoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ErrorConsoleLayout.createSequentialGroup()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 1509, Short.MAX_VALUE))
         );
 
-        MainPageTab.addTab("CCSS", jPanel6);
+        jScrollPane2.setViewportView(ErrorConsole);
 
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1033, Short.MAX_VALUE)
-        );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 431, Short.MAX_VALUE)
-        );
-
-        MainPageTab.addTab("CHTML", jPanel7);
-
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1033, Short.MAX_VALUE)
-        );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 431, Short.MAX_VALUE)
-        );
-
-        MainPageTab.addTab("CJS", jPanel8);
+        MainPageTab.addTab("Consola de Errores", jScrollPane2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -174,7 +165,7 @@ public class Pestania extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(MainPageTab)
+            .addComponent(MainPageTab, javax.swing.GroupLayout.DEFAULT_SIZE, 1038, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -183,7 +174,7 @@ public class Pestania extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(MainPageTab))
+                .addComponent(MainPageTab, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -200,13 +191,16 @@ public class Pestania extends javax.swing.JPanel {
                 raizCHTML = parser.raiz;
                 //EJECUTA LA ACCION DE PARSEAR EL CHTML
                 System.out.println(raizCHTML.graficaAST(raizCHTML));
-                Interprete_CHTML nuevo = new Interprete_CHTML(raizCHTML, Principal);
+                Interprete_CHTML nuevo = new Interprete_CHTML(raizCHTML, Principal, padre, index);
                 nuevo.InicioCHTML();
+                ErrorModel modelo = new ErrorModel(nuevo.getErrores());
+                ErrorTable.setModel(modelo);
             }
             else
             {
                 JOptionPane.showMessageDialog(null, "Se encontraron muchos errores en el archivo, revisa la sintaxis...");
             }
+            
         } catch (Exception e) 
         {
             JOptionPane.showMessageDialog(null, "Error al Intentar acceder a la Pagina: "+URL_Search.getText());
@@ -215,6 +209,8 @@ public class Pestania extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel ErrorConsole;
+    private javax.swing.JTable ErrorTable;
     private javax.swing.JTabbedPane MainPageTab;
     private javax.swing.JPanel Principal;
     private javax.swing.JTextField URL_Search;
@@ -225,10 +221,8 @@ public class Pestania extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     // End of variables declaration//GEN-END:variables
 }

@@ -17,9 +17,11 @@ public class USAC_WEB_GUI extends javax.swing.JFrame {
     /**
      * Creates new form USAC_WEB_GUI
      */
+    int index;
     public USAC_WEB_GUI() {
         initComponents();
-        Pestania p = new Pestania();
+        index = 0;
+        Pestania p = new Pestania(web_tabs, index);
         web_tabs.add("Nueva", p);
     }
 
@@ -82,7 +84,7 @@ public class USAC_WEB_GUI extends javax.swing.JFrame {
 
     private void add_tabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_tabActionPerformed
         // ADDS NEW TABS TO THE VIEW
-        Pestania p = new Pestania();
+        Pestania p = new Pestania(web_tabs, web_tabs.getSelectedIndex()+1);
         web_tabs.add("Nueva Pestania",p);
     }//GEN-LAST:event_add_tabActionPerformed
 

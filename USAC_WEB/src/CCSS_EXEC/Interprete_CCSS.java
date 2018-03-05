@@ -33,10 +33,10 @@ public class Interprete_CCSS {
         {
             this.definciones = new ArrayList<>();
             inicio_CSS(this.raiz);
-            for(int x = 0; x < this.definciones.size(); x++)
+            /*for(int x = 0; x < this.definciones.size(); x++)
             {
                 this.definciones.get(x).print_definicion();
-            }
+            }*/
             return true;
         }
         catch(Exception ex)

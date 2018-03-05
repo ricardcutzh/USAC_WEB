@@ -35,11 +35,11 @@ public class USAC_WEB {
     public static void main(String[] args) throws IOException {
         //pruebaCCSS();
         //pruebaCHTML();
-        pruebaCJS();
+        //pruebaCJS();
         //System.out.println(es_fecha("0"));
         //System.out.println(es_fecha_tiempo("01/12/201719:45:22"));
-       //USAC_WEB_GUI ventana = new USAC_WEB_GUI();
-       //ventana.setVisible(true);
+       USAC_WEB_GUI ventana = new USAC_WEB_GUI();
+       ventana.setVisible(true);
     }
     
     public static void pruebaCHTML()

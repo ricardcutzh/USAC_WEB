@@ -119,7 +119,7 @@ CUERPO ::= opentag cuerpo FONDO:h1 closetag L_CUERPO:h2 opentag finCuerpo closet
           {:
             ASTNodo padre = new ASTNodo(parser.contador, "CUERPO");
             parser.contador++;
-            nodo.addHijo(h1);
+            padre.addHijo(h1);
             padre.addHijo(h2);
             RESULT = padre;
           :}
@@ -127,7 +127,7 @@ CUERPO ::= opentag cuerpo FONDO:h1 closetag L_CUERPO:h2 opentag finCuerpo closet
           {:
             ASTNodo padre = new ASTNodo(parser.contador, "CUERPO");
             parser.contador++;
-            nodo.addHijo(h1);
+            padre.addHijo(h1);
             RESULT = padre;
           :}
           | error finCuerpo closetag
@@ -1352,7 +1352,7 @@ RUTA ::= ruta igual cadena:cad pcoma
         ASTNodo padre = new ASTNodo(parser.contador, "RUTA");
         parser.contador++;
         cad =cad.replace("\"","");
-        ASTNodo nodo = new ASTNodo(parser.contador, cad);
+        ASTNodo nodo = new ASTNodo(parser.contador, cadright, cadleft, cad);
         parser.contador++;
         padre.addHijo(nodo);
         RESULT = padre;

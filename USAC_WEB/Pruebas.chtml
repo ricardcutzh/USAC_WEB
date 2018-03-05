@@ -1,8 +1,10 @@
 <chtml>
   <encabezado>
-    <Titulo>Mi nuevo titulo<fin-Titulo>
+    <Titulo>Pagina de Pruebas<fin-Titulo>
+    <CCSS ruta="extra/css1.ccss";><FIN-CCSS>
+    <CJS ruta="extra/cjs1.cjs";><FIN-CJS>
   <fin-encabezado>
-  <cuerpo>
+  <cuerpo fondo="#b3b3ff";>
     <panel>
     <fin-panel>
   <fin-cuerpo>

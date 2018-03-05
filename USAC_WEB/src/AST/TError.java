@@ -1,4 +1,4 @@
-/*
+    /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -20,7 +20,7 @@ public class TError {
     String descripcion;
     int line;
     int column;
-    
+    String archivo;
     public TError(String lexema, String tipo, String descripcion, int line, int column)
     {
         this.lexema = lexema;
@@ -28,8 +28,19 @@ public class TError {
         this.descripcion = descripcion;
         this.line = line;
         this.column = column;
+        this.archivo = "";
     }
 
+    public String getArchivo() {
+        return archivo;
+    }
+
+    public void setArchivo(String archivo) {
+        this.archivo = archivo;
+    }
+
+    
+    
     public String getLexema() {
         return lexema;
     }
