@@ -75,4 +75,9 @@ public class Funcion {
     {
         return this.parametros.size();
     }
+    
+    public Parametro getParametroIndex(int x)
+    {
+        return this.parametros.get(x);
+    }
 }

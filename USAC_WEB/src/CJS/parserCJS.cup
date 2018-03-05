@@ -972,7 +972,7 @@ PARAMS::= PARAMS:h1 coma EXPRESION:h2
         ;
 EXE_FUNC::= iden:ide oParent cParent
         {:
-          ASTNodo padre = new ASTNodo(parser.contador,"EXE_FUNC");
+          ASTNodo padre = new ASTNodo(parser.contador,"EXEC_FUNC");
           parser.contador++;
           padre.addHijo(new ASTNodo(parser.contador, ideright, ideleft, ide));
           parser.contador++;

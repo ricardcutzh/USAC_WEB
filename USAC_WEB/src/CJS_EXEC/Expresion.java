@@ -435,24 +435,212 @@ public class Expresion {
             }
             case "VALOR_VECTOR":
             {
+                if(raiz.contarHijos()==2)
+                {
+                    String nombreVector = raiz.getHijo(0).getEtiqueta();
+                    Expresion exp = new Expresion(funciones, ambitos, raiz.getHijo(1), errores_semanticas);
+                    NodoOperacion op = (NodoOperacion)exp.evaluaExpresion();
+                    if(op.getTipo().equals("numerico"))
+                    {
+                        Variable vec = this.ambitos.get(0).busca_vector(nombreVector);
+                        if(vec==null)
+                        {
+                            vec = busca_vector(nombreVector);
+                        }
+                        if(vec!=null)
+                        {
+                            int index = Integer.parseInt(op.getValor());
+                            if(index < vec.getDimension())
+                            {
+                                NodoOperacion res = vec.index_vector(index);
+                                return res;
+                            }
+                            else
+                            {
+                                TError error = new TError("Vector: "+nombreVector,"Error Semantico","Indice Fuera de las dimensiones del vector",raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
+                                this.errores_semanticas.add(error);
+                            }
+                        }
+                        else
+                        {
+                            TError error = new TError("Vector: "+nombreVector,"Error Semantico","El vector especificado no existe",raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
+                            this.errores_semanticas.add(error);
+                        }
+                    }
+                }
                 break;
             }
             case "CONTEO":
             {
+                if(raiz.contarHijos()==1)
+                {
+                    String nombreVector = raiz.getHijo(0).getEtiqueta();
+                    Variable vector = this.ambitos.get(0).busca_vector(nombreVector);
+                    if(vector==null){vector = busca_vector(nombreVector);}
+                    if(vector!=null)
+                    {
+                        NodoOperacion res = new NodoOperacion(String.valueOf(vector.getDimension()),"numerico", raiz.getLine(), raiz.getColumn());
+                        return res;
+                    }
+                    else
+                    {
+                        TError error = new TError("Vector: "+nombreVector,"Error Semantico","El vector especificado no existe",raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
+                        this.errores_semanticas.add(error);
+                    }
+                }
                 break;
             }
             case "ATEXTO":
             {
+                if(raiz.contarHijos()==1)
+                {
+                    String nombre = raiz.getHijo(0).getEtiqueta();
+                    Variable var = this.ambitos.get(0).busca_Variable(nombre);
+                    if(var==null){var = this.ambitos.get(0).busca_vector(nombre);}
+                    if(var==null){var = busca_Var_Global(nombre);}
+                    if(var==null){var = this.ambitos.get(0).busca_vector(nombre);}
+                    if(var==null){var = busca_vector(nombre);}
+                    if(var!=null)
+                    {
+                        NodoOperacion op = new NodoOperacion(var.variableATexto(), "cadena", raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
+                        return op;
+                    }
+                }
                 break;
             }
-            case "EXE_FUNC":
+            case "EXEC_FUNC":
             {
+                if(raiz.contarHijos()==2)
+                {
+                    String nombre = raiz.getHijo(0).getEtiqueta();
+                    ArrayList<NodoOperacion> parametros = (ArrayList<NodoOperacion>)ejecutaAuxiliar(raiz.getHijo(1));
+                    if(parametros!=null)
+                    {
+                        Funcion f = this.funciones.buscaFuncion(nombre, parametros.size());
+                        if(f!=null)
+                        {
+                           //VALIDACION DE LA CANTIDAD DE PARAMETROS
+                            if(f.getNumeroParametros() == parametros.size())
+                            {
+                                Ambito ambito = new Ambito(nombre);
+                                this.ambitos.add(0, ambito);
+                                for(int x = 0; x < parametros.size() ; x++)
+                                {
+                                    Variable var = new Variable(f.getParametroIndex(x).getIdParametro());
+                                    var.setEsVector(false);
+                                    var.setTipo(parametros.get(x).getTipo());
+                                    var.setValor(parametros.get(x).getValor());
+                                    this.ambitos.get(0).agregaVariableAlAmbito(var);
+                                }
+                                //EJECUTO LA FUNCION
+                                if(f.getRaiz()!=null)
+                                {
+                                    CuerpoCJS cuerpo = new CuerpoCJS(ambitos, f.getRaiz(), funciones);
+                                    cuerpo.ejecutaCuerpo();
+                                    if(cuerpo.huboReturn)
+                                    {
+                                       NodoOperacion res = cuerpo.getRetorno();
+                                       if(res!=null)
+                                       {
+                                           this.ambitos.remove(0);
+                                           return res;
+                                       }
+                                    }
+                                }
+                                this.ambitos.remove(0);
+                            }
+                            else
+                            {
+                                TError error = new TError("Funcion: "+nombre,"Error Semantico","La cantidad de parametros no coinciden",raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
+                                this.errores_semanticas.add(error);
+                            }
+                        }
+                        else
+                        {
+                            TError error = new TError("Funcion: "+nombre,"Error Semantico","No existe una funcion declarada como: "+nombre,raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
+                            this.errores_semanticas.add(error);
+                        }
+                    }
+                    else
+                    {
+                        TError error = new TError("Funcion: "+nombre,"Error Semantico","Esta funcion requiere parametros validos",raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
+                        this.errores_semanticas.add(error);
+                    }
+                }
+                if(raiz.contarHijos()==1)
+                {
+                    String nombre = raiz.getHijo(0).getEtiqueta();
+                    Funcion f = this.funciones.buscaFuncion(nombre, 0);
+                    if(f!=null)
+                    {
+                        Ambito ambito = new Ambito(nombre);
+                        this.ambitos.add(0, ambito);
+                        if(f.getRaiz()!=null)
+                        {
+                            CuerpoCJS cuerpo = new CuerpoCJS(ambitos,f.getRaiz(), funciones);
+                            cuerpo.ejecutaCuerpo();
+                            if(cuerpo.huboReturn)
+                            {
+                                NodoOperacion res = cuerpo.getRetorno();
+                                if(res!=null)
+                                {
+                                    return res;
+                                }
+                            }
+                        }
+                        this.ambitos.remove(0);
+                    }
+                    else
+                    {
+                        //ERROR SEMANTICO
+                        TError error = new TError("Funcion: "+nombre,"Error Semantico","No existe una funcion declarada como: "+nombre,raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
+                        this.errores_semanticas.add(error);
+                    }
+                }
                 break;
             }
+            
         }
         return new NodoOperacion("error","error",0,0);
     }
     
+    private Object ejecutaAuxiliar(ASTNodo raiz)
+    {
+        switch(raiz.getEtiqueta())
+        {
+            case "PARAMS":
+            {
+                if(raiz.contarHijos()==2)
+                {
+                    ArrayList<NodoOperacion> parametros = (ArrayList<NodoOperacion>)ejecutaAuxiliar(raiz.getHijo(0));
+                    if(parametros==null)
+                    {
+                        parametros = new ArrayList<>();
+                    }
+                    Expresion exp = new Expresion(funciones, ambitos, raiz.getHijo(1), errores_semanticas);
+                    NodoOperacion op = (NodoOperacion)exp.evaluaExpresion();
+                    if(!op.getValor().equals("error"))
+                    {
+                        parametros.add(op);
+                    }
+                    return parametros;
+                }
+                if(raiz.contarHijos()==1)
+                {
+                    Expresion exp = new Expresion(funciones, ambitos, raiz.getHijo(0), errores_semanticas);
+                    NodoOperacion op = (NodoOperacion)exp.evaluaExpresion();
+                    ArrayList<NodoOperacion> parametros = new ArrayList<>();
+                    if(!op.getValor().equals("error"))
+                    {
+                        parametros.add(op);
+                    }
+                    return parametros;
+                }
+                break;
+            }
+        }
+        return null;
+    }
     
     public Variable busca_Var_Global(String nombre)
     {
@@ -467,6 +655,18 @@ public class Expresion {
         return null;
     }
     
+    public Variable busca_vector(String nombre)
+    {
+        for(int x = 1; x < this.ambitos.size(); x++)
+        {
+            Variable aux = this.ambitos.get(x).busca_vector(nombre);
+            if(aux!=null)
+            {
+                return aux;
+            }
+        }
+        return null;
+    }
     
     private NodoOperacion realizaSuma(NodoOperacion val1, NodoOperacion val2)
     {

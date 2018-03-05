@@ -28,7 +28,32 @@ public class Variable {
         this.esVector = false;
         this.valVectores = new ArrayList<>();
     }
-
+    
+    public String variableATexto()
+    {
+        if(this.esVector)
+        {
+            String ret = "[";
+            for(int x = 0; x < this.valVectores.size(); x++)
+            {
+                if(!(x==this.valVectores.size()-1))
+                {
+                    ret = ret + this.valVectores.get(x).getValor()+",";
+                }
+                else
+                {
+                    ret = ret + this.valVectores.get(x).getValor();
+                }
+            }
+            ret = ret + "]";
+            return ret;
+        }
+        else
+        {
+            return this.getValor();
+        }
+    }
+    
     public String getIdentificador() {
         return identificador;
     }
