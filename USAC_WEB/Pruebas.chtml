@@ -1,11 +1,17 @@
 <chtml>
   <encabezado>
-    <Titulo>Pagina de Pruebas<fin-Titulo>
     <CCSS ruta="extra/css1.ccss";><FIN-CCSS>
     <CJS ruta="extra/cjs1.cjs";><FIN-CJS>
+    <Titulo id="tit"; grupo="pintatitulo";>MI PAGINA DE PRUEBAS<fin-Titulo>
   <fin-encabezado>
-  <cuerpo fondo="#b3b3ff";>
-    <panel>
+  <cuerpo fondo="red";>
+    <panel grupo="paneles"; ancho="900"; alto="500"; alineado="centrado";>
+        <caja_texto id="mitexto"; ancho = "300"; alto="50";> ESTO ES UNA CAJITA DE TEXTO<fin-caja_texto>
+        <spinner id="miEspinner"; Ancho = "100"; alto="20";>45<fin-spinner>
+        <caja_texto> hola que hace <fin-caja_texto>
     <fin-panel>
+    <texto_a id="mitexto";> hola mundo este es un  kkakaka<fin-texto_a>
+    <texto_a> ESTE ES OTRO JAJAJAJAJA <fin-texto_a>
+
   <fin-cuerpo>
 <fin-chtml>

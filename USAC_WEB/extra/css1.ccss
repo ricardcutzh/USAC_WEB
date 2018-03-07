@@ -1,41 +1,32 @@
-Titular_ccss[
-	GRUPO(grupo_areas);
-		TamTex := 16*2;
-		FondoElemento := "blue";
-		AutoRedimension := [true, Horizontal];
-		Visible := false;
+Pruebas[
+	GRUPO(paneles);
+		alineado:=centrado;
+		fondoelemento := "green";
 
-	ID(segudo);
-		Tamtex := 5*4.5;
-		FondoElemento := "#6365ff";
-		AutoRedimension := [true, Vertical];
-		Visible := true;
-		ColorText := "#A04343";
+	ID(primero);
+		borde :=[50,"blue",true];
+		opaque :=false;
+	ID(miEspinner);
+		fondoelemento :="blue";
+		tamtex := 20;
+		formato := negrilla;
 
-	Grupo(tercero);
-		AutoRedimension := [false, Horizontal];
-		Visible := false;
-		Borde := [12+12*2.4, "black", true];
-		Opaque := true;
-		ColorText := "red";
+	ID(tit);
+		tamtex := 10;
+		formato := capital-t;
+		letra := "Arial";
 
-	ID(cuarto);
-		AutoRedimension := [false, Vertical];
-		Visible := true;
-		Borde := [12, "#FFFFFF", false];
-		Opaque := false;
-]
+	GRUPO(pintatitulo);
+		colortext := "blue";
+		texto := "modificado";
 
-Caraturlas[
-	GRUPO(grupo_areas);
-		TamTex := 16*2;
-		FondoElemento := "blue";
-		AutoRedimension := [true, Horizontal];
-		Visible := false;
-
-	ID(quinto);
-		AutoRedimension := [false, Vertical];
-		Visible := true;
-		Borde := [12, "#FFFFFF", false];
-		Opaque := false;
+	ID(mitexto);
+	texto := "hola mi amigo iocef!";
+	formato := mayuscula, cursiva;
+	tamtex := 20;
+	fondoelemento := "white";
+	borde := [20,"black",false];
+	opaque := true;
+	alineado := centrado;
+	colortext := "green";
 ]

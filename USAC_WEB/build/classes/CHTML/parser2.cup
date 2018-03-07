@@ -1215,6 +1215,7 @@ SPINNER ::= opentag spinner closetag opentag finSpinner closetag
             ASTNodo hijo = new ASTNodo(parser.contador, "CONTADOR");
             parser.contador++;
             ASTNodo con = new ASTNodo(parser.contador, cont);
+            parser.contador++;
             hijo.addHijo(con);
             if(h1!=null)
             {padre.addHijo(h1);}

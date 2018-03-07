@@ -16,7 +16,7 @@ public class Atributo {
     
     public Atributo(String nombreAtributo)
     {
-        this.nombreAtributo = nombreAtributo;
+        this.nombreAtributo = nombreAtributo.toLowerCase();
         this.valores = new ArrayList<>();
     }
 

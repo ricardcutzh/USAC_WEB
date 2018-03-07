@@ -64,4 +64,19 @@ public class Elemento {
         }
         System.out.println("    //////////////////////////////////////////////////////////////////////");
     }
+    
+    public Atributo buscaAtributo(String nombre)
+    {
+        Atributo at= null;
+        for(int x = 0; x < this.atributos.size(); x++ )
+        {
+            
+            if(this.atributos.get(x).getNombreAtributo().toLowerCase().equals(nombre))
+            {
+                at = this.atributos.get(x);
+                return at;
+            }
+        }
+        return at;
+    }
 }

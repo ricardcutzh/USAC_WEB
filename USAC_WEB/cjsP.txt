@@ -1,3 +1,10 @@
 dimv a:{1,2,3,4};
-dimv texto : a.atexto;
-mensaje(texto.atexto);
+dimv b: a;
+
+funcion devuelveme_vector(vec1)
+{
+  mensaje("devolvere: "+vec1.atexto);
+  retornar vec1;
+}
+
+dimv nuevo : devuelveme_vector(b);

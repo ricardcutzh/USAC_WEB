@@ -375,18 +375,42 @@ public class Expresion {
                     NodoOperacion op;
                     String id = raiz.getHijo(0).getEtiqueta();
                     Variable aux = this.ambitos.get(0).busca_Variable(id);
+                    //AQUI EMPIEZA LA EDICION
+                    if(aux==null){aux = this.ambitos.get(0).busca_vector(id);}
+                    //AQUI FINALIZA LA EDICION
                     if(aux!=null)//EXITE EN ESTE AMBITO?
                     {
-                        op = new NodoOperacion(aux.getValor(),aux.getTipo(),raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
-                        return op;
+                        if(aux.isEsVector())
+                        {
+                            op = new NodoOperacion("0", "vector", raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
+                            op.setValVectores(aux.getValVectores());
+                            return op;
+                        }
+                        else
+                        {
+                            op = new NodoOperacion(aux.getValor(),aux.getTipo(),raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
+                            return op;
+                        }
                     }
                     else//BUSCA EN GLOBAL O MAS ARRIBA!
                     {
                         Variable aux2 = busca_Var_Global(id);
+                        //AQUI SIGO EDITANDO
+                        if(aux2==null){ aux2 = busca_vector(id);}
+                        //AQUI OTRA VEZ EDITO
                         if(aux2!=null)//SIi EXISTE MAS ARRIBA, TRAE SU VALOR
                         {
-                            op = new NodoOperacion(aux2.getValor(),aux2.getTipo(),raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
-                            return op;
+                            if(aux2.isEsVector())
+                            {
+                                op = new NodoOperacion("0", "vector", raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
+                                op.setValVectores(aux2.getValVectores());
+                                return op;
+                            }
+                            else
+                            {
+                                op = new NodoOperacion(aux2.getValor(),aux2.getTipo(),raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
+                                return op;
+                            }
                         }
                         else//SI NO EXISTE..... ERROR DE SEMANTICA
                         {
@@ -527,9 +551,17 @@ public class Expresion {
                                 for(int x = 0; x < parametros.size() ; x++)
                                 {
                                     Variable var = new Variable(f.getParametroIndex(x).getIdParametro());
-                                    var.setEsVector(false);
+                                    if(parametros.get(x).getTipo().equals("vector"))
+                                    {
+                                        var.setEsVector(true);
+                                        var.setValVectores(parametros.get(x).getValVectores());
+                                    }
+                                    else
+                                    {
+                                        var.setEsVector(false);
+                                        var.setValor(parametros.get(x).getValor());
+                                    }
                                     var.setTipo(parametros.get(x).getTipo());
-                                    var.setValor(parametros.get(x).getValor());
                                     this.ambitos.get(0).agregaVariableAlAmbito(var);
                                 }
                                 //EJECUTO LA FUNCION

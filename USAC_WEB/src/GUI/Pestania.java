@@ -14,9 +14,15 @@ import CHTML.*;
 import java.io.FileReader;
 import javax.swing.JOptionPane;
 import CHTML_EXEC.Interprete_CHTML;
+import Objetos.Panel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.security.Principal;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -24,6 +30,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.ScrollPaneLayout;
 import java.util.ArrayList;
+import javax.swing.BoxLayout;
 public class Pestania extends javax.swing.JPanel {
 
     /**
@@ -33,17 +40,39 @@ public class Pestania extends javax.swing.JPanel {
     JTabbedPane padre;
     int index;
     JPanel panelPrincipal;
+    int alto = 10000, largo = 2000;
+    
     public Pestania() {
         initComponents();
         
     }
+    
     
     public Pestania(JTabbedPane padre, int index)
     {
         initComponents();
         this.padre = padre;
         this.index = index;
+        this.ErrorTable.setVisible(false);
+        
     }
+    
+    public Pestania(JTabbedPane padre, int index, int largo, int alto)
+    {
+        initComponents();
+        this.padre = padre;
+        this.index = index;
+        this.ErrorTable.setVisible(false);
+        if(largo > this.largo)
+        {
+            this.largo = largo;
+        }
+        if(alto > this.alto)
+        {
+            this.alto = alto;
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -62,8 +91,6 @@ public class Pestania extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         MainPageTab = new javax.swing.JTabbedPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        Principal = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         ErrorConsole = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -108,23 +135,6 @@ public class Pestania extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 48)); // NOI18N
         jLabel1.setText("USAC WEB");
         jPanel2.add(jLabel1);
-
-        Principal.setPreferredSize(new java.awt.Dimension(5000, 5000));
-
-        javax.swing.GroupLayout PrincipalLayout = new javax.swing.GroupLayout(Principal);
-        Principal.setLayout(PrincipalLayout);
-        PrincipalLayout.setHorizontalGroup(
-            PrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 5000, Short.MAX_VALUE)
-        );
-        PrincipalLayout.setVerticalGroup(
-            PrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 5000, Short.MAX_VALUE)
-        );
-
-        jScrollPane1.setViewportView(Principal);
-
-        MainPageTab.addTab("Contenido", jScrollPane1);
 
         ErrorConsole.setAutoscrolls(true);
         ErrorConsole.setPreferredSize(new java.awt.Dimension(1000, 2000));
@@ -183,6 +193,8 @@ public class Pestania extends javax.swing.JPanel {
         ASTNodo raizCHTML = null;
         try 
         {
+            panelPrincipal = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            panelPrincipal.setPreferredSize(new Dimension(largo, alto));
             LexCHTML lex = new LexCHTML(new FileReader(URL_Search.getText()));
             parser p = new parser(lex);
             p.parse();
@@ -191,15 +203,20 @@ public class Pestania extends javax.swing.JPanel {
                 raizCHTML = parser.raiz;
                 //EJECUTA LA ACCION DE PARSEAR EL CHTML
                 System.out.println(raizCHTML.graficaAST(raizCHTML));
-                Interprete_CHTML nuevo = new Interprete_CHTML(raizCHTML, Principal, padre, index);
+                Interprete_CHTML nuevo = new Interprete_CHTML(raizCHTML, panelPrincipal, padre, index);
                 nuevo.InicioCHTML();
                 ErrorModel modelo = new ErrorModel(nuevo.getErrores());
                 ErrorTable.setModel(modelo);
+                ErrorTable.setVisible(true);
             }
             else
             {
                 JOptionPane.showMessageDialog(null, "Se encontraron muchos errores en el archivo, revisa la sintaxis...");
             }
+            JScrollPane scroll = new JScrollPane(panelPrincipal);
+            scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+            MainPageTab.addTab("Contenido", scroll);
             
         } catch (Exception e) 
         {
@@ -212,7 +229,6 @@ public class Pestania extends javax.swing.JPanel {
     private javax.swing.JPanel ErrorConsole;
     private javax.swing.JTable ErrorTable;
     private javax.swing.JTabbedPane MainPageTab;
-    private javax.swing.JPanel Principal;
     private javax.swing.JTextField URL_Search;
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnExec;
@@ -221,7 +237,6 @@ public class Pestania extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     // End of variables declaration//GEN-END:variables

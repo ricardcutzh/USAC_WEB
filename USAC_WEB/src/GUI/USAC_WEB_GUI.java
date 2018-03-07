@@ -18,6 +18,7 @@ public class USAC_WEB_GUI extends javax.swing.JFrame {
      * Creates new form USAC_WEB_GUI
      */
     int index;
+    int alto = 0, largo = 0;
     public USAC_WEB_GUI() {
         initComponents();
         index = 0;
@@ -39,6 +40,7 @@ public class USAC_WEB_GUI extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         add_tab = new javax.swing.JMenuItem();
         close_tab = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("USAC WEB");
@@ -64,6 +66,14 @@ public class USAC_WEB_GUI extends javax.swing.JFrame {
         });
         jMenu1.add(close_tab);
 
+        jMenuItem1.setText("Dimensiones");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
         jMenuBar1.add(jMenu1);
 
         setJMenuBar(jMenuBar1);
@@ -84,22 +94,31 @@ public class USAC_WEB_GUI extends javax.swing.JFrame {
 
     private void add_tabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_tabActionPerformed
         // ADDS NEW TABS TO THE VIEW
-        Pestania p = new Pestania(web_tabs, web_tabs.getSelectedIndex()+1);
+        Pestania p = new Pestania(web_tabs, web_tabs.getSelectedIndex()+1,largo, alto);
         web_tabs.add("Nueva Pestania",p);
     }//GEN-LAST:event_add_tabActionPerformed
 
     private void close_tabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_close_tabActionPerformed
         // DELETS DE CURRENT TAB
         int closetab = web_tabs.getSelectedIndex();
-        /*if(web_tabs.getTabCount()>1)
+        if(web_tabs.getTabCount()>1)
         {
             web_tabs.remove(closetab);
-        }*/
-        JPanel aux = (JPanel)web_tabs.getComponent(0);
+        }
+        /*JPanel aux = (JPanel)web_tabs.getComponent(0);
         JPanel aux2 = (JPanel)aux.getComponent(0);
         JTextField s = (JTextField)aux2.getComponent(3);
-        JOptionPane.showMessageDialog(null, s.getText());
+        JOptionPane.showMessageDialog(null, s.getText());*/
     }//GEN-LAST:event_close_tabActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        alto = Integer.parseInt(JOptionPane.showInputDialog(this, "Alto: "));
+        largo = Integer.parseInt(JOptionPane.showInputDialog(this,"Ancho: "));
+        index = 0;
+        Pestania p = new Pestania(web_tabs, index,largo, alto);
+        web_tabs.add("Nueva", p);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -141,6 +160,7 @@ public class USAC_WEB_GUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem close_tab;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JTabbedPane web_tabs;
     // End of variables declaration//GEN-END:variables
 }

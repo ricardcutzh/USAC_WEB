@@ -151,9 +151,18 @@ public class CuerpoCJS {
                         for(int x = 0; x < ids.size(); x++)
                         {
                             Variable var = new Variable(ids.get(x).getEtiqueta());
-                            var.setEsVector(false);
-                            var.setTipo(res.getTipo());
-                            var.addValor(res.getValor());
+                            if(res.getTipo().equals("vector"))
+                            {
+                                var.setEsVector(true);
+                                var.setTipo("vector");
+                                var.setValVectores(res.getValVectores());
+                            }
+                            else
+                            {
+                                var.setEsVector(false);
+                                var.setTipo(res.getTipo());
+                                var.addValor(res.getValor());
+                            }
                             if(!this.ambitos.get(0).agregaVariableAlAmbito(var))
                             {
                                 TError error = new TError(ids.get(x).getEtiqueta(),"Error Semantico","Esta variable ya existe en este Ambito",ids.get(x).getLine(),ids.get(x).getColumn());
@@ -359,6 +368,7 @@ public class CuerpoCJS {
                                 if(indice < dimension)
                                 {
                                     var.set_val_index(indice, valor);
+                                    var.setEsVector(true);
                                 }
                                 else
                                 {
@@ -404,6 +414,7 @@ public class CuerpoCJS {
                                 if(dimension == vals)
                                 {
                                     vec.setValVectores(valores);
+                                    vec.setEsVector(true);
                                 }
                                 else
                                 {
@@ -795,9 +806,17 @@ public class CuerpoCJS {
                                 for(int x = 0; x < parametros.size() ; x++)
                                 {
                                     Variable var = new Variable(f.getParametroIndex(x).getIdParametro());
-                                    var.setEsVector(false);
                                     var.setTipo(parametros.get(x).getTipo());
-                                    var.setValor(parametros.get(x).getValor());
+                                    if(parametros.get(x).getTipo().equals("vector"))
+                                    {
+                                        var.setEsVector(true);
+                                        var.setValVectores(parametros.get(x).getValVectores());
+                                    }
+                                    else
+                                    {
+                                        var.setEsVector(false);
+                                        var.setValor(parametros.get(x).getValor());
+                                    }
                                     this.ambitos.get(0).agregaVariableAlAmbito(var);
                                 }
                                 //EJECUTO LA FUNCION

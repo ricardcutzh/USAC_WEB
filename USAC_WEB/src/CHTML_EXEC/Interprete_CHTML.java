@@ -13,6 +13,14 @@ import javax.swing.*;
 import CCSS_EXEC.*;
 import java.io.FileReader;
 import AST.TError;
+import Objetos.*;
+import com.sun.xml.internal.ws.util.StringUtils;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import javafx.scene.layout.Pane;
+import javax.swing.border.LineBorder;
 /**
  *
  * @author richard
@@ -31,6 +39,15 @@ public class Interprete_CHTML {
     ArrayList<String> archivosCSS;
     //LISTA DE ARBOLES DE CJS
     ArrayList<NodoCJS> archivosCJS;
+    ///////////////////////////////
+    int ocupado = 0;
+    ///////////////////////////////
+    ///////////////////////////////
+    //PILA DE PANELES
+    ArrayList<JPanel> paneles;
+    ///////////////////////////////
+    Tabla_Componente tabla_componentes;
+    ///////////////////////////////
     public Interprete_CHTML(ASTNodo raiz, JPanel principal)
     {
         this.raiz = raiz;
@@ -39,6 +56,7 @@ public class Interprete_CHTML {
         this.errores = new ArrayList<>();
         this.archivosCSS = new ArrayList<>();
         this.archivosCJS = new ArrayList<>();
+        this.paneles = new ArrayList<>();
     }
     
     
@@ -52,8 +70,12 @@ public class Interprete_CHTML {
         this.errores = new ArrayList<>();
         this.archivosCSS = new ArrayList<>();
         this.archivosCJS = new ArrayList<>();
+        this.paneles = new ArrayList<>();
+        this.tabla_componentes = new Tabla_Componente();
     }
 
+    
+    
     public ArrayList<TError> getErrores() {
         return errores;
     }
@@ -71,6 +93,7 @@ public class Interprete_CHTML {
                 //OBTENGO LOS ENCABEZADOS
                 E_Encabezado(raiz.getHijo(0));
                 //OBTENGO LAS ETIQUETAS DEL CUERPO
+                this.paneles.add(0, principal);
                 Cuerpo(raiz.getHijo(1));
                 //IMPRIMO LAS DEFINICIONES DEL CSS
                 this.definicionesCSS.imprimeDefiniciones();
@@ -176,6 +199,32 @@ public class Interprete_CHTML {
                         pestania.setTitleAt(indexPesta, rut);
                     }
                 }
+                if(raiz.contarHijos()==2)
+                {
+                    ArrayList<NodoAtributo> atts = (ArrayList<NodoAtributo>)Lista_Atributos(raiz.getHijo(0));
+                    Fuente f = new Fuente(atts, this.definicionesCSS);
+                    
+                    Font fe = f.dameLaFuente();
+                    String texto = raiz.getHijo(1).getEtiqueta();
+                    this.pestania.setTitleAt(indexPesta, texto);
+                    if(texto!=null)
+                    {   
+                        //////////////////////////////////////////////////////////////////////
+                        if(f.isCaptitalt()){
+                            texto = upperCaseAllFirst(texto);
+                        }
+                        if(f.isMayuscula()){
+                            texto = texto.toUpperCase();
+                        }
+                        if(f.isMinuscula()){
+                            texto = texto.toLowerCase();
+                        }
+                        PintaTitulo pintor = new PintaTitulo(pestania, indexPesta, atts, definicionesCSS);
+                        pintor.pintalo();
+                        this.pestania.setFont(fe);
+                        //////////////////////////////////////////////////////////////////////
+                    }
+                }
                 break;
             }
             case "RUTA":
@@ -235,19 +284,272 @@ public class Interprete_CHTML {
                 }
                 break;
             }
-            case "L_CUERPO":
+            case "L_CUERPO"://ESTE ES EL PRINCIPAL DEL CUERPO
             {
-                if(raiz.contarHijos()>0)//EMPIEZA LA PINTADA DEL CUERPO
+                if(raiz.contarHijos()==2)//EMPIEZA LA PINTADA DEL CUERPO
                 {
-                    
+                    //ME MUEVO MAS A LA IZQUIERDA
+                    Cuerpo(raiz.getHijo(0));
+                    //LUEGO ME MUEVO A LA DERECHA
+                    Cuerpo(raiz.getHijo(1));
+                }
+                if(raiz.contarHijos()==1)
+                {
+                    Cuerpo(raiz.getHijo(0));
                 }
                 break;
             }
-                    
+            case "PANEL":
+            {
+                if(raiz.contarHijos()==2)
+                {
+                    ArrayList<NodoAtributo> atts = (ArrayList<NodoAtributo>)Lista_Atributos(raiz.getHijo(0));
+                    if(atts!=null)
+                    {
+                        String id = traeID(atts);
+                        
+                        GeneraPanel generador = new GeneraPanel(definicionesCSS, atts);
+                        Panel p = generador.gerenameElPanel();
+                        if(!id.equals("NAC")){this.tabla_componentes.addComponenete(new Component(p,"panel", id));}
+                        this.paneles.get(0).add(p);//ANADO AL PADRE
+                        this.paneles.add(0, p);//EL NUEVO PADRE
+                        Cuerpo(raiz.getHijo(1));
+                        this.paneles.remove(0);//VUELE A SALIR
+                    }
+                }
+                if(raiz.contarHijos()==1)
+                {
+                    if(raiz.getHijo(0).getEtiqueta().equals("L_ATTS"))
+                    {
+                        ArrayList<NodoAtributo> atts = (ArrayList<NodoAtributo>)Lista_Atributos(raiz.getHijo(0));
+                        if(atts!=null)
+                        {
+                            String id = traeID(atts);
+                            GeneraPanel generador = new GeneraPanel(definicionesCSS, atts);
+                            Panel p = generador.gerenameElPanel();
+                            if(!id.equals("NAC")){this.tabla_componentes.addComponenete(new Component(p,"panel", id));}
+                            this.paneles.get(0).add(p);
+                        }
+                    }
+                    else
+                    {
+                        Panel p = new Panel(false, false, 0, Color.white, 500, 500);
+                        this.paneles.get(0).add(p);
+                        this.paneles.add(0, p);
+                        Cuerpo(raiz.getHijo(0));
+                        this.paneles.remove(0);
+                    }
+                }
+                break;
+            }
+            case "SALTO":
+            {
+                JPanel panel = new JPanel();
+                panel.setBackground(Color.white);
+                panel.setPreferredSize(new Dimension(2000-ocupado, 10));//OJO EL 2000 QUE SEA CONFIGURABLE DE ACUERDO AL TAMANIO QUE YO SETEE
+                this.paneles.get(0).add(panel);
+                break;
+            }
+            case "TEXTO":
+            {
+                if(raiz.contarHijos()==2)
+                {
+                     ArrayList<NodoAtributo> atts = (ArrayList<NodoAtributo>)Lista_Atributos(raiz.getHijo(0));
+                     if(atts!=null)
+                     {
+                         String tid = traeID(atts);
+                         String texto = raiz.getHijo(1).getEtiqueta();
+                         GeneraTexto generador = new GeneraTexto(definicionesCSS, atts, texto);
+                         ETexto tex = generador.generameLabel();
+                         if(!tid.equals("NAC")){this.tabla_componentes.addComponenete(new Component(tex,"label", tid));}
+                         this.paneles.get(0).add(tex);
+                     }
+                }
+                if(raiz.contarHijos()==1)
+                {
+                    String texto = raiz.getHijo(0).getEtiqueta();
+                    ETexto textol = new ETexto(false, false, 0, Color.GREEN);
+                    textol.setText(texto);
+                    this.paneles.get(0).add(textol);
+                }
+                break;
+            }
+            case "CAJA_TEXTO":
+            {
+                if(raiz.contarHijos()==2)
+                {
+                    ArrayList<NodoAtributo> atts = (ArrayList<NodoAtributo>)Lista_Atributos(raiz.getHijo(0));
+                    if(atts!=null)
+                    {
+                        String tid = traeID(atts);
+                        String texto = raiz.getHijo(1).getEtiqueta();
+                        GeneraTexto generador = new GeneraTexto(definicionesCSS, atts, texto);
+                        Caja_Texto cajita = generador.generameTextField();
+                        if(!tid.equals("NAC")){this.tabla_componentes.addComponenete(new Component(cajita, "textfield", tid));}
+                        this.paneles.get(0).add(cajita);
+                    }
+                }
+                if(raiz.contarHijos()==1)
+                {
+                    String texto = raiz.getHijo(0).getEtiqueta();
+                    Caja_Texto cajita = new Caja_Texto(false, false, 0, Color.black);
+                    this.paneles.get(0).add(cajita);
+                }
+                break;
+            }
+            case "TEXTO_A":
+            {
+                if(raiz.contarHijos()==2)
+                {
+                     ArrayList<NodoAtributo> atts = (ArrayList<NodoAtributo>)Lista_Atributos(raiz.getHijo(0));
+                     if(atts!=null)
+                     {
+                         String tid = traeID(atts);
+                         String texto = raiz.getHijo(1).getEtiqueta();
+                         GeneraTexto generador = new GeneraTexto(definicionesCSS, atts, texto);
+                         AreaTexto area = generador.generameTextArea();
+                         if(!tid.equals("NAC")){this.tabla_componentes.addComponenete(new Component(area, "texpane", tid));}
+                        this.paneles.get(0).add(area);
+                     }
+                }
+                if(raiz.contarHijos()==1)
+                {
+                    String texto = raiz.getHijo(0).getEtiqueta();
+                    AreaTexto area = new AreaTexto(false, false, 0, Color.black);
+                    this.paneles.get(0).add(area);
+                }
+                break;
+            }
+            case "SPINNER":
+            {
+                if(raiz.contarHijos()==2)
+                {
+                    ArrayList<NodoAtributo> atts = (ArrayList<NodoAtributo>)Lista_Atributos(raiz.getHijo(0));
+                    if(atts!=null)
+                    {
+                        String tid = traeID(atts);
+                        int num = (Integer)Cuerpo(raiz.getHijo(1));
+                        GeneraTexto generador = new GeneraTexto(definicionesCSS, atts,"");
+                        JSpinner spinner = generador.generameSpinner(num);
+                        if(!tid.equals("NAC")){this.tabla_componentes.addComponenete(new Component(spinner, "spinner", tid));}
+                        this.paneles.get(0).add(spinner);
+                    }
+                }
+                if(raiz.contarHijos()==1)
+                {
+                    int num = (Integer)Cuerpo(raiz.getHijo(0));
+                    JSpinner spiner = new JSpinner(new SpinnerNumberModel(0, 0, num, 1));
+                    spiner.setPreferredSize(new Dimension(100, 50));
+                    this.paneles.get(0).add(spiner);
+                }
+                break;
+            }
+            case "CONTADOR":
+            {
+                if(raiz.contarHijos()==1)
+                {
+                    try {
+                        int num = Integer.parseInt(raiz.getHijo(0).getEtiqueta());
+                        return num;
+                    } catch (Exception e) {
+                        return 0;
+                    }
+                }
+                break;
+            }
         }
         return null;
     }
     
+    
+    private Object Lista_Atributos(ASTNodo raiz)
+    {
+        switch(raiz.getEtiqueta())
+        {
+            case "L_ATTS":
+            {
+                if(raiz.contarHijos()==2)
+                {
+                    ArrayList<NodoAtributo> atts = (ArrayList<NodoAtributo>)Lista_Atributos(raiz.getHijo(0));
+                    if(atts!=null)
+                    {
+                        NodoAtributo at = (NodoAtributo)Lista_Atributos(raiz.getHijo(1));
+                        if(at!=null)
+                        {
+                            atts.add(at);
+                        }
+                    }
+                    return atts;
+                }
+                if(raiz.contarHijos()==1)
+                {
+                    ArrayList<NodoAtributo> atts = new ArrayList<>();
+                    NodoAtributo at = (NodoAtributo)Lista_Atributos(raiz.getHijo(0));
+                    if(at!=null)
+                    {
+                        atts.add(at);
+                    }
+                    return atts;
+                }
+                break;
+            }
+            case "ID":
+            {
+                if(raiz.contarHijos() == 1)
+                {
+                    NodoAtributo at = new NodoAtributo(raiz.getEtiqueta().toLowerCase(), raiz.getHijo(0).getEtiqueta());
+                    return at;
+                }
+                break;
+            }
+            case "ALTO":
+            {
+                if(raiz.contarHijos() == 1)
+                {
+                    NodoAtributo at = new NodoAtributo(raiz.getEtiqueta().toLowerCase(), raiz.getHijo(0).getEtiqueta());
+                    return at;
+                }
+                break;
+            }
+            case "ANCHO":
+            {
+                if(raiz.contarHijos() == 1)
+                {
+                    NodoAtributo at = new NodoAtributo(raiz.getEtiqueta().toLowerCase(), raiz.getHijo(0).getEtiqueta());
+                    return at;
+                }
+                break;
+            }
+            case "ALINEADO":
+            {
+                if(raiz.contarHijos() == 1)
+                {
+                    NodoAtributo at = new NodoAtributo(raiz.getEtiqueta().toLowerCase(), raiz.getHijo(0).getEtiqueta());
+                    return at;
+                }
+                break;
+            }
+            case "GRUPO":
+            {
+                if(raiz.contarHijos() == 1)
+                {
+                    NodoAtributo at = new NodoAtributo(raiz.getEtiqueta().toLowerCase(), raiz.getHijo(0).getEtiqueta());
+                    return at;
+                }
+                break;
+            }
+            case "RUTA":
+            {
+                if(raiz.contarHijos() == 1)
+                {
+                    NodoAtributo at = new NodoAtributo(raiz.getEtiqueta().toLowerCase(), raiz.getHijo(0).getEtiqueta());
+                    return at;
+                }
+                break;
+            }
+        }
+        return null;
+    }
     
     private Color stringToColor(String color)
     {
@@ -296,5 +598,33 @@ public class Interprete_CHTML {
         }
     }
     
+    
+    private String traeID(ArrayList<NodoAtributo> atts)
+    {
+        for(int x = 0; x < atts.size(); x++)
+        {
+            if(atts.get(x).getNombre().toLowerCase().equals("id"))
+            {
+                return atts.get(x).getValor();
+            }
+        }
+        return "NAC";
+    }
+    
+    public  String upperCaseAllFirst(String value) {
 
+        char[] array = value.toCharArray();
+        // Uppercase first letter.
+        array[0] = Character.toUpperCase(array[0]);
+
+        // Uppercase all letters that follow a whitespace character.
+        for (int i = 1; i < array.length; i++) {
+            if (Character.isWhitespace(array[i - 1])) {
+                array[i] = Character.toUpperCase(array[i]);
+            }
+        }
+
+        // Result.
+        return new String(array);
+    }
 }
