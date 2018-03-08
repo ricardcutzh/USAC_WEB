@@ -64,4 +64,10 @@ public class Tabla_Funciones {
         System.out.println("////////////////////////////////////////////////////////////////////////////////////////");
         
     }
+
+    public ArrayList<Funcion> getFunciones() {
+        return funciones;
+    }
+    
+    
 }

@@ -1126,15 +1126,15 @@ OPCION ::= opentag opcion closetag opentag finOpcion closetag
           parser.contador++;
           RESULT = padre;
         :}
-        | opentag opcion closetag TXT:h1 opentag finOpcion closetag
+        | opentag opcion closetag TXT:h1 opentag finOpcion closetag//VALIDA
         {:
           ASTNodo padre = new ASTNodo(parser.contador,"OPCION");
           parser.contador++;
-          ASTNodo hij = new ASTNodo(parser.contador, "TXT");
-          parser.contador++;
+          /*ASTNodo hij = new ASTNodo(parser.contador, "TXT");
+          parser.contador++;*/
           if(h1!=null)
-          {hij.addHijo(h1);}
-          padre.addHijo(hij);
+          {padre.addHijo(h1);}
+          //padre.addHijo(hij);
           RESULT = padre;
         :}
         | opentag opcion L_ATTS:h1 closetag opentag finOpcion closetag
@@ -1145,7 +1145,7 @@ OPCION ::= opentag opcion closetag opentag finOpcion closetag
           {padre.addHijo(h1);}
           RESULT = padre;
         :}
-        | opentag opcion L_ATTS:h2 closetag TXT:h1 opentag finOpcion closetag
+        | opentag opcion L_ATTS:h2 closetag TXT:h1 opentag finOpcion closetag//VALIDA
         {:
           ASTNodo padre = new ASTNodo(parser.contador,"OPCION");
           parser.contador++;

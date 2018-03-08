@@ -1,7 +1,9 @@
 <chtml>
   <encabezado>
     <CCSS ruta="extra/css1.ccss";><FIN-CCSS>
+    <CCSS ruta="extra/css2.ccss";><FIN-CCSS>
     <CJS ruta="extra/cjs1.cjs";><FIN-CJS>
+    <CJS ruta="extra/cjs2.cjs";><FIN-CJS>
     <Titulo id="tit"; grupo="pintatitulo";>MI PAGINA DE PRUEBAS<fin-Titulo>
   <fin-encabezado>
   <cuerpo fondo="red";>
@@ -10,8 +12,9 @@
         <spinner id="miEspinner"; Ancho = "100"; alto="20";>45<fin-spinner>
         <caja_texto> hola que hace <fin-caja_texto>
     <fin-panel>
+    <salto-fin>
     <texto_a id="mitexto";> hola mundo este es un  kkakaka<fin-texto_a>
     <texto_a> ESTE ES OTRO JAJAJAJAJA <fin-texto_a>
-
+    <enlace grupo="enlaces"; ruta = "Otra.chtml";> Pagina nueva <fin-enlace>
   <fin-cuerpo>
 <fin-chtml>

@@ -56,4 +56,10 @@ public class Ambito {
     {
         this.tabla_simbolos.imprime_variables();
     }
+
+    public void setTabla_simbolos(Tabla_Variables tabla_simbolos) {
+        this.tabla_simbolos = tabla_simbolos;
+    }
+    
+    
 }

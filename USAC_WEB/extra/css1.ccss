@@ -21,8 +21,8 @@ Pruebas[
 		texto := "modificado";
 
 	ID(mitexto);
-	texto := "hola mi amigo iocef!";
-	formato := mayuscula, cursiva;
+	texto := "cambie el texto";
+	formato := minuscula, cursiva;
 	tamtex := 20;
 	fondoelemento := "white";
 	borde := [20,"black",false];

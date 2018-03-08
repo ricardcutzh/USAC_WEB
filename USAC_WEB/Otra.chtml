@@ -1,0 +1,9 @@
+<chtml>
+  <encabezado>
+    <CCSS ruta="extra/css2.ccss";><FIN-CCSS>
+    <Titulo>MI PAGINA DE PRUEBAS<fin-Titulo>
+  <fin-encabezado>
+  <cuerpo fondo="blue";>
+      <TEXTO grupo="enlaces"; Ancho="200"; alto ="30";> ESTA ES LA NUEVA PAGINA! <fin-texto>
+  <fin-cuerpo>
+<fin-chtml>

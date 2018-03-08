@@ -47,6 +47,24 @@ public class CuerpoCJS {
         return huboReturn;
     }
     
+    public ArrayList<TError> error()
+    {
+        return this.errores_semanticas;
+    }
+    
+    public Tabla_Variables dameGlobales()
+    {
+        return this.ambitos.get(0).tabla_simbolos;
+    }
+
+    public ArrayList<NodoImprimir> getImp() {
+        return imp;
+    }
+
+    public Tabla_Funciones getFunciones() {
+        return funciones;
+    }
+    
     
     
     public Variable busca_en_Ambitos(String nombre)
@@ -508,7 +526,7 @@ public class CuerpoCJS {
                     NodoOperacion op = (NodoOperacion)exp.evaluaExpresion();
                     if(!op.getValor().equals("error"))
                     {
-                        this.imp.add(new NodoImprimir(op.getValor(), raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn()));
+                        this.imp.add(new NodoImprimir(op.getValor(), raiz.getLine()+1, raiz.getColumn()+1));
                         System.out.println("Imprimir: "+op.getValor()+" | Linea: "+op.getLinea()+" | Columna: "+op.getColumna());
                     }
                 }

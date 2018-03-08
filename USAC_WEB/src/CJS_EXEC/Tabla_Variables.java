@@ -86,4 +86,10 @@ public class Tabla_Variables {
         }
         System.out.println("///////////////////////////////////////////////////////////////////////////////////////");
     }
+
+    public ArrayList<Variable> getVariables() {
+        return variables;
+    }
+    
+    
 }

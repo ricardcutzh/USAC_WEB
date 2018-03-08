@@ -21,6 +21,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import javafx.scene.layout.Pane;
 import javax.swing.border.LineBorder;
+import CJS_EXEC.*;
+import java.awt.BorderLayout;
+import java.io.BufferedReader;
 /**
  *
  * @author richard
@@ -48,6 +51,23 @@ public class Interprete_CHTML {
     ///////////////////////////////
     Tabla_Componente tabla_componentes;
     ///////////////////////////////
+    ///DONDE COLOCARE PESTANIAS////
+    JTabbedPane MainTabPage;
+    ///////////////////////////////
+    //////////////////////////////
+    /////////INFO DE CJS//////////
+    CJS_OB datosCJS;
+    //////////////////////////////
+    //IMPRESION
+    //////////////////////////////
+    ArrayList<NodoImprimir> impresiones;
+    //////////////////////////////
+    Tabla_Funciones funciones;
+    Tabla_Variables variables;
+    //////////////////////////////
+    JTable ErrorTable;
+    JTable PrintTable;
+    //////////////////////////////
     public Interprete_CHTML(ASTNodo raiz, JPanel principal)
     {
         this.raiz = raiz;
@@ -57,6 +77,9 @@ public class Interprete_CHTML {
         this.archivosCSS = new ArrayList<>();
         this.archivosCJS = new ArrayList<>();
         this.paneles = new ArrayList<>();
+        this.impresiones = new ArrayList<>();
+        this.funciones = new Tabla_Funciones();
+        this.variables = new Tabla_Variables();
     }
     
     
@@ -72,12 +95,46 @@ public class Interprete_CHTML {
         this.archivosCJS = new ArrayList<>();
         this.paneles = new ArrayList<>();
         this.tabla_componentes = new Tabla_Componente();
+        this.impresiones = new ArrayList<>();
+        this.funciones = new Tabla_Funciones();
+        this.variables = new Tabla_Variables();
     }
 
+    public Interprete_CHTML(ASTNodo raiz, JPanel principal, JTabbedPane pestania, int index, JTabbedPane MainTabPage)
+    {
+        this.raiz = raiz;
+        this.principal = principal;
+        this.pestania = pestania;
+        this.indexPesta = index;
+        this.definicionesCSS = new CCSS_OB();
+        this.errores = new ArrayList<>();
+        this.archivosCSS = new ArrayList<>();
+        this.paneles = new ArrayList<>();
+        this.tabla_componentes = new Tabla_Componente();
+        this.MainTabPage = MainTabPage;
+        this.datosCJS = new CJS_OB();
+        this.archivosCJS = new ArrayList<>();
+        this.impresiones = new ArrayList<>();
+        this.funciones = new Tabla_Funciones();
+        this.variables = new Tabla_Variables();
+    }
     
-    
+    public void setErrorTable(JTable ErrorTable) {
+        this.ErrorTable = ErrorTable;
+    }
+
+    //////////////////////////////////////////
+    public void setPrintTable(JTable PrintTable) {    
+        this.PrintTable = PrintTable;
+    }
+
+    //////////////////////////////////////////
     public ArrayList<TError> getErrores() {
         return errores;
+    }
+
+    public ArrayList<NodoImprimir> getImpresiones() {
+        return impresiones;
     }
     
     
@@ -116,6 +173,78 @@ public class Interprete_CHTML {
                 if(raiz.contarHijos()>0)
                 {
                     E_Encabezado(raiz.getHijo(0));
+                    /////////////////////////////
+                    //DEBERIA DE CREAR LA LLAMADA
+                    //A CREAR LAS PESTANIAS DE CODIGO
+                    /////////////////////////////
+                    ////////////CJS//////////////
+                    if(MainTabPage.getTabCount()==6)
+                    {
+                       try {
+                            for(int x = 0; x< 4;x++)
+                            {
+                                MainTabPage.remove(2);
+                            }
+                        } catch (Exception e) {
+                            System.err.println("Error: En Maintab: "+e.toString());
+                        }
+                    }
+                    JPanel csspanel = new JPanel(new BorderLayout());
+                    JTabbedPane csstab = new JTabbedPane();
+                    for(String arc: this.archivosCSS)
+                    {
+                        JPanel aux = new JPanel(new BorderLayout());
+                        try 
+                        {
+                            FileReader reader = new FileReader(arc);
+                            BufferedReader br = new BufferedReader(reader);
+                            JTextArea tx1 = new JTextArea();
+                            tx1.read(br, null);
+                            br.close();
+                            tx1.requestFocus();
+                            tx1.setEditable(false);
+                            tx1.setFont(new Font("Lucida Console",Font.PLAIN,20));
+                            JScrollPane p = new JScrollPane(tx1);
+                            p.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                            p.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+                            aux.add(p);
+                            csstab.addTab(arc, aux);
+                        } catch (Exception e) 
+                        {
+                            System.err.println("Error en ruta... CSS TAB");
+                        }
+                    }
+                    csspanel.add(csstab);
+                    this.MainTabPage.addTab("CCSS", csspanel);
+                    /////////////////////////////////////
+                    /////CJS/////////////////////////////
+                    JPanel cjspanel = new JPanel(new BorderLayout());
+                    JTabbedPane cjstab = new JTabbedPane();
+                    for(NodoCJS n: this.archivosCJS)
+                    {
+                        JPanel aux = new JPanel(new BorderLayout());
+                        try 
+                        {
+                            FileReader reader = new FileReader(n.nombreArchivo);
+                            BufferedReader br = new BufferedReader(reader);
+                            JTextArea tx1 = new JTextArea();
+                            tx1.read(br, null);
+                            br.close();
+                            tx1.requestFocus();
+                            tx1.setEditable(false);
+                            tx1.setFont(new Font("Lucida Console",Font.PLAIN,20));
+                            JScrollPane p = new JScrollPane(tx1);
+                            p.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                            p.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+                            aux.add(p);
+                            cjstab.addTab(n.getNombreArchivo(),aux);
+                        } catch (Exception e) {
+                            System.err.println("Error en ruta... CJS TAB");
+                        }
+                    }
+                    cjspanel.add(cjstab);
+                    this.MainTabPage.add("CJS", cjspanel);
+                    /////////////////////////////////////
                 }
                 break;
             }
@@ -152,6 +281,7 @@ public class Interprete_CHTML {
                     else
                     {
                         TError error = new TError(rut, "Error Semantico", "La Ruta No Existe", raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
+                        error.setArchivo(rut);
                         this.errores.add(error);
                     }
                     if(auxiliar.errores.size()>0)
@@ -176,6 +306,58 @@ public class Interprete_CHTML {
                     {
                         //ANADO EL NODO A LA LISTA PARA SU POSTERIOR EJECUCION
                         this.archivosCJS.add(nodo);
+                        //EJECUTARE DE UNA....
+                        CJS_OB auxiliar = new CJS_OB();
+                        if(auxiliar.ejecutaCJS(nodo.getRaiz(), variables, funciones))
+                        {
+                            for(NodoImprimir n : auxiliar.getImpresion())
+                            {
+                                n.setArchivo(rut);
+                                this.impresiones.add(n);
+                            }
+                        }
+                        /*if(auxiliar.ejecutaCSJ(nodo.getRaiz()))
+                        {
+                            Tabla_Funciones tablatemp = auxiliar.getFunciones();
+                            for(Funcion f : tablatemp.getFunciones())
+                            {
+                                if(!this.datosCJS.agregarFuncion(f))
+                                {
+                                    TError error = new TError("Funcion En Archivo: "+rut, "Error Semantico", "Funcion: "+f.getNombre()+" Ya esta definida", raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
+                                    error.setArchivo(rut);
+                                    this.errores.add(error);
+                                }
+                            }
+                            Tabla_Variables tablavartemp = auxiliar.getVariables();
+                            for(Variable v : tablavartemp.getVariables())
+                            {
+                                if(!this.datosCJS.agregarVariables(v))
+                                {
+                                    TError error = new TError("Variable En Archivo: "+rut, "Error Semantico", "Variable "+v.getIdentificador()+" Ya esta definida", raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
+                                    error.setArchivo(rut);
+                                    this.errores.add(error);
+                                }
+                            }
+                            for(NodoImprimir n: auxiliar.getImpresion())
+                            {
+                                n.setArchivo(rut);
+                                this.impresiones.add(n);
+                            }
+                        }*/
+                        if(auxiliar.errores.size()>0)
+                        {
+                            for(TError e: auxiliar.errores)
+                            {
+                                e.setArchivo(rut);
+                                this.errores.add(e);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        TError error = new TError(rut, "Error Semantico", "La Ruta No Existe", raiz.getHijo(0).getLine(), raiz.getHijo(0).getColumn());
+                        error.setArchivo(rut);
+                        this.errores.add(error);
                     }
                     if(nodo.getNumeroErrores()>0)
                     {
@@ -238,7 +420,7 @@ public class Interprete_CHTML {
                 break;
             }
             case "TXT":
-            {
+            {   
                 if(raiz.contarHijos()==1)
                 {
                     return raiz.getHijo(0).getEtiqueta();
@@ -457,10 +639,89 @@ public class Interprete_CHTML {
                 }
                 break;
             }
+            case "CAJA":
+            {
+                if(raiz.contarHijos()==2)
+                {
+                    //HIJO 0 SON LOS ATRIBUTOS
+                    //HIJO 1 SON LAS OPCIONES
+                    //ArrayList<NodoAtributo> atts = (ArrayList<NodoAtributo>)Lista_Atributos(raiz.getHijo(0));
+                }
+                if(raiz.contarHijos()==1)
+                {
+                    //PUEDEN HABER DOS OPCIONES....
+                    // *-1) QUE VENGAN SOLO ATRIBUTOS
+                    // *-2) QUE VENGAN SOLO LAS OPCIONES
+                }
+                break;
+            }
+            case "ENLACE":
+            {
+                if(raiz.contarHijos()==2)
+                {
+                    ArrayList<NodoAtributo> atts = (ArrayList<NodoAtributo>)Lista_Atributos(raiz.getHijo(0));//OBTENGO LA LISTA DE ATRIBUTOS
+                    String texto = (String)Cuerpo(raiz.getHijo(1));//OBTENGO LA ETIQUETA
+                    if(atts!=null)
+                    {
+                         String tid = traeID(atts);
+                         GeneraTexto generador = new GeneraTexto(definicionesCSS, atts, texto);
+                         ETexto tex = generador.generameLabel();
+                         Search s = new Search();
+                         NodoAtributo at = s.buscameElAtributoCHTML(atts, "ruta");
+                         if(at!=null)
+                         {
+                             tex.addMouseListener(new EnlaceAction(principal, ErrorTable, PrintTable, pestania, MainTabPage, indexPesta, at.getValor(), ocupado, ocupado));
+                         }
+                         if(!tid.equals("NAC")){this.tabla_componentes.addComponenete(new Component(tex,"label", tid));}
+                         this.paneles.get(0).add(tex);
+                    }
+                }
+                if(raiz.contarHijos()==1)
+                {
+                    
+                }
+                break;
+            }
+            case "TXT":
+            {
+                if(raiz.contarHijos()==1)
+                {
+                    return raiz.getHijo(0).getEtiqueta();
+                }
+                break;
+            }
         }
         return null;
     }
     
+    
+    private Object listaOpciones(ASTNodo raiz)
+    {
+        switch(raiz.getEtiqueta())
+        {
+            case "L_OPCIONES":
+            {
+                if(raiz.contarHijos()==2)
+                {
+                    
+                }
+                if(raiz.contarHijos()==1)
+                {
+                    
+                }
+                break;
+            }
+            case "OPCION":
+            {
+                if(raiz.contarHijos()==1)
+                {
+                    
+                }
+                break;
+            }
+        }
+        return null;
+    }
     
     private Object Lista_Atributos(ASTNodo raiz)
     {
@@ -546,6 +807,13 @@ public class Interprete_CHTML {
                     return at;
                 }
                 break;
+            }
+            case "VALOR":
+            {
+                if(raiz.contarHijos()==1)
+                {
+                    return new NodoAtributo(raiz.getEtiqueta().toLowerCase(), raiz.getHijo(0).getEtiqueta());
+                }
             }
         }
         return null;

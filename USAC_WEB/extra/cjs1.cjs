@@ -1,2 +1,19 @@
-mensaje("hola mundo desde cjs1!");
-dimv s : "hola";
+funcion suma(a,b)
+{
+  retornar a+b;
+}
+
+funcion resta(a,b)
+{
+  retornar a-b;
+}
+
+funcion multi(a,b)
+{
+  retornar a*b;
+}
+
+funcion divi(a,b)
+{
+  retornar a/b;
+}

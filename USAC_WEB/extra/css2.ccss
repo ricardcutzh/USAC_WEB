@@ -1,0 +1,8 @@
+Enlaces[
+
+  grupo(enlaces);
+    formato:= negrilla;
+    opaque := true;
+    fondoelemento := "red";
+
+]

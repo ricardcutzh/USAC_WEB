@@ -11,6 +11,7 @@ package GUI;
  */
 import AST.*;
 import CHTML.*;
+import CHTML_EXEC.CHTML;
 import java.io.FileReader;
 import javax.swing.JOptionPane;
 import CHTML_EXEC.Interprete_CHTML;
@@ -36,6 +37,9 @@ public class Pestania extends javax.swing.JPanel {
     /**
      * Creates new form Pestania
      */
+    
+    public static ArrayList<String> paginas = new ArrayList<>();
+    public static int indicePagina=0;
     
     JTabbedPane padre;
     int index;
@@ -63,6 +67,7 @@ public class Pestania extends javax.swing.JPanel {
         this.padre = padre;
         this.index = index;
         this.ErrorTable.setVisible(false);
+        this.PrintTable.setVisible(false);
         if(largo > this.largo)
         {
             this.largo = largo;
@@ -95,6 +100,9 @@ public class Pestania extends javax.swing.JPanel {
         ErrorConsole = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         ErrorTable = new javax.swing.JTable();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        PrintTable = new javax.swing.JTable();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
@@ -102,11 +110,21 @@ public class Pestania extends javax.swing.JPanel {
         btnBack.setIcon(new javax.swing.ImageIcon("/home/richard/Documents/Universidad/Compiladores 2/USAC_WEB/IMGS/if_arrow_full_left_103292.png")); // NOI18N
         btnBack.setMaximumSize(new java.awt.Dimension(50, 50));
         btnBack.setPreferredSize(new java.awt.Dimension(50, 50));
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnBack);
 
         btnForward.setIcon(new javax.swing.ImageIcon("/home/richard/Documents/Universidad/Compiladores 2/USAC_WEB/IMGS/if_arrow_full_right_103295.png")); // NOI18N
         btnForward.setMaximumSize(new java.awt.Dimension(50, 50));
         btnForward.setPreferredSize(new java.awt.Dimension(50, 50));
+        btnForward.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnForwardActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnForward);
 
         btnRefresh.setIcon(new javax.swing.ImageIcon("/home/richard/Documents/Universidad/Compiladores 2/USAC_WEB/IMGS/if_refresh22_216527.png")); // NOI18N
@@ -169,13 +187,39 @@ public class Pestania extends javax.swing.JPanel {
 
         MainPageTab.addTab("Consola de Errores", jScrollPane2);
 
+        PrintTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(PrintTable);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1033, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
+        );
+
+        MainPageTab.addTab("Consola de Impresion", jPanel3);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(MainPageTab, javax.swing.GroupLayout.DEFAULT_SIZE, 1038, Short.MAX_VALUE)
+            .addComponent(MainPageTab)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -190,7 +234,7 @@ public class Pestania extends javax.swing.JPanel {
 
     private void btnExecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExecActionPerformed
         // BOTON QUE INICIA LA INTERPTRETACION DEL CHTML
-        ASTNodo raizCHTML = null;
+        /*ASTNodo raizCHTML = null;
         try 
         {
             panelPrincipal = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -221,14 +265,54 @@ public class Pestania extends javax.swing.JPanel {
         } catch (Exception e) 
         {
             JOptionPane.showMessageDialog(null, "Error al Intentar acceder a la Pagina: "+URL_Search.getText());
+        }*/
+        Objetos.ValidadorRuta val = new Objetos.ValidadorRuta(URL_Search.getText());
+        if(val.esValida())
+        {
+            paginas.add(URL_Search.getText());
+            CHTML c = new CHTML(panelPrincipal, ErrorTable, PrintTable, padre, MainPageTab, index,URL_Search.getText(),alto, largo);
+            c.executeCHTML();
+        }
+        else 
+        {
+            JOptionPane.showMessageDialog(null, "Ruta: "+URL_Search.getText()+" es Invalida...");
         }
     }//GEN-LAST:event_btnExecActionPerformed
+
+    private void btnForwardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnForwardActionPerformed
+        // TODO add your handling code here:
+        if(paginas.size()>0)
+        {
+            if(indicePagina < paginas.size()-1)
+            {
+                indicePagina++;
+                CHTML c = new CHTML(panelPrincipal, ErrorTable, PrintTable, padre, MainPageTab, index,paginas.get(indicePagina),alto, largo);
+                c.executeCHTML();
+                URL_Search.setText(paginas.get(indicePagina));
+            }
+        }
+    }//GEN-LAST:event_btnForwardActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        if(paginas.size()>0)
+        {
+            if(indicePagina>0)
+            {
+                indicePagina--;
+                CHTML c = new CHTML(panelPrincipal, ErrorTable, PrintTable, padre, MainPageTab, index,paginas.get(indicePagina),alto, largo);
+                c.executeCHTML();
+                URL_Search.setText(paginas.get(indicePagina));
+            }
+        }
+    }//GEN-LAST:event_btnBackActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel ErrorConsole;
     private javax.swing.JTable ErrorTable;
     private javax.swing.JTabbedPane MainPageTab;
+    private javax.swing.JTable PrintTable;
     private javax.swing.JTextField URL_Search;
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnExec;
@@ -237,6 +321,8 @@ public class Pestania extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     // End of variables declaration//GEN-END:variables

@@ -14,6 +14,7 @@ public class NodoImprimir {
     String mensaje;
     int linea;
     int columna;
+    String archivo;
     
     public NodoImprimir(String mensaje, int linea, int columna)
     {
@@ -32,6 +33,14 @@ public class NodoImprimir {
 
     public int getColumna() {
         return columna;
+    }
+
+    public String getArchivo() {
+        return archivo;
+    }
+
+    public void setArchivo(String archivo) {
+        this.archivo = archivo;
     }
     
     
